@@ -1,6 +1,6 @@
-# connectly
+# marmite
 
-The subsequent images represent the screenshots captured from the sample HTTP request and response executed to evaluate the REST API endpoints. The compilation of sample HTTP requests generated from the [connectly-api](https://github.com/arnelimperial/connectly/tree/main/connectly-api) (Django REST API project) is available for review in the [rest.http file](https://github.com/arnelimperial/connectly/blob/main/rest.http).
+The subsequent images represent the screenshots captured from the sample HTTP request and response executed to evaluate the REST API endpoints. The compilation of sample HTTP requests generated from the [connectly-api](https://github.com/imperionite/marmite/tree/main/connectly-api) (Django REST API project) is available for review in the [rest.http file](https://github.com/imperionite/marmite/blob/main/rest.http).
 
 ## Create user
 

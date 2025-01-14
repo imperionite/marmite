@@ -1,12 +1,12 @@
 <a name="intro"></a>
 
-# connectly
+# marmite
 
-Refer to the [connectly-api directory](https://github.com/arnelimperial/connectly/tree/main/connectly-api) for the Django/Django REST API project.
+Refer to the [connectly-api directory](https://github.com/imperionite/marmite/tree/main/connectly-api) for the Django/Django REST API project.
 
-PostgreSQL was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/arnelimperial/connectly/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations. 
+PostgreSQL was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/imperionite/marmite/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations. 
 
-The REST API endpoints can be accessed through HTTPS, specifically at localhost https://127.0.0.1:8080/{endpoint}/, since the default Django server port 8000 is being [proxied](https://github.com/arnelimperial/connectly/blob/main/nginx/nginx.conf).
+The REST API endpoints can be accessed through HTTPS, specifically at localhost https://127.0.0.1:8080/{endpoint}/, since the default Django server port 8000 is being [proxied](https://github.com/imperionite/marmite/blob/main/nginx/nginx.conf).
 
 Certain sensitive `environment variables` are currently made visible; however, their exposure will be minimized in accordance with the project's requirements in the near future.
 
@@ -94,9 +94,9 @@ $ docker system prune -a && docker images prune -a && docker volume prune -a
 
 ### 📌 Endpoints and HTTP Request & Response Screenshots
 
-- [HTTP Sample Requests](https://github.com/arnelimperial/connectly/blob/main/rest.http)
+- [HTTP Sample Requests](https://github.com/imperionite/marmite/blob/main/rest.http)
 
-- [HTTP Request & Response Screenshots](https://github.com/arnelimperial/connectly/blob/main/HTTP.md)
+- [HTTP Request & Response Screenshots](https://github.com/imperionite/marmite/blob/main/HTTP.md)
 
 
 
@@ -160,5 +160,5 @@ $ cd connectly-api && python manage.py runserver 0.0.0.0:8000
 
 ### 👨🏻‍💻 Author
 
-- [Arnel Imperial](https://github.com/arnelimperial)
+- [Arnel Imperial](https://github.com/imperionite)
 
