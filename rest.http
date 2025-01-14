@@ -1,0 +1,26 @@
+### create new user
+POST https://127.0.0.1:8080/posts/users/create/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "user0",
+    "email": "user0@gmail.com",
+    "password": "@passworD1#"
+}
+
+### list all users
+GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
+Content-Type: application/json
+
+### create new post
+POST https://127.0.0.1:8080/posts/posts/create/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "content": "Hello, World!",
+    "author": 2
+}
+
+### list all posts
+GET https://127.0.0.1:8080/posts/posts/ HTTP/1.1
+Content-Type: application/json

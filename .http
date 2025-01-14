@@ -1,0 +1,11 @@
+### list all users
+GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
+Content-Type: application/json
+
+
+
+
+
+
+
+
