@@ -1,11 +1,4 @@
-### list all users
-GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
+### create comment
+GET https://127.0.0.1:8080/posts/comments/ HTTP/1.1
 Content-Type: application/json
-
-
-
-
-
-
-
 

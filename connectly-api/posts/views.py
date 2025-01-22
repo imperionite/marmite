@@ -1,8 +1,8 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
-from .models import Post
-from .serializers import UserSerializer, PostSerializer
+from .models import Post, Comment
+from .serializers import UserSerializer, PostSerializer, CommentSerializer
 
 User = get_user_model()
 
@@ -46,6 +46,28 @@ class PostViewSet(viewsets.ModelViewSet):
         response_data = {
             'id': postInstance.id,
             'message': 'Post created successfully',
+        }
+
+        # Return the custom response
+        return Response(response_data, status=status.HTTP_201_CREATED)
+    
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        # Get the newly created comment instance
+        commentInstance = serializer.instance
+
+        # Customize the response data
+        response_data = {
+            'text': commentInstance.text,
+            'author': commentInstance.author.id,
+            'post': commentInstance.post.id,
         }
 
         # Return the custom response

@@ -30,3 +30,4 @@ types-PyYAML==6.0.12.20240917
 types-requests==2.32.0.20241016
 typing_extensions==4.12.2
 urllib3==2.2.3
+validate_email==1.3

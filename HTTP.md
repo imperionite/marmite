@@ -4,26 +4,28 @@ The subsequent images represent the screenshots captured from the sample HTTP re
 
 ## Create user
 
-POST /posts/users/create/
+POST /posts/users/
 
 
-![create user](https://drive.google.com/uc?id=1fxLlfT03RVaUJI_lFUINJ0Qha9wo4WH-)
+![create user](https://drive.google.com/uc?id=1VaKxgIw83Uk27qj2v2N5KMk2Z4cnIRTX)
+
 
 ## Fetch all users
 
 
 GET /posts/users/ 
 
-![all users](https://drive.google.com/uc?id=1N_35dkHD3mItFZCfYbNsOv-foQa7CXnB)
+![all users](https://drive.google.com/uc?id=1RbHCg7FE7hhfwSJ8v1hL5gTa-qpqmEpO)
 
 
 ## Create post
 
 
-POST /posts/posts/create/
+POST /posts/posts/
 
 
-![create post](https://drive.google.com/uc?id=13VLN7fYwqQhnK8pb3rrQHLCnaZxjjpqZ)
+![create post](https://drive.google.com/uc?id=1d7_xg0gKN0q6YG4oMzTBJ8OvvfsZDzJR)
+
 
 ## Fetch all posts
 
@@ -31,4 +33,27 @@ POST /posts/posts/create/
 GET /posts/posts/ 
 
 
-![all posts](https://drive.google.com/uc?id=1N_35dkHD3mItFZCfYbNsOv-foQa7CXnB)
+![all posts](https://drive.google.com/uc?id=1xU6DPFmbO2Sjm1aB_adYgEHavJeCFhTM)
+
+
+
+## Create comment
+
+
+POST /posts/comments/
+
+
+![create comment](https://drive.google.com/uc?id=1RIUpadp9FpS8NaOLFXN7EQl68TYDugx2)
+
+
+## Fetch all comments
+
+
+GET /posts/comments/ 
+
+
+![all comments](https://drive.google.com/uc?id=17uEsmEY1YiOGALYUDODRf8Q3g4ocJvYZ)
+
+
+
+
