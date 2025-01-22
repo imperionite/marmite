@@ -15,10 +15,9 @@ Certain sensitive `environment variables` are currently made visible; however, t
 1. [ Introduction ](#intro)
 2. [ Requisite ](#requisite)
 4. [ CLI Commands ](#commands)
-5. [ Basic System Architecture Diagram ](#diagram)
-6. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
-7. [ Running Locally ](#rl)
-8. [ Author ](#author)
+5. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
+6. [ Running Locally ](#rl)
+7. [ Author ](#author)
 
 <a name="requisite"></a>
 
@@ -81,13 +80,6 @@ $ docker-compose down -v
 # clean slate
 $ docker system prune -a && docker images prune -a && docker volume prune -a
 ```
-
-
-<a name="diagram"></a>
-
-### 🔗 System Architecture Diagram
-
-![System architecture diagram](https://drive.google.com/uc?id=1W9vta3B3OZl48e0kVfaOzcS0ITPIoZ-Z)
 
 
 <a name="ss"></a>
