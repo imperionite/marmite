@@ -49,7 +49,7 @@ python manage.py startapp app_name
 # create and apply migration
 $ python manage.py makemigrations --dry-run --verbosity 3 # dry-run
 $ python manage.py makemigrations
-$ python manage.py migrate --noiinput
+$ python manage.py migrate --noinput
 
 # creating super user
 python manage.py createsuperuser
