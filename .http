@@ -1,4 +1,6 @@
-### create comment
-GET https://127.0.0.1:8080/posts/comments/ HTTP/1.1
+### user's post
+GET https://127.0.0.1:8080/posts/2/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NzI0OTI3LCJpYXQiOjE3Mzc3MTQxMjcsImp0aSI6IjkxYjg3ZTgzOWExNTQ5MzNiZmNmZjkxZDg0NmQyMTI3IiwidXNlcl9pZCI6M30.Ut5TMU2IsxxZ9k-qdkEbjn-KxlvOIwz2_IrPbev4PZM
 Content-Type: application/json
+
 

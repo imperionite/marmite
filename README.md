@@ -62,6 +62,10 @@ pip freeze > requirements.txt
 
 # create secret keys
 $ python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+
+# entering django shell
+python manage.py shell
+
 ```
 
 #### 🤖 CLI Commands (Docker)
@@ -76,6 +80,24 @@ $ docker-compose up --build -d
 
 # stop running container and remove volumes
 $ docker-compose down -v
+
+# access postgres
+$ docker-compose exec postgres sh # assume that service name is postgres in docker compose file
+$ psql -U myuser -d mydatabase
+# listing tables
+$ \dt
+# describe table structure
+$ \d table_name
+# executing SQL queries
+$ SELECT * FROM table_name;
+# write specific query
+$ SELECT id, username, password FROM posts_user;
+# clear screen
+$ CTRL + L
+# exiting psql
+$ \q
+# exiting interactive mode
+$ cmd + d
 
 # clean slate
 $ docker system prune -a && docker images prune -a && docker volume prune -a

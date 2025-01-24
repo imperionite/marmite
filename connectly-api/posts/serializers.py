@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+# from djoser.serializers import UserSerializer
 from validate_email import validate_email
 
 from .models import Post, Comment
@@ -9,7 +11,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'created_at']
+        fields = ['id', 'username', 'email', 'created_at'] # Exclude sensitive fields like password
     
     def validate_username(self, value):
         if len(value) < 3:
@@ -62,3 +64,22 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Author not found.")
         return value
 
+class LoginSerializer(serializers.Serializer):
+    identifier = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        identifier = attrs.get('identifier')
+        password = attrs.get('password')
+
+        if identifier and password:
+            user = authenticate(username=identifier, password=password)
+            if not user:
+                msg = 'Unable to log in with provided credentials.'
+                raise serializers.ValidationError(msg, code='authorization')
+        else:
+            msg = 'Must include "identifier" and "password".'
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs

@@ -16,3 +16,4 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ('content',)
     list_filter = ('author', 'created_at')
     ordering = ('-created_at',)
+

@@ -3,8 +3,8 @@ POST https://127.0.0.1:8080/posts/users/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "user0",
-    "email": "user0@gmail.com",
+    "username": "user1",
+    "email": "use10@gmail.com",
     "password": "@passworD1#"
 }
 
@@ -13,12 +13,12 @@ GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
 Content-Type: application/json
 
 ### create new post
-POST https://127.0.0.1:8080/posts/posts/create/ HTTP/1.1
+POST https://127.0.0.1:8080/posts/posts/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "content": "Hello, World!",
-    "author": 2
+    "content": "Citizen Kane",
+    "author": 3
 }
 
 ### list all posts
@@ -39,3 +39,31 @@ Content-Type: application/json
 ### fetch all comments
 GET https://127.0.0.1:8080/posts/comments/ HTTP/1.1
 Content-Type: application/json
+
+### login
+POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "user01",
+    "password": "@passworD1#"
+}
+
+### protected route
+GET https://127.0.0.1:8080/posts/protected/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NjM4Mjk2LCJpYXQiOjE3Mzc2Mjc0OTYsImp0aSI6ImI5YWZkYzhjMzk5ZDRlN2Q5YzI3OTI0ZTU3YTJjZDQ4IiwidXNlcl9pZCI6MX0.P1Ek2Esh8jP-3bFiX8j6ZOIt0EXSh6t3oFWPqkYUUrg
+Content-Type: application/json
+
+### posts admin route
+GET https://127.0.0.1:8080/posts/admin/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NzIzMjc1LCJpYXQiOjE3Mzc3MTI0NzUsImp0aSI6IjEzOTA4YjRjZWMwODRiZmE5M2Y1N2QzMjI3NmM5MGJjIiwidXNlcl9pZCI6Mn0.ORD8CWniakgBoqhycEkEY7penb6-DGflY3MyhDI31WA
+Content-Type: application/json
+
+
+### user's post
+GET https://127.0.0.1:8080/posts/1/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NzIzNzE3LCJpYXQiOjE3Mzc3MTI5MTcsImp0aSI6ImQyM2I3Y2VlODdkYTQ1Njc5ZGJmMzgxNDFkYWVjNzRkIiwidXNlcl9pZCI6MX0.6z5QuVcPrH1nysKJUW2P42U2ZgzKfKOUh3Lk9NLNVXE
+Content-Type: application/json
+
+
+

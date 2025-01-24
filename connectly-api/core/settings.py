@@ -1,6 +1,6 @@
 import os
 from decouple import config, Csv
-import dj_database_url
+import dj_database_url # type: ignore
 from pathlib import Path
 from datetime import timedelta
 from corsheaders.defaults import default_headers
@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'djoser',
 ]
 
 LOCAL_APPS = [
@@ -150,13 +151,17 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Type', 'authorization', 'X-CSRFToken', 'Access-Control-Allow-Origin: *',]
 
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8080',
     'https://127.0.0.1:8080',
-    'https://localhost:8080',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 
 ]
 CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
     'https://127.0.0.1:8080',
-    'https://localhost:8080',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 )
 
 CORS_ALLOW_HEADERS = default_headers + (
@@ -204,6 +209,21 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 10,
     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 
+}
+
+# Djoser
+# ------------------------------------------------------------------------------
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user_create': 'posts.serializers.UserSerializer',
+        'user': 'posts.serializers.UserSerializer',  # Use custom serializer for user retrieval as well
+    },
+    'LOGIN_FIELD': 'login',
+    'AUTH_BACKENDS': (
+        'posts.backends.EmailOrUsernameModelBackend',
+    ),
 }
 
 
