@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 # from djoser.serializers import UserSerializer
 from validate_email import validate_email
 
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 User = get_user_model()
 
@@ -83,3 +83,9 @@ class LoginSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']  # Fields to include in API response
+        read_only_fields = ['id', 'user', 'created_at']  # User should not set these manually

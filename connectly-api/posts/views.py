@@ -3,12 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Post, Comment
-from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer
-from .permissions import IsAdmin, IsPostAuthor
+from .models import Post, Comment, Like
+from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer, LikeSerializer
+from .permissions import IsAdmin, IsPostAuthor, CanLikePost
 
 User = get_user_model()
 
@@ -117,4 +118,34 @@ class ProtectedView(APIView):
         content = {'message': 'This is a protected route, accessible only to authenticated users.'}
 
         return Response(content)
+    
+
+class LikeViewSet(viewsets.ModelViewSet):
+    """
+    Handles liking and unliking posts.
+    """
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated, CanLikePost]
+
+    def create(self, request, *args, **kwargs):
+        """
+        Handles the like action.
+        """
+        post = get_object_or_404(Post, id=request.data.get('post'))
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if created:
+            return Response({"message": "Post liked successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"error": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Handles the unlike action.
+        """
+        like = get_object_or_404(Like, id=kwargs['pk'], user=request.user)
+        like.delete()
+        return Response({"message": "Post unliked successfully."}, status=status.HTTP_204_NO_CONTENT)
+
 
