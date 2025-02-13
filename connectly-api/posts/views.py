@@ -149,3 +149,56 @@ class LikeViewSet(viewsets.ModelViewSet):
         return Response({"message": "Post unliked successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
+
+
+
+###################### Revisions
+
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from .models import Post, Comment, Like
+from .serializers import PostSerializer, CommentSerializer, LikeSerializer
+from .permissions import IsPostAuthor, CanLikePost
+
+class PostViewSet(viewsets.ModelViewSet):
+    """Viewset for handling Post CRUD operations"""
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """Viewset for handling Comments on posts"""
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Handles commenting on a post"""
+        post = get_object_or_404(Post, id=self.kwargs["post_id"])  # Ensure post exists
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user, post=post)  # Assign author and post automatically
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class LikeViewSet(viewsets.ModelViewSet):
+    """Viewset for handling likes"""
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated, CanLikePost]  # Apply custom like permission
+
+    def get_queryset(self):
+        """Return likes for the requested post"""
+        post_id = self.kwargs["post_id"]
+        return Like.objects.filter(post_id=post_id)
+
+    def create(self, request, *args, **kwargs):
+        """Handles liking/unliking a post"""
+        post = get_object_or_404(Post, id=self.kwargs["post_id"])  # Ensure post exists
+        like, created = Like.objects.get_or_create(user=request.user, post=post)  # Ensure unique like
+
+        if not created:  
+            like.delete()  # Unlike the post if it was already liked
+            return Response({"message": "Post unliked"}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({"message": "Post liked"}, status=status.HTTP_201_CREATED)
+

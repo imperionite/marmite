@@ -24,49 +24,6 @@ class Post(models.Model):
     def __str__(self):
         return f"Post by {self.author.username} - {self.created_at}"
     
-
-class Comment(models.Model):
-    text = models.TextField()
-    author = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Comment by {self.author.username} on Post {self.post.id}"
-
-class Like(models.Model):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)  # User who liked
-    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)  # Liked post
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when liked
-    
-    class Meta:
-        unique_together = ('user', 'post')  # Ensure a user can like a post only once
-    
-    def __str__(self):
-        return f"{self.user.username} liked {self.post.id}"
-
-
-
-
-
-
-#
-
-from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
-class Post(models.Model):
-    """Model representing a post created by a user."""
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")  # A user can have multiple posts
-    content = models.TextField()  # Post content
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when the post was created
-
-    def __str__(self):
-        return f"Post by {self.author.username} - {self.created_at}"
-
-
 class Comment(models.Model):
     """Model representing a comment on a post."""
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")  # User who wrote the comment
@@ -89,4 +46,17 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user.username} liked Post {self.post.id}"
+
+
+"""Enhancements & Revisions
+# Like Relationship (Many-to-Many)
+# Instead of using a ManyToManyField, we use an explicit through model (Like), allowing us to store extra metadata like the created_at timestamp.
+# The unique_together = ("user", "post") constraint prevents duplicate likes, ensuring a user can like a post only once.
+# Comment Relationship (One-to-Many)
+# Each Comment references:
+# A User (who wrote the comment).
+# A Post (the post being commented on).
+# The related_name="comments" allows easy access to all comments related to a post (post.comments.all()).
+"""
+
 

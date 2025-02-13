@@ -9,6 +9,7 @@ from .models import Post, Comment, Like
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    """Serializer for the User model"""
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'created_at'] # Exclude sensitive fields like password
@@ -44,15 +45,19 @@ class CommentSerializer(serializers.ModelSerializer):
         return value
 
 class PostSerializer(serializers.ModelSerializer):
+    """Serializer for the Post model"""
     # The comments field in the serializer is used to represent the reverse relationship from the Post model to the Comment model. 
     # This relationship is established through the related_name='comments' argument in the post field of the Comment model.
     # For consistency, readability and flexibility, nested serializer was used.
     
+    like_count = serializers.IntegerField(source="likes.count", read_only=True)  # Get total likes
+    comment_count = serializers.IntegerField(source="comments.count", read_only=True)  # Get total comments
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ['id', 'content', 'author', 'created_at', 'comments']
+        fields = ["id", "author", "content", "created_at", "like_count", "comment_count", "comments"]
     
     def validate_content(self, value):
         if len(value) < 7:
@@ -63,6 +68,15 @@ class PostSerializer(serializers.ModelSerializer):
         if not User.objects.filter(id=value.id).exists():
             raise serializers.ValidationError("Author not found.")
         return value
+
+class LikeSerializer(serializers.ModelSerializer):
+    """Serializer for the Like model"""
+
+    class Meta:
+        model = Like
+        fields = ["id", "user", "post", "created_at"]
+        read_only_fields = ["user"]  # Ensure user is set automatically
+
 
 class LoginSerializer(serializers.Serializer):
     identifier = serializers.CharField()
@@ -84,8 +98,9 @@ class LoginSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
 
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Like
-        fields = ['id', 'user', 'post', 'created_at']  # Fields to include in API response
-        read_only_fields = ['id', 'user', 'created_at']  # User should not set these manually
+
+
+
+
+
+
