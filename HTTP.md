@@ -17,6 +17,20 @@ GET /posts/users/
 
 ![all users](https://drive.google.com/uc?id=1RbHCg7FE7hhfwSJ8v1hL5gTa-qpqmEpO)
 
+## Update user by user id 
+Implementation of [ModelViewSet](https://www.django-rest-framework.org/api-guide/viewsets/#modelviewset) and [DefaultRouter](https://www.django-rest-framework.org/api-guide/routers/#defaultrouter)/[SimpleRouter](https://www.django-rest-framework.org/api-guide/routers/#simplerouter) seamlessly provides all the functionalities to perform all CRUD operations with abstraction.
+
+PUT /posts/users/{id}
+
+
+![update user by id](https://drive.google.com/uc?id=1-9EN4hXWFgyzI7ULAQczXBJnEF39sOpD)
+
+
+## Delete user by id
+
+DELETE /posts/users/{id}
+
+![delete user by id](https://drive.google.com/uc?id=1U44YweWqw-tS-Z1mKzdJDZi6ipU_qGN4)
 
 ## Create post
 

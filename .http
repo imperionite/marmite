@@ -1,4 +1,2 @@
-### create comment
-GET https://127.0.0.1:8080/posts/comments/ HTTP/1.1
-Content-Type: application/json
-
+### delete comment by id
+DELETE https://127.0.0.1:8080/posts/comments/4/ HTTP/1.1
