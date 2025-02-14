@@ -120,4 +120,5 @@ PATCH /posts/comments/{id}/ or PUT /posts/comments/{id}/
 
 DELETE /posts/comments/{id}/
 
-![delete comment by id](https://drive.google.com/uc?id=1zu9rvaFjB0njyqfxXFH96gEILbtsI5ZF)
+
+![delete comment by id](https://drive.google.com/uc?id=1lGfCwxRFFc4ZwgmSesbKM_t9ZW7Spsou)
