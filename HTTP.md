@@ -2,7 +2,7 @@
 
 The subsequent images represent the screenshots captured from the sample HTTP request and response executed to evaluate the REST API endpoints. The compilation of sample HTTP requests generated from the [connectly-api](https://github.com/imperionite/marmite/tree/main/connectly-api) (Django REST API project) is available for review in the [rest.http file](https://github.com/imperionite/marmite/blob/main/rest.http).
 
-**Note om my implementation of all CRUD operations (CREATE, READ, UPDATE, DELETE):**
+**Note on my implementation of all CRUD operations (CREATE, READ, UPDATE, DELETE):**
 
 When using a ModelViewSet, it inherently supports all CRUD (Create, Read, Update, Delete) operations by default. This means that without explicitly writing code for each action (like PUT, PATCH, or DELETE), these actions are still available and functional.
 
@@ -52,9 +52,8 @@ GET /posts/users/
 ![all users](https://drive.google.com/uc?id=1RbHCg7FE7hhfwSJ8v1hL5gTa-qpqmEpO)
 
 ## Update user by user id 
-Implementation of [ModelViewSet](https://www.django-rest-framework.org/api-guide/viewsets/#modelviewset) and [DefaultRouter](https://www.django-rest-framework.org/api-guide/routers/#defaultrouter)/[SimpleRouter](https://www.django-rest-framework.org/api-guide/routers/#simplerouter) seamlessly provides all the functionalities to perform all CRUD operations with abstraction.
 
-PUT /posts/users/{id}
+PUT /posts/users/{id}/
 
 
 ![update user by id](https://drive.google.com/uc?id=1-9EN4hXWFgyzI7ULAQczXBJnEF39sOpD)
@@ -62,7 +61,7 @@ PUT /posts/users/{id}
 
 ## Delete user by id
 
-DELETE /posts/users/{id}
+DELETE /posts/users/{id}/
 
 ![delete user by id](https://drive.google.com/uc?id=1U44YweWqw-tS-Z1mKzdJDZi6ipU_qGN4)
 
@@ -83,6 +82,20 @@ GET /posts/posts/
 
 ![all posts](https://drive.google.com/uc?id=1xU6DPFmbO2Sjm1aB_adYgEHavJeCFhTM)
 
+## Update post by user id 
+
+PUT /posts/posts/{id}/
+
+
+![update post by id](https://drive.google.com/uc?id=1Jk5xFnEY8iewLTDV7gSj8luCX3IkZV6S)
+
+
+## Delete post by id
+
+DELETE /posts/posts/{id}/
+
+
+![delete post by id](https://drive.google.com/uc?id=1zu9rvaFjB0njyqfxXFH96gEILbtsI5ZF)
 
 
 ## Create comment
