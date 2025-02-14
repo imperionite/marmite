@@ -44,86 +44,80 @@ Update (PUT/PATCH): /posts/{id}/, /comments/{id}/
 Delete: /posts/{id}/, /comments/{id}/
 ```
 
+## For User
 
-## Create user
+### Create user
 
 POST /posts/users/
 
-
 ![create user](https://drive.google.com/uc?id=1VaKxgIw83Uk27qj2v2N5KMk2Z4cnIRTX)
 
+### Fetch all users
 
-## Fetch all users
-
-
-GET /posts/users/ 
+GET /posts/users/
 
 ![all users](https://drive.google.com/uc?id=1RbHCg7FE7hhfwSJ8v1hL5gTa-qpqmEpO)
 
-## Update user by user id 
+### Update user by user id
 
-PUT /posts/users/{id}/
-
+PATCH /posts/users/{id}/ or PUT /posts/users/{id}/
 
 ![update user by id](https://drive.google.com/uc?id=1-9EN4hXWFgyzI7ULAQczXBJnEF39sOpD)
 
-
-## Delete user by id
+### Delete user by id
 
 DELETE /posts/users/{id}/
 
 ![delete user by id](https://drive.google.com/uc?id=1U44YweWqw-tS-Z1mKzdJDZi6ipU_qGN4)
 
-## Create post
+## For Post
 
+### Create post
 
 POST /posts/posts/
 
-
 ![create post](https://drive.google.com/uc?id=1d7_xg0gKN0q6YG4oMzTBJ8OvvfsZDzJR)
 
+### Fetch all posts
 
-## Fetch all posts
-
-
-GET /posts/posts/ 
-
+GET /posts/posts/
 
 ![all posts](https://drive.google.com/uc?id=1xU6DPFmbO2Sjm1aB_adYgEHavJeCFhTM)
 
-## Update post by user id 
+### Update post by id
 
-PUT /posts/posts/{id}/
-
+PATCH /posts/posts/{id}/ or PUT /posts/posts/{id}/
 
 ![update post by id](https://drive.google.com/uc?id=1Jk5xFnEY8iewLTDV7gSj8luCX3IkZV6S)
 
-
-## Delete post by id
+### Delete post by id
 
 DELETE /posts/posts/{id}/
 
-
 ![delete post by id](https://drive.google.com/uc?id=1zu9rvaFjB0njyqfxXFH96gEILbtsI5ZF)
 
+## For Comment
 
-## Create comment
-
+### Create comment
 
 POST /posts/comments/
 
-
 ![create comment](https://drive.google.com/uc?id=1RIUpadp9FpS8NaOLFXN7EQl68TYDugx2)
 
+### Fetch all comments
 
-## Fetch all comments
-
-
-GET /posts/comments/ 
-
+GET /posts/comments/
 
 ![all comments](https://drive.google.com/uc?id=17uEsmEY1YiOGALYUDODRf8Q3g4ocJvYZ)
 
+### Update comment by id
 
+PATCH /posts/comments/{id}/ or PUT /posts/comments/{id}/
 
+![update comment by id](https://drive.google.com/uc?id=1o4QtF4i4VRmZZ7IHS7aGhhwaMFISXrYf)
 
+### Delete comment by id
+
+DELETE /posts/comments/{id}/
+
+![delete comment by id](https://drive.google.com/uc?id=1zu9rvaFjB0njyqfxXFH96gEILbtsI5ZF)
