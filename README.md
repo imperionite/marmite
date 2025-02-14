@@ -241,6 +241,29 @@ HTTP Strict Transport Security (HSTS) is enabled to enforce secure connections:
 
 - **HSTS Settings**: We specify a long duration for HSTS (1 year) and include subdomains, ensuring that all communications are conducted over HTTPS.
 
+### Security Practices and Incident Remediation
+
+#### OpenSSL Keys and Certificates Management
+
+As part of our project's security implementation, we use OpenSSL to generate SSL certificates for secure HTTPS communication. However, during development, an oversight led to the accidental exposure of private keys and certificates in the public repository. This was promptly detected by GitGuardian, a tool we use for automated secrets detection.
+
+To remediate this issue and prevent future occurrences:
+
+1. **Immediate Action Taken**:
+   - The exposed keys and certificates were immediately revoked and replaced with new ones.
+   - All related commits were removed from the repository's history to ensure the sensitive data is no longer accessible.
+
+2. **Preventive Measures**:
+   - The `ssl` directory containing keys and certificates has been added to the `.gitignore` file to prevent accidental inclusion in future commits.
+   - We have integrated GitGuardian into our development workflow to continuously monitor for exposed secrets in real-time.
+
+3. **Best Practices Moving Forward**:
+   - Sensitive files, such as private keys and certificates, will be stored securely outside the repository.
+   - Environment variables will be used to manage sensitive configurations wherever applicable.
+   - Regular audits will be conducted to ensure compliance with security best practices.
+
+By addressing this incident transparently and implementing robust preventive measures, we aim to uphold the highest standards of security in our project.
+
 
 <a name="scalability"></a>
 
