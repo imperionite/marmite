@@ -4,13 +4,13 @@
 
 Refer to the [connectly-api directory](https://github.com/imperionite/marmite/tree/main/connectly-api) for the Django/Django REST API project.
 
-PostgreSQL was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/imperionite/marmite/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations. 
+PostgreSQL was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/imperionite/marmite/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations.
 
 The REST API endpoints can be accessed through HTTPS, specifically at localhost https://127.0.0.1:8080/{endpoint}/, since the default Django server port 8000 is being [proxied](https://github.com/imperionite/marmite/blob/main/nginx/nginx.conf).
 
 Certain sensitive `environment variables` are currently made visible; however, their exposure will be minimized in accordance with the project's requirements in the near future.
 
-**Note on my implementation of all CRUD operations (CREATE, READ, UPDATE, DELETE):**
+**General notes on my implementation for all CRUD operations (CREATE, READ, UPDATE, DELETE):**
 
 When using a ModelViewSet, it inherently supports all CRUD (Create, Read, Update, Delete) operations by default. This means that without explicitly writing code for each action (like PUT, PATCH, or DELETE), these actions are still available and functional.
 
@@ -35,6 +35,7 @@ router.register(r'users', UserViewSet, basename='user')
 router.register(r'posts', PostViewSet, basename='post')
 router.register(r'comments', CommentViewSet, basename='comment')
 ```
+
 The resulting URLs will be structured as follows:
 
 ```bash
@@ -43,14 +44,22 @@ Update (PUT/PATCH): /users/{id}/
 Delete: /users/{id}/
 ```
 
+Similarly for posts and comments:
+
+```bash
+Retrieve (GET): /posts/{id}/, /comments/{id}/
+Update (PUT/PATCH): /posts/{id}/, /comments/{id}/
+Delete: /posts/{id}/, /comments/{id}/
+```
+
 ## 🧬 Table of Contents
 
 1. [ Introduction ](#intro)
 2. [ Requisite ](#requisite)
-4. [ CLI Commands ](#commands)
-5. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
-6. [ Running Locally ](#rl)
-7. [ Author ](#author)
+3. [ CLI Commands ](#commands)
+4. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
+5. [ Running Locally ](#rl)
+6. [ Author ](#author)
 
 <a name="requisite"></a>
 
@@ -58,9 +67,7 @@ Delete: /users/{id}/
 
 Basic understanding of Django Stack, Postgres, REST API and web development.
 
-
 <a name="commands"></a>
-
 
 #### 🤖 CLI Commands (DRF)
 
@@ -114,7 +121,6 @@ $ docker-compose down -v
 $ docker system prune -a && docker images prune -a && docker volume prune -a
 ```
 
-
 <a name="ss"></a>
 
 ### 📌 Endpoints and HTTP Request & Response Screenshots
@@ -123,15 +129,11 @@ $ docker system prune -a && docker images prune -a && docker volume prune -a
 
 - [HTTP Request & Response Screenshots](https://github.com/imperionite/marmite/blob/main/HTTP.md)
 
-
-
 <a name="rl"></a>
-
-
 
 ### 💻 Running Locally
 
-Make sure you have Docker and openssl package install on your local machine.  
+Make sure you have Docker and openssl package install on your local machine.
 
 Clone the project
 
@@ -162,7 +164,7 @@ GOOGLE_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXX
 GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXX
 ```
 
-Install the packages 
+Install the packages
 
 ```bash
 # be sure you're in the connectly-api folder and the virtual environment is activated
@@ -179,11 +181,8 @@ $ cd connectly-api && python manage.py runserver 0.0.0.0:8000
 # this will run at https://127.0.0.1:8080/{what/ever/endpoint/it/is/}
 ```
 
-
 <a name="author"></a>
-
 
 ### 👨🏻‍💻 Author
 
 - [Arnel Imperial](https://github.com/imperionite)
-
