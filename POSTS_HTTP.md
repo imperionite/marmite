@@ -25,3 +25,30 @@ PATCH /posts/posts/{id}/
 DELETE /posts/posts/{id}/
 
 ![delete post by id](https://drive.google.com/uc?id=1G2iEGpsgZe9hJlvYMmQO6SQcRtAuitDV)
+
+### Fetch post by id - Public
+
+GET /posts/posts/{id}/
+
+![post by id](https://drive.google.com/uc?id=1eyGABDfDBA9H5rEq4ukmq_g1casVAKVJ)
+
+### Like post by id - Protected
+
+POST /posts/posts/{id}/like/
+
+![like post by id](https://drive.google.com/uc?id=1GZylyu8SGXTJo3en3ClKoHrUWAn0GMtp)
+
+
+### Unlike a post by id - Protected
+
+POST /posts/posts/{id}/unlike/
+
+![unlike post by id](https://drive.google.com/uc?id=1mBpuyOFXwXwxj9kCWrI7Uxc2H6L-5Nb4)
+
+### Like a post twice
+
+![like post twice](https://drive.google.com/uc?id=1Q0IaxV6-I8gOXK9wiItK9n33h0yD_Ze9)
+
+### Cannot unlike never liked post
+
+![cannot unlike post](https://drive.google.com/uc?id=1dyDMnyECcuKY1083oGWiYPh3yuC-wh7m)

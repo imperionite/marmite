@@ -1,12 +1,12 @@
 ###### VARIABLES (tokens, etc) ######
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU0NTE3LCJpYXQiOjE3NDAxNDM3MTcsImp0aSI6IjMzMTBjOTVlNjU2OTQwOTJhOGRkOTc4MDQ3NjhkMGQ3IiwidXNlcl9pZCI6MX0.6JwAMeh_Tte8KGv_luZ2fSS-_DfCAIM4IqqAX3GkD9k
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTYxMDA3LCJpYXQiOjE3NDAxNTAyMDcsImp0aSI6IjUxMGNlN2JjYzZhNjRjMGJhZDg3ZmVmYTM5Mjc0NGM1IiwidXNlcl9pZCI6NX0.IBtoNp9rQh7wQMMKVMmxoy65AdIzoVXvfcw1MtBRN4Y
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTYyNzMxLCJpYXQiOjE3NDAxNTE5MzEsImp0aSI6IjYzYWMyNzA3ZjlhYjQzNjFiODQwMjQzMGFkMTgyYmUwIiwidXNlcl9pZCI6M30.D1rR9yE0rW51px16O2TQ2O7eM1vAZw92yQHzI5WFcOQ
 #######################################################################################
 
 
-### delete post by id - Owner/Author
-DELETE https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1 
-Authorization: Bearer {{nonAdminUserAccess}}
+### unlike a post
+POST https://127.0.0.1:8080/posts/posts/4/unlike/ HTTP/1.1 
+Authorization: Bearer {{adminUserAccess}}
 Content-Type: application/json
 
 

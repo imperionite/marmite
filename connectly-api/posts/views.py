@@ -147,7 +147,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message': 'You have not liked this post yet.'}, status=status.HTTP_400_BAD_REQUEST)
 
         like.delete()
-        return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
 
 
     
