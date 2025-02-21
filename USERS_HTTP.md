@@ -14,11 +14,17 @@ GET /posts/users/
 
 ![all users](https://drive.google.com/uc?id=1MxkkouAmKWFfK4h_e7RNgqaQXkfAC8xz)
 
-### Update user by user id - Owner or Admin
+### Partial update by user id - Owner or Admin
 
-PATCH /posts/users/{id}/ or PUT /posts/users/{id}/
+PATCH /posts/users/{id}/
 
-![update user by id](https://drive.google.com/uc?id=19Ul9wKriWpsLRrhihmPmPJ3rizTc0W6d)
+![partial update by id](https://drive.google.com/uc?id=19Ul9wKriWpsLRrhihmPmPJ3rizTc0W6d)
+
+### Full update by user id - Owner or Admin
+
+PUT /posts/users/{id}/
+
+![full update by id](https://drive.google.com/uc?id=1ParXH1GYrESrXz4J-rfhgI83sBhfXwQk)
 
 ### Update user by user id with access token (JWT)
 
