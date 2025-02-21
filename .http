@@ -1,18 +1,13 @@
 ###### VARIABLES (tokens, etc) ######
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU0NTE3LCJpYXQiOjE3NDAxNDM3MTcsImp0aSI6IjMzMTBjOTVlNjU2OTQwOTJhOGRkOTc4MDQ3NjhkMGQ3IiwidXNlcl9pZCI6MX0.6JwAMeh_Tte8KGv_luZ2fSS-_DfCAIM4IqqAX3GkD9k
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU3MTA5LCJpYXQiOjE3NDAxNDYzMDksImp0aSI6IjE2N2I4YzE5MjM1MTQ0YWE4YTk0OWRlNzg3ZmFhNzlkIiwidXNlcl9pZCI6M30.AyCBlfjdp6izj6d6vIuc8U4BI7B4ybKnZcAN4vl7nf4
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTYxMDA3LCJpYXQiOjE3NDAxNTAyMDcsImp0aSI6IjUxMGNlN2JjYzZhNjRjMGJhZDg3ZmVmYTM5Mjc0NGM1IiwidXNlcl9pZCI6NX0.IBtoNp9rQh7wQMMKVMmxoy65AdIzoVXvfcw1MtBRN4Y
 #######################################################################################
 
-### update user by Id - Owner or Admin
-PUT https://127.0.0.1:8080/posts/users/3/ HTTP/1.1
+
+### delete post by id - Owner/Author
+DELETE https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1 
 Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
-
-{
-    "username": "user10",
-    "email": "user1@gmail.com",
-    "password": "passworD10#"
-}
 
 
 
@@ -27,7 +22,7 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "user1@gmail.com",
+    "identifier": "user3",
     "password": "passworD1#"
 }
 

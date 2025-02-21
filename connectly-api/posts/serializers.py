@@ -56,6 +56,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'content', 'author', 'created_at', 'comments']
+        read_only_fields = ['id', 'author', 'created_at'] 
     
     def validate_content(self, value):
         if len(value) < 7:
