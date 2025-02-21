@@ -1,6 +1,27 @@
-### user's post
-GET https://127.0.0.1:8080/posts/2/ HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3NzI0OTI3LCJpYXQiOjE3Mzc3MTQxMjcsImp0aSI6IjkxYjg3ZTgzOWExNTQ5MzNiZmNmZjkxZDg0NmQyMTI3IiwidXNlcl9pZCI6M30.Ut5TMU2IsxxZ9k-qdkEbjn-KxlvOIwz2_IrPbev4PZM
+###### VARIABLES (tokens, etc) ######
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU0NTE3LCJpYXQiOjE3NDAxNDM3MTcsImp0aSI6IjMzMTBjOTVlNjU2OTQwOTJhOGRkOTc4MDQ3NjhkMGQ3IiwidXNlcl9pZCI6MX0.6JwAMeh_Tte8KGv_luZ2fSS-_DfCAIM4IqqAX3GkD9k
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU0ODQ4LCJpYXQiOjE3NDAxNDQwNDgsImp0aSI6IjU1ZGI1OWNjODM3NTRmODhhMTdhOTFlZjhmNmJlNDQwIiwidXNlcl9pZCI6Mn0.ZN5HuEnfgGjDVlxc-stNWe3sgDg_Whm5T5dI2ay7wAw
+#######################################################################################
+
+### delete user by Id - Owner or Admin
+DELETE https://127.0.0.1:8080/posts/users/2/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
+
+
+####################### LOGIN ###############################
+
+
+
+### login
+### A custom auth backend are implemented EmailOrUsernameModelBackend
+### to be able for user to login using username or email
+POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "user0@gmail.com",
+    "password": "passworD1#"
+}
 
 
