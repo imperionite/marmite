@@ -1,5 +1,9 @@
 *.env
 .DS_Store
 secrets.txt
+<<<<<<< HEAD
 /app-secrets/
 /ssl/
+=======
+/app-secrets/
+>>>>>>> df87f07 (:ambulance: (ssl) untrack file)
