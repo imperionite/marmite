@@ -1,6 +1,6 @@
 ## Posts
 
-The subsequent images represent the screenshots captured from the sample HTTP calls related to `posts` to evaluate and validate the REST API endpoints. For this updates majority of the endpoints now are `protected` with access token provided by JWT except for the the **creation of new user** and **user login**. The compilation of sample HTTP requests generated from the [connectly-api](https://github.com/imperionite/marmite/tree/main/connectly-api) (Django REST API project) is available for review in the [rest.http file](https://github.com/imperionite/marmite/blob/main/rest.http).
+The subsequent images represent the screenshots captured from the sample HTTP calls related to `posts` to evaluate and validate the REST API endpoints. For this updates majority of the endpoints now are `protected` with access token provided by JWT except for the the **creation of new user** and **user login**. The compilation of sample HTTP requests generated from the [connectly-api](https://github.com/imperionite/marmite/tree/main/connectly-api) (Django REST API project) is available for review in the [posts.http file](https://github.com/imperionite/marmite/blob/main/posts.http).
 
 ### Create post
 
