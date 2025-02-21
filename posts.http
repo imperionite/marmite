@@ -1,0 +1,50 @@
+###### VARIABLES (tokens, etc) ######
+@access=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM5NTYxNjI2LCJpYXQiOjE3Mzk1NTA4MjYsImp0aSI6ImJlNjU2NDc5YzAwYTRhN2RiZTg2MjFmZDY0NzVkOTgyIiwidXNlcl9pZCI6Mn0.Ijs7KvQ3yyrodDWSdkRnhTMWe057ESyGKdONZOJOP2Y
+@extraAccess= 
+
+########################################################################################
+
+### login
+POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "user0",
+    "password": "passworD1#"
+}
+
+#################################### START ####################################################
+
+
+### create new post
+POST https://127.0.0.1:8080/posts/posts/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "content": "Mind blowing post by admin",
+    "author": 1
+}
+
+### list all posts
+GET https://127.0.0.1:8080/posts/posts/ HTTP/1.1
+Content-Type: application/json
+
+### update post by Id (as ModelViewset and DefaultRouter automatically used id in the url)
+PUT https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "content": "Hello, World!",
+    "author": 2
+}
+
+### update post by id
+PATCH https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "content": "Title # 0"
+}
+
+### delete post by id
+DELETE https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1

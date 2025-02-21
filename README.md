@@ -10,25 +10,26 @@ The REST API endpoints can be accessed through HTTPS, specifically at localhost 
 
 Certain sensitive `environment variables` are currently made visible; however, their exposure will be minimized in accordance with the project's requirements in the near future.
 
-**General notes on my implementation for all CRUD operations (CREATE, READ, UPDATE, DELETE):**
+**General notes on my implementation for all CRUD operations (CREATE, READ, UPDATE, DELETE)**
 
-When using a ModelViewSet, it inherently supports all CRUD (Create, Read, Update, Delete) operations by default. This means that without explicitly writing code for each action (like PUT, PATCH, or DELETE), these actions are still available and functional.
+When using a [ModelViewSet](https://www.django-rest-framework.org/api-guide/viewsets/), it inherently supports all CRUD (Create, Read, Update, Delete) operations by default. This means that without explicitly writing code for each action (such as PUT, PATCH, or DELETE), these actions are still available and functional.
 
 For example:
 
-- **Update Operations**: Both **full updates (PUT)** and **partial updates (PATCH)** are handled by the `.update()` and `.partial_update()` methods respectively.
+- **Update Operations**: Both **full updates (PUT)** and **partial updates (PATCH)** are handled by the `.update()` and `.partial_update()` methods respectively.  
+
 - **Delete Operations**: The `.destroy()` method handles deletions.
 
 Here’s how these actions map to HTTP methods:
 
-- GET (Retrieve): Supported via .retrieve() method.
-- POST (Create): Supported via .create() method.
-- PUT/PATCH (Update): Supported via .update()/.partial_update() methods respectively.
-- DELETE (Delete): Supported via .destroy() method
+- GET (Retrieve): Supported via `.retrieve()` method.  
+- POST (Create): Supported via `.create()` method.  
+- PUT/PATCH (Update): Supported via `.update()`/.partial_update() methods respectively.  
+- DELETE (Delete): Supported via `.destroy()` method.  
 
-The implementation using ModelViewSet and the router (DefaultRouter or SimpleRouter) in Django REST Framework does automatically include the ID in the URL for update and delete operations.
+The implementation using `ModelViewSet` and the router (either [DefaultRouter](https://www.django-rest-framework.org/api-guide/routers/#defaultrouter) or [SimpleRouter](https://www.django-rest-framework.org/api-guide/routers/#simplerouter)) in Django REST Framework automatically includes the ID in the URL for update and delete operations.
 
-When registered a viewset with a router like this:
+When registering a viewset with a router like this:
 
 ```py
 router.register(r'users', UserViewSet, basename='user')
@@ -44,7 +45,7 @@ Update (PUT/PATCH): /users/{id}/
 Delete: /users/{id}/
 ```
 
-Similarly for posts and comments:
+Similarly, for posts and comments:
 
 ```bash
 Retrieve (GET): /posts/{id}/, /comments/{id}/
@@ -59,9 +60,10 @@ Delete: /posts/{id}/, /comments/{id}/
 3. [ CLI Commands ](#commands)
 4. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
 5. [ Running Locally ](#rl)
-6.  [Security Implemetation](#security)
-7.  [Scalability Implemetation](#scalability)
-8. [ Author ](#author)
+6. [ Endpoints ](#ep)
+7. [ Security Implemetation](#security)
+8. [ Scalability Implemetation](#scalability)
+9. [ Author ](#author)
 
 <a name="requisite"></a>
 
@@ -182,6 +184,60 @@ $ cd .. && docker-compose up --build
 $ cd connectly-api && python manage.py runserver 0.0.0.0:8000
 # this will run at https://127.0.0.1:8080/{what/ever/endpoint/it/is/}
 ```
+
+<a name="ep"></a>
+
+## Endpoints
+
+### User
+
+**Public Endpoints:**
+- **POST /posts/users/** – Create a new user.
+
+**Protected Endpoints (Authentication Required):**
+- **GET /posts/users/** – List all users.
+- **GET /posts/users/{id}/** – Retrieve a specific user.
+
+**Protected Endpoints (Authentication + Authorization Required):**
+- **PUT /posts/users/{id}/** – Update a specific user.
+- **PATCH /posts/users/{id}/** – Partially update a specific user.
+- **DELETE /posts/users/{id}/** – Delete a specific user.
+
+All `User` endpoints are now secured with appropriate permissions ensuring public access only for registration and authenticated/authorized access for all other actions.
+
+### Post
+
+### **Public Endpoints:**
+- **GET /posts/** – List all posts.
+- **GET /posts/{id}/** – Retrieve a specific post.
+
+### **Protected Endpoints (Authentication Required):**
+- **POST /posts/** – Create a new post (only authenticated users can create posts).
+- **GET /posts/{id}/comments/** – List all comments on a specific post with pagination.
+- **POST /posts/{id}/like/** – Like a specific post.
+- **DELETE /posts/{id}/unlike/** – Unlike a specific post.
+
+### **Protected Endpoints (Authentication + Authorization Required):**
+- **PUT /posts/{id}/** – Update a specific post (only the author of the post can update).
+- **PATCH /posts/{id}/** – Partially update a specific post (only the author can update).
+- **DELETE /posts/{id}/** – Delete a specific post (only the author can delete).
+
+### Comment
+**Public Endpoints:**
+- **GET /posts/comments/** – List all comments.
+- **GET /posts/comments/{id}/** – Retrieve a specific comment.
+
+**Protected Endpoints (Authentication Required):**
+- **POST /posts/comments/** – Create a new comment (only authenticated users can create comments).
+
+**Protected Endpoints (Authentication + Authorization Required):**
+- **PUT /posts/comments/{id}/** – Update a specific comment (only the comment's author can update).
+- **PATCH /posts/comments/{id}/** – Partially update a specific comment (only the comment's author can update).
+- **DELETE /posts/comments/{id}/** – Delete a specific comment (only the comment's author can delete).
+
+This implementation ensures that comment-related operations are secured, allowing only authenticated users to create comments and only the comment author to update or delete their comments.
+
+
 
 
 <a name="security"></a>
