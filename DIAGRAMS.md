@@ -54,7 +54,7 @@ This shows how different API endpoints enable CRUD (Create, Read, Update, Delete
   - `POST /posts/{id}/like/` — Like a post
   - `DELETE /posts/{id}/like/` — Unlike a post
 
-**Why this matters:**  
+
 This diagram helps visualize how clients (like frontend apps) interact with the backend. It also ensures all necessary CRUD operations are covered and aligned with the API’s permissions and business logic.
 
 ---
