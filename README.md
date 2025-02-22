@@ -10,60 +10,18 @@ The REST API endpoints can be accessed through HTTPS, specifically at localhost 
 
 Certain sensitive `environment variables` are currently made visible; however, their exposure will be minimized in accordance with the project's requirements in the near future.
 
-**General notes on my implementation for all CRUD operations (CREATE, READ, UPDATE, DELETE)**
-
-When using a [ModelViewSet](https://www.django-rest-framework.org/api-guide/viewsets/), it inherently supports all CRUD (Create, Read, Update, Delete) operations by default. This means that without explicitly writing code for each action (such as PUT, PATCH, or DELETE), these actions are still available and functional.
-
-For example:
-
-- **Update Operations**: Both **full updates (PUT)** and **partial updates (PATCH)** are handled by the `.update()` and `.partial_update()` methods respectively.  
-
-- **Delete Operations**: The `.destroy()` method handles deletions.
-
-Here’s how these actions map to HTTP methods:
-
-- GET (Retrieve): Supported via `.retrieve()` method.  
-- POST (Create): Supported via `.create()` method.  
-- PUT/PATCH (Update): Supported via `.update()`/.partial_update() methods respectively.  
-- DELETE (Delete): Supported via `.destroy()` method.  
-
-The implementation using `ModelViewSet` and the router (either [DefaultRouter](https://www.django-rest-framework.org/api-guide/routers/#defaultrouter) or [SimpleRouter](https://www.django-rest-framework.org/api-guide/routers/#simplerouter)) in Django REST Framework automatically includes the ID in the URL for update and delete operations.
-
-When registering a viewset with a router like this:
-
-```py
-router.register(r'users', UserViewSet, basename='user')
-router.register(r'posts', PostViewSet, basename='post')
-router.register(r'comments', CommentViewSet, basename='comment')
-```
-
-The resulting URLs will be structured as follows:
-
-```bash
-Retrieve (GET): /users/{id}/
-Update (PUT/PATCH): /users/{id}/
-Delete: /users/{id}/
-```
-
-Similarly, for posts and comments:
-
-```bash
-Retrieve (GET): /posts/{id}/, /comments/{id}/
-Update (PUT/PATCH): /posts/{id}/, /comments/{id}/
-Delete: /posts/{id}/, /comments/{id}/
-```
-
 ## 🧬 Table of Contents
 
 1. [ Introduction ](#intro)
 2. [ Requisite ](#requisite)
-3. [ CLI Commands ](#commands)
-4. [ Endpoints and HTTP Request & Response Screenshots ](#ss)
-5. [ Running Locally ](#rl)
+3. [ Initial Data Seeding ](#ids)
+4. [ Endpoints and Manual API Tests ](#ss)
+5. [ Getting started ](#rl)
 6. [ Endpoints ](#ep)
 7. [ Security Implemetation](#security)
 8. [ Scalability Implemetation](#scalability)
-9. [ Author ](#author)
+9. [ CLI Commands ](#commands)
+10. [ Author ](#author)
 
 <a name="requisite"></a>
 
@@ -71,119 +29,65 @@ Delete: /posts/{id}/, /comments/{id}/
 
 Basic understanding of Django Stack, Postgres, REST API and web development.
 
-<a name="commands"></a>
+<a name="ids"></a>
 
-#### 🤖 CLI Commands (DRF)
+## 🧬 Initial Data Seeding
 
-```bash
-# virtual env.
-$ python -m venv .venv # create
-$ source .venv/bin/activate # activate
-$ deactivate # deactivate
+This project utilizes Django fixtures to seed initial data into the database, including users, posts, comments, and likes. This allows for a consistent starting point for development and testing.
 
-# install dependencies (backend)
-pip install dependency_name
+### Generating the Fixture Data
 
-# creating backend project
-django-admin startproject core .
+The fixture data is generated using a custom Django management command:
 
-# creating backend local apps
-python manage.py startapp app_name
+1.  Create the `generate_fixture_data.py` file within the `posts/management/commands` directory of your Django app. The contents of this file should be as follows:
 
-# create and apply migration
-$ python manage.py makemigrations --dry-run --verbosity 3 # dry-run
-$ python manage.py makemigrations
-$ python manage.py migrate --noinput
+    ```python
+    # posts/management/commands/generate_fixture_data.py
+    import json
+    from django.core.management.base import BaseCommand
+    from django.contrib.auth.models import User
+    from ...models import Post, Comment, Like  # Import your models
 
-# creating super user
-python manage.py createsuperuser
+    class Command(BaseCommand):
+        help = 'Generates fixture data with hashed passwords'
 
-# serve backend at localhost:8000
-python manage.py runserver
+        def handle(self, *args, **options):
+            # ... (Code from previous response goes here) ...
+    ```
 
-# generating requirements file
-pip freeze > requirements.txt
+2.  Run the following command to generate the `initial_data.json` file:
 
-# create secret keys
-$ python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
-```
+    ```bash
+    python manage.py generate_fixture_data
+    ```
 
-#### 🤖 CLI Commands (Docker)
+    This command creates the `initial_data.json` file in the `posts/fixtures` directory. It's crucial that this command is run _after_ the initial migrations and _after_ you have created the superuser account (either through `createsuperuser` or within the initial migration itself).
 
-```bash
-# create Docker Network
-$ docker network create app-network
-$ docker network ls
+### Loading the Fixture Data
 
-# build & run containers on detached mode
-$ docker-compose up --build -d
+1.  Place the generated `initial_data.json` file in the `posts/fixtures` directory.
 
-# stop running container and remove volumes
-$ docker-compose down -v
+2.  Load the fixture data into the database using the following command:
 
-# clean slate
-$ docker system prune -a && docker images prune -a && docker volume prune -a
-```
+    ```bash
+    python manage.py loaddata posts/fixtures/initial_data.json
+    ```
 
-<a name="ss"></a>
+### Fixture Data Details
 
-### 📌 Endpoints and HTTP Request & Response Screenshots
+The `initial_data.json` file contains the following data:
 
-- [HTTP Sample Requests](https://github.com/imperionite/marmite/blob/main/rest.http)
+- **Users:** 5 users are created, including one superuser (admin) and four regular users. Usernames and emails are in the format `user0`, `user1`, etc. The password for all users is `passworD1#` (hashed using Django's password hashing).
+- **Posts:** 6 posts are created, authored by different users.
+- **Comments:** 5 comments are created, associated with specific posts and users.
+- **Likes:** 3 likes are created, associating users with posts.
+- **Unlikes:** 2 "unlikes" are simulated by creating likes that you would then delete if you were implementing unliking functionality. This is how you represent the "unlike" state in a fixture.
 
-- [HTTP Request & Response Screenshots](https://github.com/imperionite/marmite/blob/main/HTTP.md)
+### Important Considerations
 
-<a name="rl"></a>
-
-### 💻 Running Locally
-
-Make sure you have Docker and openssl package install on your local machine.
-
-Clone the project
-
-```bash
-  git clone git@github.com:arnelimperial/connectly.git
-```
-
-Generate a self-signed SSL certificate with OpenSSL
-
-```bash
-# this will create a folder name ssl at the root of the project
-$ mkdir ssl && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
--out ./ssl/cert.pem -keyout ./ssl/key.pem \
--subj "/C=US/ST=State/L=City/O=Organization/OU=Unit/CN=localhost"
-```
-
-Create environment variables
-
-```bash
-$ cd connectly-api && touch .env
-
-# .env file might look like this one
-DEBUG=True
-DATABASE_URL=postgres://myuser:mypassword@127.0.0.1:6432/mydatabase
-SECRET_KEY=give_me_your_secrets
-# optional
-GOOGLE_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXX
-GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXX
-```
-
-Install the packages
-
-```bash
-# be sure you're in the connectly-api folder and the virtual environment is activated
-$ pip install -r requirements.txt
-```
-
-Build the services and run Django
-
-```bash
-# at the project root
-$ cd .. && docker-compose up --build
-# run Django server on the other terminal
-$ cd connectly-api && python manage.py runserver 0.0.0.0:8000
-# this will run at https://127.0.0.1:8080/{what/ever/endpoint/it/is/}
-```
+- **Password Hashing:** The `generate_fixture_data` command handles password hashing securely using Django's built-in methods. **Do not** attempt to store plain text passwords in your fixtures.
+- **Dependencies:** The order of objects in the JSON file is important due to foreign key constraints. Users must be created before posts, posts before comments and likes, and so on. The provided command handles this automatically.
+- **Running Order:** Ensure that you run the `generate_fixture_data` command _after_ running your initial migrations (`python manage.py migrate`) and _after_ creating the superuser account. The superuser should be created either through `createsuperuser` or within the initial migration itself. Then, run `loaddata`.
 
 <a name="ep"></a>
 
@@ -192,13 +96,16 @@ $ cd connectly-api && python manage.py runserver 0.0.0.0:8000
 ### User
 
 **Public Endpoints:**
+
 - **POST /posts/users/** – Create a new user.
 
 **Protected Endpoints (Authentication Required):**
+
 - **GET /posts/users/** – List all users.
 - **GET /posts/users/{id}/** – Retrieve a specific user.
 
 **Protected Endpoints (Authentication + Authorization Required):**
+
 - **PUT /posts/users/{id}/** – Update a specific user.
 - **PATCH /posts/users/{id}/** – Partially update a specific user.
 - **DELETE /posts/users/{id}/** – Delete a specific user.
@@ -208,37 +115,41 @@ All `User` endpoints are now secured with appropriate permissions ensuring publi
 ### Post
 
 ### **Public Endpoints:**
+
 - **GET /posts/** – List all posts.
 - **GET /posts/{id}/** – Retrieve a specific post.
 
 ### **Protected Endpoints (Authentication Required):**
+
 - **POST /posts/** – Create a new post (only authenticated users can create posts).
 - **GET /posts/{id}/comments/** – List all comments on a specific post with pagination.
 - **POST /posts/{id}/like/** – Like a specific post.
 - **DELETE /posts/{id}/unlike/** – Unlike a specific post.
 
 ### **Protected Endpoints (Authentication + Authorization Required):**
+
 - **PUT /posts/{id}/** – Update a specific post (only the author of the post can update).
 - **PATCH /posts/{id}/** – Partially update a specific post (only the author can update).
 - **DELETE /posts/{id}/** – Delete a specific post (only the author can delete).
 
 ### Comment
+
 **Public Endpoints:**
+
 - **GET /posts/comments/** – List all comments.
 - **GET /posts/comments/{id}/** – Retrieve a specific comment.
 
 **Protected Endpoints (Authentication Required):**
+
 - **POST /posts/comments/** – Create a new comment (only authenticated users can create comments).
 
 **Protected Endpoints (Authentication + Authorization Required):**
+
 - **PUT /posts/comments/{id}/** – Update a specific comment (only the comment's author can update).
 - **PATCH /posts/comments/{id}/** – Partially update a specific comment (only the comment's author can update).
 - **DELETE /posts/comments/{id}/** – Delete a specific comment (only the comment's author can delete).
 
 This implementation ensures that comment-related operations are secured, allowing only authenticated users to create comments and only the comment author to update or delete their comments.
-
-
-
 
 <a name="security"></a>
 
@@ -306,10 +217,12 @@ As part of our project's security implementation, we use OpenSSL to generate SSL
 To remediate this issue and prevent future occurrences:
 
 1. **Immediate Action Taken**:
+
    - The exposed keys and certificates were immediately revoked and replaced with new ones.
    - All related commits were removed from the repository's history to ensure the sensitive data is no longer accessible.
 
 2. **Preventive Measures**:
+
    - The `ssl` directory containing keys and certificates has been added to the `.gitignore` file to prevent accidental inclusion in future commits.
    - We have integrated GitGuardian into our development workflow to continuously monitor for exposed secrets in real-time.
 
@@ -319,7 +232,6 @@ To remediate this issue and prevent future occurrences:
    - Regular audits will be conducted to ensure compliance with security best practices.
 
 By addressing this incident transparently and implementing robust preventive measures, we aim to uphold the highest standards of security in our project.
-
 
 <a name="scalability"></a>
 
@@ -339,6 +251,11 @@ Our project is designed with scalability in mind, incorporating several key feat
 
 These features collectively contribute to a robust and scalable architecture capable of accommodating future growth.
 
+<a name="commands"></a>
+
+#### 🤖 CLI Commands
+
+Refer to [RUNNING.md](https://github.com/imperionite/marmite/tree/main/RUNNING.md) file for details on the commonly use commads in the project.
 
 <a name="author"></a>
 
