@@ -31,7 +31,7 @@ Basic understanding of Django Stack, Postgres, REST API and web development.
 
 <a name="ids"></a>
 
-## 🧬 Initial Data Seeding
+## 🌱 Initial Data Seeding
 
 This project utilizes Django fixtures to seed initial data into the database, including users, posts, comments, and likes. This allows for a consistent starting point for development and testing.
 
