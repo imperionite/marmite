@@ -52,3 +52,9 @@ POST /posts/posts/{id}/unlike/
 ### Cannot unlike never liked post
 
 ![cannot unlike post](https://drive.google.com/uc?id=1dyDMnyECcuKY1083oGWiYPh3yuC-wh7m)
+
+### User commenting on a specific post - Protected
+
+POST /posts/posts/{id}/add_comment/
+
+![commenting on a specific post](https://drive.google.com/uc?id=1a8VCTRBFdS-QJDhO_mbwiB2zf7juTrTi)

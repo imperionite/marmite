@@ -27,7 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'content', 'created_at', 'user', 'post']
+        read_only_fields = ['user', 'post']
 
     def validate_post(self, value):
         if not Post.objects.filter(id=value.id).exists():

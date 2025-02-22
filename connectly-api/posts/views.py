@@ -2,16 +2,17 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+# from rest_framework.authtoken.models import Token
+# from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 import logging
 
 from .models import Post, Comment, Like
 from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer
-from .permissions import IsAdmin, IsPostAuthor, IsOwnerOrAdmin, IsCommentAuthor
+from .permissions import IsOwnerOrAdmin
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -76,19 +77,32 @@ class CommentPagination(PageNumberPagination):
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for handling CRUD operations on Post objects.
+    Includes additional actions for liking, unliking, and commenting on posts.
+    Only post owners or admin users can update or delete a post.
+    """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    
+
     def get_permissions(self):
+        """
+        Returns the appropriate permissions based on the action.
+        """
         if self.action in ['list', 'retrieve', 'comments', 'likes']:
             permission_classes = [IsAuthenticatedOrReadOnly]
         elif self.action in ['create', 'like', 'unlike', 'add_comment']:
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsAuthenticated, IsPostAuthor]
+            permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
+        """
+        Creates a new post.
+
+        Automatically sets the current user as the author.
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -100,9 +114,17 @@ class PostViewSet(viewsets.ModelViewSet):
         )
 
     def perform_create(self, serializer):
+        """
+        Saves the post instance with the current user as the author.
+        """
         serializer.save(author=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
+        """
+        Retrieves a single post.
+
+        Includes like and comment counts in the response.
+        """
         post = self.get_object()
         data = self.get_serializer(post).data
         data['like_count'] = post.likes.count()
@@ -111,6 +133,9 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def comments(self, request, pk=None):
+        """
+        Retrieves all comments for a specific post with pagination.
+        """
         post = self.get_object()
         paginator = CommentPagination()
         result_page = paginator.paginate_queryset(post.comments.all(), request)
@@ -121,16 +146,15 @@ class PostViewSet(viewsets.ModelViewSet):
     def like(self, request, pk=None):
         """
         Allows an authenticated user to like a post.
+
         Prevents duplicate likes from the same user.
         """
         post = self.get_object()
         user = request.user
 
-        # Check if the user has already liked the post
         if Like.objects.filter(user=user, post=post).exists():
             return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create a new like
         Like.objects.create(user=user, post=post)
         return Response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
 
@@ -149,40 +173,76 @@ class PostViewSet(viewsets.ModelViewSet):
         like.delete()
         return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def add_comment(self, request, pk=None):
+        """
+        Allows an authenticated user to add a comment to a post.
+        """
+        post = self.get_object()
+        serializer = CommentSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=request.user, post=post)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
+    
+
 class CommentViewSet(viewsets.ModelViewSet):
+
+    """
+    ViewSet for managing comments on posts.
+
+    Allows creating, retrieving, updating, and deleting comments.
+    Only the comment's author or an admin user can update or delete a comment.
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_permissions(self):
+        """
+        Returns permissions based on the action.
+        """
+        if self.action in ['list', 'retrieve']:
+            return [IsAuthenticatedOrReadOnly()]
+        return [IsAuthenticated(), IsOwnerOrAdmin()]
 
     def create(self, request, *args, **kwargs):
-        self.check_permissions(request)
+        """
+        Creates a comment. Supports:
+        - POST /comments/ with { "post": post_id, "content": "..." }
+        - POST /posts/{post_id}/comments/ without needing post_id in the body
+        """
+        post_id = kwargs.get('post_id') or request.data.get('post')
+        if not post_id:
+            return Response({'error': 'Post ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        post = get_object_or_404(Post, pk=post_id)
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        comment_instance = serializer.instance
+        serializer.save(user=self.request.user, post=post)
 
-        response_data = {
-            'content': comment_instance.content,
-            'author': comment_instance.user.id,
-            'post': comment_instance.post.id,
-        }
-        return Response(response_data, status=status.HTTP_201_CREATED)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        self.permission_classes = [IsAuthenticated, IsCommentAuthor]
+        """
+        Updates a comment. Only the author or admin can update.
+        """
         return super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        self.permission_classes = [IsAuthenticated, IsCommentAuthor]
+        """
+        Partially updates a comment.
+        """
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        self.permission_classes = [IsAuthenticated, IsCommentAuthor]
+        """
+        Deletes a comment.
+        """
         return super().destroy(request, *args, **kwargs)
 
 
@@ -195,7 +255,7 @@ class LoginView(APIView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
     
 class PostDetailView(APIView):
-    permission_classes = [IsAuthenticated, IsPostAuthor]
+    permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
 
     def get(self, request, pk):
         post = Post.objects.get(pk=pk)
@@ -203,7 +263,7 @@ class PostDetailView(APIView):
         return Response({"content": post.content})
 
 class AdminView(APIView):
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request):
         return Response({"message": "Hello, Admin!"})

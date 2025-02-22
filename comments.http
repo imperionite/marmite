@@ -1,7 +1,7 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1MTcwLCJpYXQiOjE3NDAxNDQzNzAsImp0aSI6ImMzYTE5ZTIxMmUxZDRjOTc5MTVlYzA1ZWZmYzFhZGVmIiwidXNlcl9pZCI6Mn0.72FGRJMO8W67WBp5fr1o1GTLhauluez17VvSnG14MrQ
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjE3NTYyLCJpYXQiOjE3NDAyMDY3NjIsImp0aSI6IjE5YjI5MGYyMmZlMzQwM2Q4OWYxZDkxNGE0NDQyY2UwIiwidXNlcl9pZCI6Nn0.wpOoPvN4-p5wqxsLwblHGfWvxPJ7zzCPuKFxBQdoYRk
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjE2NjY0LCJpYXQiOjE3NDAyMDU4NjQsImp0aSI6IjEyNzFhODEyZjQ4ZTRhNDhhYjcwMDAxNmQyN2Y4NGEyIiwidXNlcl9pZCI6MX0.nOFHG0HA2wxa0Qe_CkYPk6HFGx8js-f8Xo5LVr8msQs
 
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1NTIzLCJpYXQiOjE3NDAxNDQ3MjMsImp0aSI6IjE0MjA1MTAyYzMwZTQ3MjdhN2FkNTU0NGNmOWE5ZGJjIiwidXNlcl9pZCI6MX0.KLV8a5TwWfpmRXrxTXo-9VkYILwMQOJrkwXA0QSf-Go
 ########################################################################################
 
 ### login1
@@ -22,8 +22,8 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "user10",
-    "password": "passworD10#"
+    "identifier": "user2",
+    "password": "passworD1#"
 }
 
 
@@ -31,12 +31,12 @@ Content-Type: application/json
 
 ### create comment
 POST https://127.0.0.1:8080/posts/comments/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
 
 {
-    "text": "Riveting!",
-    "author": 2,
-    "post": 4
+    "post": 4, // post_id
+    "content": "{content....}" 
 }
 
 
@@ -44,8 +44,12 @@ Content-Type: application/json
 GET https://127.0.0.1:8080/posts/comments/ HTTP/1.1
 Content-Type: application/json
 
+### retrieve specific comment
+GET https://127.0.0.1:8080/posts/comments/2/ HTTP/1.1
+Content-Type: application/json
+
 ### update comment by Id (as ModelViewset and DefaultRouter automatically used id in the url)
-PUT https://127.0.0.1:8080/posts/comments/4/ HTTP/1.1
+PUT https://127.0.0.1:8080/posts/comments/3/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -64,6 +68,17 @@ Content-Type: application/json
 
 ### delete comment by id
 DELETE https://127.0.0.1:8080/posts/comments/3/ HTTP/1.1
+
+
+### user creating comment on a specific post
+POST https://127.0.0.1:8080/posts/posts/5/add_comment/ HTTP/1.1 
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json
+
+{
+    "content": "Riveting!"
+}
+
 
 
 

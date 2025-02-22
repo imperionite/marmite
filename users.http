@@ -1,7 +1,7 @@
 ###### VARIABLES (tokens, etc) ######
 @nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1MTcwLCJpYXQiOjE3NDAxNDQzNzAsImp0aSI6ImMzYTE5ZTIxMmUxZDRjOTc5MTVlYzA1ZWZmYzFhZGVmIiwidXNlcl9pZCI6Mn0.72FGRJMO8W67WBp5fr1o1GTLhauluez17VvSnG14MrQ
 
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1NTIzLCJpYXQiOjE3NDAxNDQ3MjMsImp0aSI6IjE0MjA1MTAyYzMwZTQ3MjdhN2FkNTU0NGNmOWE5ZGJjIiwidXNlcl9pZCI6MX0.KLV8a5TwWfpmRXrxTXo-9VkYILwMQOJrkwXA0QSf-Go
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjA4ODkyLCJpYXQiOjE3NDAxOTgwOTIsImp0aSI6IjQxZTIyM2RhOGVmMjRjZjA5MWIyOGE0NmRiZWE4OTUyIiwidXNlcl9pZCI6NH0.3ekFRltY0BmTmxz2R_BJDYiG5C101B1v-rHdIX8vX2g
 ########################################################################################
 
 ### login1
@@ -22,8 +22,8 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "user10",
-    "password": "passworD10#"
+    "identifier": "user2",
+    "password": "passworD1#"
 }
 
 

@@ -1,14 +1,18 @@
 ###### VARIABLES (tokens, etc) ######
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU0NTE3LCJpYXQiOjE3NDAxNDM3MTcsImp0aSI6IjMzMTBjOTVlNjU2OTQwOTJhOGRkOTc4MDQ3NjhkMGQ3IiwidXNlcl9pZCI6MX0.6JwAMeh_Tte8KGv_luZ2fSS-_DfCAIM4IqqAX3GkD9k
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTYyNzMxLCJpYXQiOjE3NDAxNTE5MzEsImp0aSI6IjYzYWMyNzA3ZjlhYjQzNjFiODQwMjQzMGFkMTgyYmUwIiwidXNlcl9pZCI6M30.D1rR9yE0rW51px16O2TQ2O7eM1vAZw92yQHzI5WFcOQ
-#######################################################################################
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjE5Njk0LCJpYXQiOjE3NDAyMDg4OTQsImp0aSI6IjY0NjRjNDQ5YjZhMjRlMzFhY2Y3MDE4NzNhODJjYTFhIiwidXNlcl9pZCI6Nn0.He_QwBgCFEPLf4sNx8WriJhhnCJiikBZJ3ZOl59YskQ
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
 
+########################################################################################
 
-### unlike a post
-POST https://127.0.0.1:8080/posts/posts/4/unlike/ HTTP/1.1 
-Authorization: Bearer {{adminUserAccess}}
+### create comment
+POST https://127.0.0.1:8080/posts/comments/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
 
+{
+    "post": 6,
+    "content": "Fantastic!!"
+}
 
 
 ####################### LOGIN ###############################
@@ -22,8 +26,8 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "user3",
-    "password": "passworD1#"
+    "identifier": "admin",
+    "password": "A#123qqq"
 }
 
 

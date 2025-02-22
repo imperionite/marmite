@@ -1,6 +1,6 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTYyNzMxLCJpYXQiOjE3NDAxNTE5MzEsImp0aSI6IjYzYWMyNzA3ZjlhYjQzNjFiODQwMjQzMGFkMTgyYmUwIiwidXNlcl9pZCI6M30.D1rR9yE0rW51px16O2TQ2O7eM1vAZw92yQHzI5WFcOQ
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1NTIzLCJpYXQiOjE3NDAxNDQ3MjMsImp0aSI6IjE0MjA1MTAyYzMwZTQ3MjdhN2FkNTU0NGNmOWE5ZGJjIiwidXNlcl9pZCI6MX0.KLV8a5TwWfpmRXrxTXo-9VkYILwMQOJrkwXA0QSf-Go
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjEzNTEwLCJpYXQiOjE3NDAyMDI3MTAsImp0aSI6ImFlMDE4MTA5YTBjNjQwOGI4NmIwYTY0OThjNWQzMzAxIiwidXNlcl9pZCI6NH0.2z8JkfPd6Rwcb8K_HnCMBMujy09SkJ3wQY3yFco_sCs
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjEzNDY0LCJpYXQiOjE3NDAyMDI2NjQsImp0aSI6ImZkNTk0Y2ZmNDUwNzQ3NDlhYzUyZWFiNTI4YTAxZmU3IiwidXNlcl9pZCI6MX0.IIRvZ-ZykLZk6CeGDnDFtoep-xD5tboTA6u1qlfd6KA
 ########################################################################################
 
 ### login1
@@ -21,8 +21,8 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "user10",
-    "password": "passworD10#"
+    "identifier": "user2",
+    "password": "passworD1#"
 }
 
 #################################### START ####################################################
@@ -61,5 +61,15 @@ DELETE https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1
 Authorization: Bearer {{nonAdminUserAccess}}
 
 ### Fetch post by id - Public
-GET https://127.0.0.1:8080/posts/posts/2/ HTTP/1.1 
+GET https://127.0.0.1:8080/posts/posts/5/ HTTP/1.1 
 Content-Type: application/json
+
+
+### user commenting on a specific post
+POST https://127.0.0.1:8080/posts/posts/5/add_comment/ HTTP/1.1 
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json
+
+{
+    "content": "Riveting!"
+}

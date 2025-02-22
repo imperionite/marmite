@@ -60,8 +60,6 @@ This project utilizes Django fixtures to seed initial data into the database, in
 
 #### Post Table
 
-https://drive.google.com/file/d/1iwB4TQJwF_2DGEMgga_lOYFCsJy5NBYO/view?usp=sharing
-
 ![post table](https://drive.google.com/uc?id=1iwB4TQJwF_2DGEMgga_lOYFCsJy5NBYO)
 
 #### Comment Table
