@@ -91,7 +91,7 @@ The `initial_data.json` file contains the following data:
 
 <a name="ep"></a>
 
-## Endpoints
+## 📌 Endpoints and Manual API Tests
 
 ### User
 
@@ -153,7 +153,7 @@ This implementation ensures that comment-related operations are secured, allowin
 
 <a name="security"></a>
 
-## Current Security Implementation
+## ⚙️ Current Security Implementation
 
 In our project, we have implemented a comprehensive security architecture to safeguard user data and ensure secure communication. The following components highlight our security measures:
 
@@ -235,7 +235,7 @@ By addressing this incident transparently and implementing robust preventive mea
 
 <a name="scalability"></a>
 
-## Current Scalability Implementation
+## ⚙️ Current Scalability Implementation
 
 Our project is designed with scalability in mind, incorporating several key features that enhance its ability to handle increased load and provide a reliable user experience:
 
