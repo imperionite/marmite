@@ -323,6 +323,8 @@ Refer to [RUNNING.md](https://github.com/imperionite/marmite/tree/main/RUNNING.m
 
 <a name="diagrams"></a>
 
+## 🔗 Diagrams
+
 Refer to this [link](https://github.com/imperionite/marmite/tree/main/DIAGRAMS.md) for the diagrams in the project.
 
 <a name="author"></a>
