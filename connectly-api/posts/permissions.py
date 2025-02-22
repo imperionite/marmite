@@ -11,4 +11,6 @@ class IsOwnerOrAdmin(BasePermission):
             return True
 
         # Check if the object has 'user' or 'author' and compare it with the request user
-        return getattr(obj, 'user', None) == request.user or getattr(obj, 'author', None) == request.user
+        return hasattr(obj, 'user') and obj.user == request.user or hasattr(obj, 'author') and obj.author == request.user
+    
+       
