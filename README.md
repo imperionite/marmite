@@ -34,7 +34,8 @@ Certain sensitive `environment variables` are currently made visible; however, t
 7. [ Security Implemetation](#security)
 8. [ Scalability Implemetation](#scalability)
 9. [ CLI Commands ](#commands)
-10. [ Author ](#author)
+10. [ Diagrams ](#diagrams)
+11. [ Author ](#author)
 
 <a name="requisite"></a>
 
@@ -319,6 +320,10 @@ These features collectively contribute to a robust and scalable architecture cap
 ## 🤖 CLI Commands
 
 Refer to [RUNNING.md](https://github.com/imperionite/marmite/tree/main/RUNNING.md) file for details on the commonly use commads in the project.
+
+<a name="diagrams"></a>
+
+Refer to this [link](https://github.com/imperionite/marmite/tree/main/DIAGRAMS.md) for the diagrams in the project.
 
 <a name="author"></a>
 
