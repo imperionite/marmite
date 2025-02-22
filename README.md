@@ -153,15 +153,17 @@ This implementation ensures that comment-related operations are secured, allowin
 
 <a name="ss"></a>
 
-### 🧪 Manual API Tests
+## 🧪 Manual API Tests
 
-- [HTTP Sample Requests](https://github.com/imperionite/marmite/blob/main/rest.http)
-
-- [HTTP Request & Response Screenshots](https://github.com/imperionite/marmite/blob/main/HTTP.md)
+| Category | Description                                                                                                      | Documentation                                                                 | API Calls Collection                                                                 |
+| -------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Users    | Endpoints related to user authentication, registration, and management.                                          | [Users](https://github.com/imperionite/marmite/blob/main/USERS_HTTP.md)       | [Users API Calls](https://github.com/imperionite/marmite/blob/main/users.http)       |
+| Posts    | Endpoints for creating, retrieving, updating, and deleting posts. Includes interactions like likes and comments. | [Posts](https://github.com/imperionite/marmite/blob/main/POSTS_HTTP.md)       | [Posts API Calls](https://github.com/imperionite/marmite/blob/main/posts.http)       |
+| Comments | Endpoints to manage comments on posts, including adding, retrieving, updating, and deleting comments.            | [Comments](https://github.com/imperionite/marmite/blob/main/COMMENTS_HTTP.md) | [Comments API Calls](https://github.com/imperionite/marmite/blob/main/comments.http) |
 
 <a name="rl"></a>
 
-### 💻 Running Locally
+## 💻 Running Locally
 
 Make sure you have Docker and openssl package install on your local machine.
 
