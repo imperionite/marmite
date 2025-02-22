@@ -15,9 +15,9 @@ Certain sensitive `environment variables` are currently made visible; however, t
 1. [ Introduction ](#intro)
 2. [ Requisite ](#requisite)
 3. [ Initial Data Seeding ](#ids)
-4. [ Endpoints and Manual API Tests ](#ss)
-5. [ Getting started ](#rl)
-6. [ Endpoints ](#ep)
+4. [ Endpoints ](#ep)
+5. [ Manual API Tests ](#ss)
+6. [ Getting started ](#rl)
 7. [ Security Implemetation](#security)
 8. [ Scalability Implemetation](#scalability)
 9. [ CLI Commands ](#commands)
@@ -91,7 +91,7 @@ The `initial_data.json` file contains the following data:
 
 <a name="ep"></a>
 
-## 📌 Endpoints and Manual API Tests
+## 📌 Endpoints
 
 ### User
 
@@ -150,6 +150,66 @@ All `User` endpoints are now secured with appropriate permissions ensuring publi
 - **DELETE /posts/comments/{id}/** – Delete a specific comment (only the comment's author can delete).
 
 This implementation ensures that comment-related operations are secured, allowing only authenticated users to create comments and only the comment author to update or delete their comments.
+
+<a name="ss"></a>
+
+### 🧪 Manual API Tests
+
+- [HTTP Sample Requests](https://github.com/imperionite/marmite/blob/main/rest.http)
+
+- [HTTP Request & Response Screenshots](https://github.com/imperionite/marmite/blob/main/HTTP.md)
+
+<a name="rl"></a>
+
+### 💻 Running Locally
+
+Make sure you have Docker and openssl package install on your local machine.
+
+Clone the project
+
+```bash
+  git clone git@github.com:arnelimperial/connectly.git
+```
+
+Generate a self-signed SSL certificate with OpenSSL
+
+```bash
+# this will create a folder name ssl at the root of the project
+$ mkdir ssl && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+-out ./ssl/cert.pem -keyout ./ssl/key.pem \
+-subj "/C=US/ST=State/L=City/O=Organization/OU=Unit/CN=localhost"
+```
+
+Create environment variables
+
+```bash
+$ cd connectly-api && touch .env
+
+# .env file might look like this one
+DEBUG=True
+DATABASE_URL=postgres://myuser:mypassword@127.0.0.1:6432/mydatabase
+SECRET_KEY=give_me_your_secrets
+# optional
+GOOGLE_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXX
+GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXX
+```
+
+Install the packages
+
+```bash
+# be sure you're in the connectly-api folder and the virtual environment is activated
+$ pip install -r requirements.txt
+```
+
+Build the services and run Django
+
+```bash
+# at the project root
+$ cd .. && docker-compose up --build
+# run Django server on the other terminal
+$ cd connectly-api && python manage.py runserver 0.0.0.0:8000
+# this will run at https://127.0.0.1:8080/{what/ever/endpoint/it/is/}
+```
 
 <a name="security"></a>
 
