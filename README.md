@@ -128,63 +128,29 @@ The `initial_data.json` file contains the following data:
 
 ## 📌 Endpoints
 
-### User
-
-**Public Endpoints:**
-
-- **POST /posts/users/** – Create a new user.
-
-**Protected Endpoints (Authentication Required):**
-
-- **GET /posts/users/** – List all users.
-- **GET /posts/users/{id}/** – Retrieve a specific user.
-
-**Protected Endpoints (Authentication + Authorization Required):**
-
-- **PUT /posts/users/{id}/** – Update a specific user.
-- **PATCH /posts/users/{id}/** – Partially update a specific user.
-- **DELETE /posts/users/{id}/** – Delete a specific user.
-
-All `User` endpoints are now secured with appropriate permissions ensuring public access only for registration and authenticated/authorized access for all other actions.
-
-### Post
-
-### **Public Endpoints:**
-
-- **GET /posts/** – List all posts.
-- **GET /posts/{id}/** – Retrieve a specific post.
-
-### **Protected Endpoints (Authentication Required):**
-
-- **POST /posts/** – Create a new post (only authenticated users can create posts).
-- **GET /posts/{id}/comments/** – List all comments on a specific post with pagination.
-- **POST /posts/{id}/like/** – Like a specific post.
-- **DELETE /posts/{id}/unlike/** – Unlike a specific post.
-
-### **Protected Endpoints (Authentication + Authorization Required):**
-
-- **PUT /posts/{id}/** – Update a specific post (only the author of the post can update).
-- **PATCH /posts/{id}/** – Partially update a specific post (only the author can update).
-- **DELETE /posts/{id}/** – Delete a specific post (only the author can delete).
-
-### Comment
-
-**Public Endpoints:**
-
-- **GET /posts/comments/** – List all comments.
-- **GET /posts/comments/{id}/** – Retrieve a specific comment.
-
-**Protected Endpoints (Authentication Required):**
-
-- **POST /posts/comments/** – Create a new comment (only authenticated users can create comments).
-
-**Protected Endpoints (Authentication + Authorization Required):**
-
-- **PUT /posts/comments/{id}/** – Update a specific comment (only the comment's author can update).
-- **PATCH /posts/comments/{id}/** – Partially update a specific comment (only the comment's author can update).
-- **DELETE /posts/comments/{id}/** – Delete a specific comment (only the comment's author can delete).
-
-This implementation ensures that comment-related operations are secured, allowing only authenticated users to create comments and only the comment author to update or delete their comments.
+| **Category** | **Endpoint**           | **Method** | **Description**             | **Auth Required** | **Access Level**    |
+| ------------ | ---------------------- | ---------- | --------------------------- | ----------------- | ------------------- |
+| **Users**    | `/users/`              | `GET`      | List all users              | Yes               | Admin only          |
+|              | `/users/`              | `POST`     | Create a new user           | No                | Public              |
+|              | `/users/{id}/`         | `GET`      | Retrieve a specific user    | Yes               | Owner or Admin      |
+|              | `/users/{id}/`         | `PUT`      | Update a specific user      | Yes               | Owner or Admin      |
+|              | `/users/{id}/`         | `PATCH`    | Partially update a user     | Yes               | Owner or Admin      |
+|              | `/users/{id}/`         | `DELETE`   | Delete a specific user      | Yes               | Owner or Admin      |
+| **Posts**    | `/posts/`              | `GET`      | List all posts              | No                | Public              |
+|              | `/posts/`              | `POST`     | Create a new post           | Yes               | Authenticated users |
+|              | `/posts/{id}/`         | `GET`      | Retrieve a specific post    | No                | Public              |
+|              | `/posts/{id}/`         | `PUT`      | Update a specific post      | Yes               | Owner or Admin      |
+|              | `/posts/{id}/`         | `PATCH`    | Partially update a post     | Yes               | Owner or Admin      |
+|              | `/posts/{id}/`         | `DELETE`   | Delete a specific post      | Yes               | Owner or Admin      |
+|              | `/posts/{id}/like/`    | `POST`     | Like a specific post        | Yes               | Authenticated users |
+|              | `/posts/{id}/unlike/`  | `POST`     | Unlike a specific post      | Yes               | Authenticated users |
+|              | `/posts/{id}/comment/` | `POST`     | Add a comment to a post     | Yes               | Authenticated users |
+| **Comments** | `/comments/`           | `GET`      | List all comments           | No                | Public              |
+|              | `/comments/`           | `POST`     | Create a new comment        | Yes               | Authenticated users |
+|              | `/comments/{id}/`      | `GET`      | Retrieve a specific comment | No                | Public              |
+|              | `/comments/{id}/`      | `PUT`      | Update a specific comment   | Yes               | Owner or Admin      |
+|              | `/comments/{id}/`      | `PATCH`    | Partially update a comment  | Yes               | Owner or Admin      |
+|              | `/comments/{id}/`      | `DELETE`   | Delete a specific comment   | Yes               | Owner or Admin      |
 
 <a name="ss"></a>
 
