@@ -153,7 +153,7 @@ This implementation ensures that comment-related operations are secured, allowin
 
 <a name="security"></a>
 
-## ⚙️ Current Security Implementation
+## ⛑️ Current Security Implementation
 
 In our project, we have implemented a comprehensive security architecture to safeguard user data and ensure secure communication. The following components highlight our security measures:
 
@@ -235,7 +235,7 @@ By addressing this incident transparently and implementing robust preventive mea
 
 <a name="scalability"></a>
 
-## ⚙️ Current Scalability Implementation
+## 🏗️ Current Scalability Implementation
 
 Our project is designed with scalability in mind, incorporating several key features that enhance its ability to handle increased load and provide a reliable user experience:
 
@@ -253,7 +253,7 @@ These features collectively contribute to a robust and scalable architecture cap
 
 <a name="commands"></a>
 
-#### 🤖 CLI Commands
+## 🤖 CLI Commands
 
 Refer to [RUNNING.md](https://github.com/imperionite/marmite/tree/main/RUNNING.md) file for details on the commonly use commads in the project.
 
