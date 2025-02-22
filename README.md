@@ -4,7 +4,20 @@
 
 Refer to the [connectly-api directory](https://github.com/imperionite/marmite/tree/main/connectly-api) for the Django/Django REST API project.
 
-PostgreSQL was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/imperionite/marmite/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations.
+**PostgreSQL** was utilized as the database for the project, and Nginx was implemented to manage reverse proxying and load balancing. There is a possibility of integrating a frontend service developed in React in the future, primarily for demonstration purposes only. All services (as shown in the System Architecture Diagram) are deployed within Docker containers, except for the [connectly-api project](https://github.com/imperionite/marmite/tree/main/connectly-api), which runs locally on the host machine to simplify usage and avoid issues related to migrations.
+
+The data schema is defined using Django's ORM (Object-Relational Mapper). Key models include:
+
+- **User:** Represents a user of the system, extending Django's built-in User model to include additional fields like `email` and `created_at`. Authentication and authorization are handled using Django's authentication framework, with JWT (JSON Web Tokens) for API authentication.
+- **Post:** Stores the content of a post, authored by a User.
+- **Comment:** Stores a comment on a Post, authored by a User.
+- **Like:** Represents a "like" on a Post by a User. A unique constraint prevents duplicate likes from the same user on the same post.
+
+The relationships between these models are defined using ForeignKey relationships in Django. For example, a Post has a ForeignKey to the User who authored it. This allows for efficient querying and retrieval of related data.
+
+Data migrations are used to manage database schema changes over time. Migrations are Python scripts that define how to create, alter, or delete database tables and fields. This ensures that the database schema is always consistent with the application's models.
+
+Initial data, such as a set of users, posts, comments, and likes, can be seeded into the database using Django fixtures. This is helpful for development, testing, and ensuring a consistent starting point for the application. A custom Django management command is used to generate the fixture data, including properly hashed user passwords.
 
 The REST API endpoints can be accessed through HTTPS, specifically at localhost https://127.0.0.1:8080/{endpoint}/, since the default Django server port 8000 is being [proxied](https://github.com/imperionite/marmite/blob/main/nginx/nginx.conf).
 
@@ -35,6 +48,30 @@ Basic understanding of Django Stack, Postgres, REST API and web development.
 
 This project utilizes Django fixtures to seed initial data into the database, including users, posts, comments, and likes. This allows for a consistent starting point for development and testing.
 
+### Sample Initial Data in the DB
+
+#### All Public Tables
+
+![public tables](https://drive.google.com/uc?id=1waXZDtu8Et_4kNX210ujx_sepgEK7DtP)
+
+#### User Table
+
+![user table](https://drive.google.com/uc?id=1I45Bhfrlg9x5BXvDUskIKj3oHtLaLJln)
+
+#### Post Table
+
+https://drive.google.com/file/d/1iwB4TQJwF_2DGEMgga_lOYFCsJy5NBYO/view?usp=sharing
+
+![post table](https://drive.google.com/uc?id=1iwB4TQJwF_2DGEMgga_lOYFCsJy5NBYO)
+
+#### Comment Table
+
+![comment table](https://drive.google.com/uc?id=1rlJ-h2_VmCzbyiFrGEqrUE-Oq2czd9YU)
+
+#### Like Table
+
+![comment table](https://drive.google.com/uc?id=19wVsnd6rCrsYqhgRwkVqw9O_GZzFqLMl)
+
 ### Generating the Fixture Data
 
 The fixture data is generated using a custom Django management command:
@@ -55,7 +92,7 @@ The fixture data is generated using a custom Django management command:
             # ... (Code from previous response goes here) ...
     ```
 
-2.  Run the following command to generate the `initial_data.json` file:
+2.  Run the following command to generate the `initial_data.json` file, ensure that `fixtures` directory gas already been created inside the `posts` app directory:
 
     ```bash
     python manage.py generate_fixture_data

@@ -31,6 +31,21 @@ pip freeze > requirements.txt
 
 # create secret keys
 $ python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+
+# postgres
+docker ps
+docker exec -it [postgres_container_id] bash
+psql -U myuser mydatabase
+\! clear # clear screen
+\dt # list tables
+\dt public.* # list all tables in public schema
+\dt * # list tables from all schema
+\dt posts_user # specific table
+SELECT * FROM posts_user;
+SELECT id, username, email, password, created_at, date_joined, is_staff FROM posts_user;
+\q # quit psql
+
+
 ```
 
 #### 🤖 CLI Commands (Docker)

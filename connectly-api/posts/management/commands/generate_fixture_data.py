@@ -1,7 +1,9 @@
 import json
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
-from ...models import Post, Comment, Like  # Import your models
+from django.contrib.auth import get_user_model
+from ...models import Post, Comment, Like 
+
+User = get_user_model() 
 
 class Command(BaseCommand):
     help = 'Generates fixture data with hashed passwords'
@@ -82,7 +84,7 @@ class Command(BaseCommand):
         # Combine all data
         fixture_data = users + posts + comments + likes
 
-        # Write to JSON file
+         # Write to JSON file
         with open('posts/fixtures/initial_data.json', 'w') as f:
             json.dump(fixture_data, f, indent=2)
 
