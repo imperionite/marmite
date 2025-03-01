@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 # from rest_framework.authtoken.models import Token
-# from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.pagination import PageNumberPagination
 import logging
 
@@ -174,7 +173,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
-    def add_comment(self, request, pk=None):
+    def comment(self, request, pk=None):
         """
         Allows an authenticated user to add a comment to a post.
         """

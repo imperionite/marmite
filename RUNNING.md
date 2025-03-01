@@ -32,6 +32,9 @@ pip freeze > requirements.txt
 # create secret keys
 $ python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 
+# running fixture
+python manage.py generate_fixture_data
+
 # postgres
 docker ps
 docker exec -it [postgres_container_id] bash

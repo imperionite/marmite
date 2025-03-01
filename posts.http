@@ -1,5 +1,5 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjEzNTEwLCJpYXQiOjE3NDAyMDI3MTAsImp0aSI6ImFlMDE4MTA5YTBjNjQwOGI4NmIwYTY0OThjNWQzMzAxIiwidXNlcl9pZCI6NH0.2z8JkfPd6Rwcb8K_HnCMBMujy09SkJ3wQY3yFco_sCs
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODExMDA0LCJpYXQiOjE3NDA4MDAyMDQsImp0aSI6IjNiNjA5OTNlZjgyYTQ3ZjJiNTM3ZGY2NmY3ZGIwMWExIiwidXNlcl9pZCI6NH0.4QWlj2Rx29NcA0TBRgGuCWgp-_e7DMjWxOVkGyCHiDs
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjEzNDY0LCJpYXQiOjE3NDAyMDI2NjQsImp0aSI6ImZkNTk0Y2ZmNDUwNzQ3NDlhYzUyZWFiNTI4YTAxZmU3IiwidXNlcl9pZCI6MX0.IIRvZ-ZykLZk6CeGDnDFtoep-xD5tboTA6u1qlfd6KA
 ########################################################################################
 
@@ -66,7 +66,7 @@ Content-Type: application/json
 
 
 ### user commenting on a specific post
-POST https://127.0.0.1:8080/posts/posts/5/add_comment/ HTTP/1.1 
+POST https://127.0.0.1:8080/posts/posts/5/comment/ HTTP/1.1 
 Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
 

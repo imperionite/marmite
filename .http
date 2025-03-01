@@ -1,18 +1,13 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjE5Njk0LCJpYXQiOjE3NDAyMDg4OTQsImp0aSI6IjY0NjRjNDQ5YjZhMjRlMzFhY2Y3MDE4NzNhODJjYTFhIiwidXNlcl9pZCI6Nn0.He_QwBgCFEPLf4sNx8WriJhhnCJiikBZJ3ZOl59YskQ
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODExMDA0LCJpYXQiOjE3NDA4MDAyMDQsImp0aSI6IjNiNjA5OTNlZjgyYTQ3ZjJiNTM3ZGY2NmY3ZGIwMWExIiwidXNlcl9pZCI6NH0.4QWlj2Rx29NcA0TBRgGuCWgp-_e7DMjWxOVkGyCHiDs
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
 
 ########################################################################################
 
-### create comment
-POST https://127.0.0.1:8080/posts/comments/ HTTP/1.1
+### liking a post
+POST https://127.0.0.1:8080/posts/post/2/like HTTP/1.1
 Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
-
-{
-    "post": 6,
-    "content": "Fantastic!!"
-}
 
 
 ####################### LOGIN ###############################
