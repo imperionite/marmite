@@ -1,13 +1,17 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODI2OTU5LCJpYXQiOjE3NDA4MTYxNTksImp0aSI6IjQwMjY5MmFlZjA3OTQwMjc5YjZmZDBjYmYyNDdiOGZkIiwidXNlcl9pZCI6NH0.mqc-7rn0cep4tMp8mM1kjXWx3IhqC-DrMb9fXVOjRLI
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODI4NDY3LCJpYXQiOjE3NDA4MTc2NjcsImp0aSI6IjRjMTU0N2RhOGQ2NDRhYTNhYTZjMjE3OGEzMzY3ZTI3IiwidXNlcl9pZCI6NH0.sHTeGV49XB1jlGZfEUvjiES-pramRPMWe7hWS-6WuV8
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
 
 ########################################################################################
 
-### Liking non-existent posL
-POST https://127.0.0.1:8080/api/posts/posts/1000/like HTTP/1.1
-Authorization: {{nonAdminUserAccess}}
+### Commenting a non-exitent post
+POST https://127.0.0.1:8080/posts/posts/1000/comment/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
+
+{
+    "content": "Riveting!"
+}
 
 ####################### LOGIN ###############################
 

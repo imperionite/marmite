@@ -56,6 +56,14 @@ POST /posts/posts/{id}/like/
 
 ![saved like](https://drive.google.com/uc?id=1yLJGEr6qTv5Rpcd-OqtH6wW2x7sQiMyS)
 
+**Liking a certain post more than once**
+
+![like post twice](https://drive.google.com/uc?id=1Q0IaxV6-I8gOXK9wiItK9n33h0yD_Ze9)
+
+**Liking non-existent post**
+
+![liking non existent post](https://drive.google.com/uc?id=1X7XK3qPKArVE458EDPrJGjmMdCxyXZck)
+
 
 ### Unliking a post - Protected
 
@@ -63,20 +71,21 @@ POST /posts/posts/{id}/unlike/
 
 ![unlike post by id](https://drive.google.com/uc?id=1mBpuyOFXwXwxj9kCWrI7Uxc2H6L-5Nb4)
 
-### Liking a certain post more than once
-
-![like post twice](https://drive.google.com/uc?id=1Q0IaxV6-I8gOXK9wiItK9n33h0yD_Ze9)
-
 **Unliking a post never liked yet**
 
 ![cannot unlike post](https://drive.google.com/uc?id=1dyDMnyECcuKY1083oGWiYPh3yuC-wh7m)
 
-**Liking non-existent post**
-
-![liking non existent post](https://drive.google.com/uc?id=1X7XK3qPKArVE458EDPrJGjmMdCxyXZck)
-
-### User commenting on a specific post - Protected
+### Commenting on a specific post - Protected
 
 POST /posts/posts/{id}/comment/
 
-![commenting on a specific post](https://drive.google.com/uc?id=1a8VCTRBFdS-QJDhO_mbwiB2zf7juTrTi)
+![commenting on a specific post](https://drive.google.com/uc?id=1FniAoCW8lAFVTa3tXhnex_Mk9sol4XKA)
+
+**DB verification on saved comment**
+
+[db comment saved](https://drive.google.com/uc?id=1lvLEmk9lHbQAJEHo-c8hadO_hKEMdFw7)
+
+**Commenting on non-exitent post**
+
+[non-exitent post commenting](https://drive.google.com/uc?id=1D-euEVuoBlY5PVUnLiPbnipuajDUIWM0)
+
