@@ -110,7 +110,9 @@ Sample Post: PK 3
 
 ## Summary
 
-### API Endpoints Table
+### Post API & Related Endpoints
+
+#### Endpoints Table
 
 | Endpoint                     | Method | Description                               | Image Link                                                                          |
 | ---------------------------- | ------ | ----------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -123,7 +125,7 @@ Sample Post: PK 3
 | `/posts/posts/{id}/unlike/`  | POST   | Unliking a post - Protected               | [Unlike Post](https://drive.google.com/uc?id=1mBpuyOFXwXwxj9kCWrI7Uxc2H6L-5Nb4)     |
 | `/posts/posts/{id}/comment/` | POST   | Commenting on a specific post - Protected | [Comment on Post](https://drive.google.com/uc?id=1FniAoCW8lAFVTa3tXhnex_Mk9sol4XKA) |
 
-### Additional Verification and Error Cases
+##### Additional Verification and Error Cases
 
 | Scenario                          | Description                                        | Image Link                                                                                       |
 | --------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
