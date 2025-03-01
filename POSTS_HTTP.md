@@ -89,3 +89,7 @@ POST /posts/posts/{id}/comment/
 
 ![non-exitent post commenting](https://drive.google.com/uc?id=1D-euEVuoBlY5PVUnLiPbnipuajDUIWM0)
 
+**Unauthorize request for commenting on post**
+
+![unauthorize request](https://drive.google.com/uc?id=1guGdzhnOEd-A9RynT71SATNewMAhrHuA)
+

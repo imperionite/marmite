@@ -4,9 +4,8 @@
 
 ########################################################################################
 
-### Commenting a non-exitent post
+### unauthorize request
 POST https://127.0.0.1:8080/posts/posts/1000/comment/ HTTP/1.1
-Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
 
 {
