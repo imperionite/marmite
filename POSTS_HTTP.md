@@ -67,9 +67,13 @@ POST /posts/posts/{id}/unlike/
 
 ![like post twice](https://drive.google.com/uc?id=1Q0IaxV6-I8gOXK9wiItK9n33h0yD_Ze9)
 
-### Cannot unlike never liked post - Current user must liked first the post, to enable unliking
+**Unliking a post never liked yet**
 
 ![cannot unlike post](https://drive.google.com/uc?id=1dyDMnyECcuKY1083oGWiYPh3yuC-wh7m)
+
+**Liking non-existent post**
+
+![liking non existent post](https://drive.google.com/uc?id=1X7XK3qPKArVE458EDPrJGjmMdCxyXZck)
 
 ### User commenting on a specific post - Protected
 
