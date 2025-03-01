@@ -64,8 +64,6 @@ To provide full transparency, it's crucial to clarify the relationship between t
 - **Justification for Retaining Existing Screenshots: Avoiding Redundant Effort:** The decision to retain the existing screenshots, despite the potential data mismatch, is based on a pragmatic assessment of the effort required to re-capture all test cases. Given that the core API functionality has already been thoroughly validated through manual testing, re-performing all tests solely for the purpose of updating the screenshots would represent a significant and unjustifiable investment of time and resources. The existing screenshots serve as valuable historical documentation of the testing process and demonstrate the evolution of the project.
 - **Comprehensive Testing Coverage: A Holistic View:** By presenting both the initial manual testing results and the subsequent fixture-based approach, I aim to provide a comprehensive and holistic view of the testing strategy employed in this project. This approach ensures that all aspects of the API have been rigorously validated, from the initial exploration of individual endpoints to the automated seeding of consistent data for ongoing development and testing.
 
-In conclusion, while acknowledging the potential for minor data inconsistencies between the older screenshots and the current fixture data, I believe that the existing documentation provides a valuable and informative record of the API testing process. The combination of manual testing with REST Client and the strategic use of Django data fixtures ensures a robust and reliable API, and I am confident that this approach meets the project's quality objectives.
-
 ### Sample Initial Data in the DB
 
 #### All Initial Public Tables
