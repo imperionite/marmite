@@ -83,9 +83,9 @@ POST /posts/posts/{id}/comment/
 
 **DB verification on saved comment**
 
-[db comment saved](https://drive.google.com/uc?id=1lvLEmk9lHbQAJEHo-c8hadO_hKEMdFw7)
+![db comment saved](https://drive.google.com/uc?id=1lvLEmk9lHbQAJEHo-c8hadO_hKEMdFw7)
 
 **Commenting on non-exitent post**
 
-[non-exitent post commenting](https://drive.google.com/uc?id=1D-euEVuoBlY5PVUnLiPbnipuajDUIWM0)
+![non-exitent post commenting](https://drive.google.com/uc?id=1D-euEVuoBlY5PVUnLiPbnipuajDUIWM0)
 
