@@ -103,7 +103,7 @@ Sample Post: PK 3
 
 ![sample post](https://drive.google.com/uc?id=1z21_4thraC0ZrcPXNATf9sHeBTCXN7CH)
 
-**DB Verification before and after liking and commenting**
+**DB Verification before and after liking and commenting a post with PK 3**
 
 ![db verification for post 3](https://drive.google.com/uc?id=1zI1VO0hrvuFnr_o534nM1ZYdlD-dzwCT)
 
