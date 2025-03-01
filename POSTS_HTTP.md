@@ -110,7 +110,7 @@ Sample Post: PK 3
 
 ## Summary
 
-### Post API & Related Endpoints
+### Post & Like API & Related Endpoints
 
 #### Endpoints Table
 
