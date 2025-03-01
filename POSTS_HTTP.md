@@ -52,9 +52,9 @@ POST /posts/posts/{id}/like/
 
 ![like post by id](https://drive.google.com/uc?id=14t1tl-1PVzc3HIrA_syphNmzavYvP9co)
 
-**DB Verification**
+**DB verification for liking a post**
 
-![saved like](https://drive.google.com/uc?id=1yLJGEr6qTv5Rpcd-OqtH6wW2x7sQiMyS)
+![saved like](https://drive.google.com/uc?id=136ipF50S22v4uRvANv9WWQHYs2q_YZaR)
 
 **Liking a certain post more than once**
 
@@ -81,9 +81,9 @@ POST /posts/posts/{id}/comment/
 
 ![commenting on a specific post](https://drive.google.com/uc?id=1FniAoCW8lAFVTa3tXhnex_Mk9sol4XKA)
 
-**DB verification on saved comment**
+**DB verification for commenting a post**
 
-![db comment saved](https://drive.google.com/uc?id=1lvLEmk9lHbQAJEHo-c8hadO_hKEMdFw7)
+![db comment saved](https://drive.google.com/uc?id=1RwIjeeYx4ikDiewF7imvOCqBXC-kWH-P)
 
 **Commenting on non-exitent post**
 
@@ -105,6 +105,6 @@ Sample Post: PK 3
 
 **DB Verification before and after liking and commenting a post with PK 3**
 
-![db verification for post 3](https://drive.google.com/uc?id=1zI1VO0hrvuFnr_o534nM1ZYdlD-dzwCT)
+![db verification for post 3](https://drive.google.com/uc?id=1fAxsDVDYdRmdg0xKFfIwGbOcxT9OOaaQ)
 
 
