@@ -23,6 +23,8 @@ Please be aware that some screenshots in this file were captured during the init
 
 ![post table](https://drive.google.com/uc?id=1iwB4TQJwF_2DGEMgga_lOYFCsJy5NBYO)
 
+---
+
 ### User commenting on a specific post - Protected
 
 POST /posts/posts/{id}/add_comment/

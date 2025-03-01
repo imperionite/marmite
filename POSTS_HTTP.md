@@ -14,6 +14,8 @@ Please be aware that some screenshots in this file were captured during the init
 
 ![like table](https://drive.google.com/uc?id=19wVsnd6rCrsYqhgRwkVqw9O_GZzFqLMl)
 
+---
+
 ### Create post - Protected
 
 POST /posts/posts/
@@ -52,7 +54,7 @@ POST /posts/posts/{id}/like/
 
 **DB Verification**
 
-[saved like](https://drive.google.com/uc?id=1yLJGEr6qTv5Rpcd-OqtH6wW2x7sQiMyS)
+![saved like](https://drive.google.com/uc?id=1yLJGEr6qTv5Rpcd-OqtH6wW2x7sQiMyS)
 
 
 ### Unliking a post - Protected

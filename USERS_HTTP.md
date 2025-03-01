@@ -10,6 +10,8 @@ Please be aware that some screenshots in this file were captured during the init
 
 ![user table](https://drive.google.com/uc?id=1I45Bhfrlg9x5BXvDUskIKj3oHtLaLJln)
 
+---
+
 ### Create user - Public
 
 POST /posts/users/
@@ -60,8 +62,8 @@ POST /posts/users/login/
 
 POST /api/validate-token/
 
-[validating JWT](https://drive.google.com/uc?id=1Rbw3mXYSwFGpY-FeXX6mCwnIU74ItHPn)
+![validating JWT](https://drive.google.com/uc?id=1Rbw3mXYSwFGpY-FeXX6mCwnIU74ItHPn)
 
 **Invalid Token**
 
-[invalid JWT](https://drive.google.com/uc?id=1sKjwU70fXE90DhXl5wEekg0JUQHdxdRf)
+![invalid JWT](https://drive.google.com/uc?id=1sKjwU70fXE90DhXl5wEekg0JUQHdxdRf)
