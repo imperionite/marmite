@@ -233,14 +233,16 @@ DJOSER = {
 
 # Simple JWT
 # ------------------------------------------------------------------------------
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'SIGNING_KEY': config('SIGNING_KEY', default='insecure-default-key'),  # Replace with a secure key from env!
+    'ALGORITHM': 'HS256',
 }
+
 
 # Security
 # ------------------------------------------------------------------------------

@@ -84,7 +84,7 @@ To provide full transparency, it's crucial to clarify the relationship between t
 
 #### Initial Like Table
 
-![comment table](https://drive.google.com/uc?id=19wVsnd6rCrsYqhgRwkVqw9O_GZzFqLMl)
+![like table](https://drive.google.com/uc?id=19wVsnd6rCrsYqhgRwkVqw9O_GZzFqLMl)
 
 ### Generating the Fixture Data
 

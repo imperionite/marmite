@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 # from rest_framework.authtoken.models import Token
@@ -277,3 +279,25 @@ class ProtectedView(APIView):
 
         return Response(content)
 
+# View for Validating JWT
+class ValidateTokenView(APIView):
+    def post(self, request, *args, **kwargs):
+        jwt_auth = JWTAuthentication()
+        
+        # Extract token from request headers or body as needed
+        token = request.data.get('token')  # Assuming token is sent in the body
+        
+        try:
+            validated_token = jwt_auth.get_validated_token(token)
+            user = jwt_auth.get_user(validated_token)
+            return Response({
+                'status': True,
+                'message': 'Token is valid',
+                'user_id': user.id,
+                'username': user.username,
+            })
+        except TokenError as e:
+            return Response({
+                'status': False,
+                'message': str(e),
+            }, status=401)

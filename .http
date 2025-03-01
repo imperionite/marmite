@@ -1,13 +1,16 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODExMDA0LCJpYXQiOjE3NDA4MDAyMDQsImp0aSI6IjNiNjA5OTNlZjgyYTQ3ZjJiNTM3ZGY2NmY3ZGIwMWExIiwidXNlcl9pZCI6NH0.4QWlj2Rx29NcA0TBRgGuCWgp-_e7DMjWxOVkGyCHiDs
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODIyOTg3LCJpYXQiOjE3NDA4MTIxODcsImp0aSI6IjMzZDc3YTZhOTk3MDQzNGZhYzY4NTdjMGUyMjQzN2VmIiwidXNlcl9pZCI6NH0.xotpjZKSb5Jeq_byY6a7do35Cea_UuNOD5XLi2GHI58
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
 
 ########################################################################################
 
-### liking a post
-POST https://127.0.0.1:8080/posts/post/2/like HTTP/1.1
-Authorization: Bearer {{nonAdminUserAccess}}
+### Invalid JWT 
+POST https://127.0.0.1:8080/api/validate-token/ HTTP/1.1
 Content-Type: application/json
+
+{
+    "token": "{{nonAdminUserAccess}}"
+}
 
 
 ####################### LOGIN ###############################
@@ -21,8 +24,8 @@ POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "identifier": "admin",
-    "password": "A#123qqq"
+    "identifier": "user2",
+    "password": "passworD1#"
 }
 
 

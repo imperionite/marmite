@@ -1,5 +1,5 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODExMDA0LCJpYXQiOjE3NDA4MDAyMDQsImp0aSI6IjNiNjA5OTNlZjgyYTQ3ZjJiNTM3ZGY2NmY3ZGIwMWExIiwidXNlcl9pZCI6NH0.4QWlj2Rx29NcA0TBRgGuCWgp-_e7DMjWxOVkGyCHiDs
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODE5NzM3LCJpYXQiOjE3NDA4MDg5MzcsImp0aSI6ImVhMDVhMGFmNjczOTQ2ZmM5NGVkM2E3MTI4ODE2YTZmIiwidXNlcl9pZCI6NH0.9OlKEWsbZ4YAlyJitgqBPFDBbuGBZ_8nh7Wy3dlzaHA
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjEzNDY0LCJpYXQiOjE3NDAyMDI2NjQsImp0aSI6ImZkNTk0Y2ZmNDUwNzQ3NDlhYzUyZWFiNTI4YTAxZmU3IiwidXNlcl9pZCI6MX0.IIRvZ-ZykLZk6CeGDnDFtoep-xD5tboTA6u1qlfd6KA
 ########################################################################################
 
@@ -73,3 +73,8 @@ Content-Type: application/json
 {
     "content": "Riveting!"
 }
+
+### liking a post with pk 6; current user with pk 4
+POST https://127.0.0.1:8080/posts/posts/6/like/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json
