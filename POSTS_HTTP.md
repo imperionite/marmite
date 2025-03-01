@@ -93,3 +93,7 @@ POST /posts/posts/{id}/comment/
 
 ![unauthorize request](https://drive.google.com/uc?id=1guGdzhnOEd-A9RynT71SATNewMAhrHuA)
 
+**Commenting with empty content field**
+
+![invalid request](https://drive.google.com/uc?id=1SDPfQafPyv7gx-hqPIm6_proRd_7zWNq)
+
