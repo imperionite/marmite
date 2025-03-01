@@ -70,14 +70,7 @@ Content-Type: application/json
 DELETE https://127.0.0.1:8080/posts/comments/3/ HTTP/1.1
 
 
-### user creating comment on a specific post
-POST https://127.0.0.1:8080/posts/posts/5/add_comment/ HTTP/1.1 
-Authorization: Bearer {{nonAdminUserAccess}}
-Content-Type: application/json
 
-{
-    "content": "Riveting!"
-}
 
 
 

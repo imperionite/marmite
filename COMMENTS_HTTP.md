@@ -43,6 +43,14 @@ GET /posts/comments/
 
 ![all comments](https://drive.google.com/uc?id=1AQbFmmkZX8SRCC9_q7ptSy7kFTR3i1EO)
 
+### Retrieve specific comment
+
+![specific comment](https://drive.google.com/uc?id=1a9ov0Plahg-tuUBa-OzMMkKdhP7u_lOm)
+
+**Retrieving non-existent comment**
+
+![non-exitent comment](https://drive.google.com/uc?id=1eDZhWd3vmXB_WjzPoO_bSljawC36wlb2)
+
 ### Update comment by id - Owner or Admin
 
 PATCH /posts/comments/{id}/ or PUT /posts/comments/{id}/

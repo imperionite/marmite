@@ -97,3 +97,14 @@ POST /posts/posts/{id}/comment/
 
 ![invalid request](https://drive.google.com/uc?id=1SDPfQafPyv7gx-hqPIm6_proRd_7zWNq)
 
+## Verification for like and comment count
+
+Sample Post: PK 3
+
+![sample post](https://drive.google.com/uc?id=1z21_4thraC0ZrcPXNATf9sHeBTCXN7CH)
+
+**DB Verification before and after liking and commenting**
+
+![db verification for post 3](https://drive.google.com/uc?id=1zI1VO0hrvuFnr_o534nM1ZYdlD-dzwCT)
+
+

@@ -41,6 +41,11 @@ Content-Type: application/json
 GET https://127.0.0.1:8080/posts/posts/ HTTP/1.1
 Content-Type: application/json
 
+### verify comment count and like count
+GET https://127.0.0.1:8080/posts/posts/6/ HTTP/1.1
+Content-Type: application/json
+
+
 ### update post by Id - Owner/author
 PUT https://127.0.0.1:8080/posts/posts/1/ HTTP/1.1
 Authorization: Bearer {{nonAdminUserAccess}}

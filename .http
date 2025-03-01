@@ -1,17 +1,12 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODI4NDY3LCJpYXQiOjE3NDA4MTc2NjcsImp0aSI6IjRjMTU0N2RhOGQ2NDRhYTNhYTZjMjE3OGEzMzY3ZTI3IiwidXNlcl9pZCI6NH0.sHTeGV49XB1jlGZfEUvjiES-pramRPMWe7hWS-6WuV8
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODMzMDEwLCJpYXQiOjE3NDA4MjIyMTAsImp0aSI6IjNkOTdkODMyZDgzODQyNWM5MzcyZDk4YTdkNmY3NjU4IiwidXNlcl9pZCI6NH0.0Nxt1ssWX0G3tvw-P48f7xWmvj-Q3bfxPDmczg3_2d0
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
 
 ########################################################################################
 
-### empty comment content
-POST https://127.0.0.1:8080/posts/posts/3/comment/ HTTP/1.1
-Authorization: Bearer {{nonAdminUserAccess}}
+### Retrieving specific comment
+GET https://127.0.0.1:8080/posts/comments/1/ HTTP/1.1
 Content-Type: application/json
-
-{
-    "content": ""
-}
 
 ####################### LOGIN ###############################
 
