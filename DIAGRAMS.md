@@ -1,6 +1,6 @@
 ## Diagrams
 
-### Homework 7: 
+### Homework 7: Building a News Feed
 
 **1. CRUD Interaction Flow Diagram**
 
@@ -23,6 +23,8 @@
     * Frontend requests the news feed from the API.
     * API retrieves filtered and sorted posts from the database.
     * API returns the post data to the frontend.
+
+---
 
 **2. System Architecture Diagram**
 
@@ -47,8 +49,6 @@
     * Handles the retrieval and creation of follow relationships.
 * **Error Response:**
     * Handles invalid authentications.
-
----
 
 ### Homework 6: Integrating Third-Party Services
 
@@ -123,8 +123,6 @@
 - **Token Invalid (Conditional):**
   - If either the Google ID token or the JWT token is invalid, the backend returns an error response to the React frontend.
 
----
-
 ### Homework 5: Adding User Interactions (Likes and Comments)
 
 **1. Data Relationship Diagram**
@@ -181,6 +179,3 @@ This shows how different API endpoints enable CRUD (Create, Read, Update, Delete
   - `POST /posts/{id}/like/` — Like a post
   - `DELETE /posts/{id}/like/` — Unlike a post
 
-This diagram helps visualize how clients (like frontend apps) interact with the backend. It also ensures all necessary CRUD operations are covered and aligned with the API’s permissions and business logic.
-
----
