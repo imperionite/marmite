@@ -28,7 +28,7 @@ This implementation provides a solid foundation for Google social login, integra
 
 
 4. **API Endpoint:**
-   - The frontend makes a POST request to `http://127.0.0.1:8000/api/auth/social/google/` to exchange Google’s response for access and refresh tokens.
+   - The frontend makes a POST request to `http://127.0.0.1:8000/api/auth/social/google/` and not the POST `/auth/google/login` as what is instructed in CAMU to exchange Google’s response for access and refresh tokens.
 
 #### Frontend Homepage
 

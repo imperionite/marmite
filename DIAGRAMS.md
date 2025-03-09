@@ -1,6 +1,68 @@
 ## Diagrams
 
-### Homework 5 Diagrams
+## Homework 6 Diagrams
+
+**1. Authentication and Authorization Flow Diagram**
+
+![Authentication and Authorization Flow](https://drive.google.com/uc?id=1PaEmp7Y7E0wcPsBMJmGWJdNwMz0iPwYY)
+
+* **Initiate Google Login:**
+    * The user, through the React frontend, initiates the Google login process.
+    * This action redirects the user to Google's OAuth 2.0 authorization server.
+
+* **Google ID Token:**
+    * Upon successful authentication with Google, Google's server returns an ID token to the React frontend.
+    * This token contains user information and serves as proof of authentication.
+
+* **POST /api/auth/social/google/:**
+    * The React frontend sends a POST request to the backend's `/api/auth/social/google/` endpoint.
+    * This request includes the Google ID token in the request body.
+
+* **Verify ID Token:**
+    * The Django/DRF backend receives the ID token and sends it to Google's verification service.
+    * This step ensures the token's authenticity and validity.
+
+* **Verification Result:**
+    * Google's verification service returns a result to the backend, indicating whether the token is valid or invalid.
+
+* **Token Valid (Conditional):**
+    * If the token is valid, the backend proceeds with the following steps:
+        * **Check Social Account:**
+            * The backend queries the database to check if a social account associated with the Google user ID already exists.
+        * **Social Account Exists/Not Exists (Conditional):**
+            * **Social Account Exists:**
+                * If the social account exists, the backend retrieves the corresponding user data from the database.
+            * **Social Account Does Not Exist:**
+                * If the social account does not exist, the backend requests user information from Google.
+                * The backend then creates a new user and a new social account record in the database.
+        * **Update/Create Social Login:**
+            * The backend updates or creates a social login entry in the database, linking the social account to the user.
+        * **Generate JWT Token:**
+            * The backend generates a JSON Web Token (JWT), containing access and refresh tokens.
+
+* **JWT Token:**
+    * The backend sends the generated JWT token to the React frontend.
+
+* **Store JWT Token:**
+    * The React frontend stores the JWT token for subsequent API requests.
+
+* **Protected API Request:**
+    * The React frontend makes a request to a protected API endpoint, including the JWT token in the Authorization header.
+
+* **Validate JWT Token:**
+    * The Django/DRF backend receives the request and validates the JWT token.
+
+* **Token Valid (Conditional):**
+    * If the JWT token is valid:
+        * **Fetch Resource:**
+            * The backend retrieves the requested resource from the database.
+        * **Resource Data:**
+            * The backend sends the resource data to the React frontend.
+
+* **Token Invalid (Conditional):**
+    * If either the Google ID token or the JWT token is invalid, the backend returns an error response to the React frontend.
+
+## Homework 5 Diagrams
 
 **1. Data Relationship Diagram**
 
