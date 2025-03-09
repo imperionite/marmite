@@ -68,7 +68,7 @@ Endpoints that can be tested:
 
 **Password Input**
 
-![password login](https://drive.google.com/1EbNP6M6FJTyHYR2r08UYgxIjHt6Tbi_v)
+![password login](https://drive.google.com/uc?id=1EbNP6M6FJTyHYR2r08UYgxIjHt6Tbi_v)
 
 ### Successful Login Redirect
 

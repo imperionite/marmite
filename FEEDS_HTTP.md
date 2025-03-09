@@ -47,13 +47,13 @@ GET /posts/feed/?filter=liked
 ![liked feed](https://drive.google.com/uc?id=1RLmCZTuoeyPkyF1tAgACj3scjn6aomJy)
 
 
-### Creates New Follow Relationship
+### Create New Follow Relationship
 
 POST /posts/follows/
 
 ![create follow](https://drive.google.com/uc?id=1BZXwSFYKRLU7pY40fml9r1YzAs3J1ZlQ)
 
-### Retrieves All Follows
+### Retrieve All Follow Relationship
 
 GET /posts/follows/
 
