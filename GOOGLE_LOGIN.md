@@ -24,7 +24,8 @@ This implementation provides a solid foundation for Google social login, integra
 
 #### Essential URI's for Setup
 
-![google DC setup](https://drive.google.com/uc?id=1g8AfzwJTL9Fp7ERxRyn5TOSH6AbpVQtw)
+<img src="https://drive.google.com/uc?id=1g8AfzwJTL9Fp7ERxRyn5TOSH6AbpVQtw" width="150" height="150" />
+
 
 4. **API Endpoint:**
    - The frontend makes a POST request to `http://127.0.0.1:8000/api/auth/social/google/` to exchange Google’s response for access and refresh tokens.
