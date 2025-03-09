@@ -19,10 +19,8 @@ Content-Type: application/json
     "password": "passworD1#"
 }
 
-### obtaining refresh token via Djoser - Public
-POST http://127.0.0.1:8000/auth/jwt/refresh/ HTTP/1.1
+### API Call with filter=followed Query Parameter
+### retrieves posts from users the authenticated user is following
+GET http://127.0.0.1:8000/posts/feed/?filter=followed HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
-
-{
-   "refresh": "{{refreshToken}}"
-}

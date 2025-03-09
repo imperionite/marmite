@@ -6,7 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 # from djoser.serializers import UserSerializer
 from validate_email import validate_email # type: ignore
 
-from .models import Post, Comment, Like
+from .models import Post, Comment, Like, Follow
 
 User = get_user_model()
 
@@ -120,3 +120,26 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = ["id", "user", "post", "created_at"]
         read_only_fields = ["user"]  # Ensure user is set automatically
+
+
+class FeedPostSerializer(serializers.ModelSerializer):
+    author_username = serializers.CharField(source='author.username', read_only=True)
+    like_count = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'content', 'author_username', 'created_at', 'like_count', 'comment_count']
+
+    def get_like_count(self, obj):
+        return obj.likes.count()
+
+    def get_comment_count(self, obj):
+        return obj.comments.count()
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ['id', 'follower', 'following', 'created_at']
+        read_only_fields = ['follower', 'created_at']  # follower is set automatically

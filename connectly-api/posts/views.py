@@ -1,6 +1,6 @@
 from rest_framework import status, viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -15,8 +15,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 import logging
 
-from .models import Post, Comment, Like
-from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer
+from .models import Post, Comment, Like, Follow
+from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer, FeedPostSerializer, FollowSerializer
 from .permissions import IsOwnerOrAdmin
 
 User = get_user_model()
@@ -356,3 +356,66 @@ class GoogleLogin(SocialLoginView):
         else:
             # If there was an error, return the response from the parent class
             return response
+        
+
+class FeedPagination(PageNumberPagination):
+    """
+    Pagination class for the feed view.
+    Sets the default page size and allows customization via query parameters.
+    """
+    page_size = 10  # Default number of posts per page
+    page_size_query_param = 'page_size'  # Query parameter to change page size
+    max_page_size = 100  # Maximum allowed page size
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def feed_view(request):
+    """
+    Retrieves a paginated list of posts, with optional filtering by followed users or liked posts.
+
+    Query Parameters:
+    - filter (optional): 'followed' or 'liked' to filter posts.
+
+    Returns:
+    - Paginated list of posts, serialized using FeedPostSerializer.
+    """
+    user = request.user  # Get the authenticated user
+    filter_type = request.query_params.get('filter', None)  # Get the filter type from query parameters
+
+    if filter_type == 'followed':
+        # Filter posts from users followed by the current user
+        followed_users = Follow.objects.filter(follower=user).values_list('following', flat=True)
+        posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+    elif filter_type == 'liked':
+        # Filter posts liked by the current user
+        liked_posts = Like.objects.filter(user=user).values_list('post', flat=True)
+        posts = Post.objects.filter(id__in=liked_posts).order_by('-created_at')
+    else:
+        # Return all posts if no filter is specified
+        posts = Post.objects.all().order_by('-created_at')
+
+    paginator = FeedPagination()  # Initialize pagination
+    result_page = paginator.paginate_queryset(posts, request)  # Paginate the queryset
+    serializer = FeedPostSerializer(result_page, many=True)  # Serialize the paginated results
+    return paginator.get_paginated_response(serializer.data)  # Return the paginated response
+
+
+class FollowViewSet(viewsets.ModelViewSet):
+    queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(follower=self.request.user)
+
+    def get_queryset(self):
+        # Allow users to only see their own follow relationships
+        return Follow.objects.filter(follower=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.follower == request.user:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({"detail": "You do not have permission to delete this follow relationship."}, status=status.HTTP_403_FORBIDDEN)
