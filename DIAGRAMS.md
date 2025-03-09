@@ -1,6 +1,56 @@
 ## Diagrams
 
-## Homework 6: Integrating Third-Party Services
+### Homework 7: 
+
+**1. CRUD Interaction Flow Diagram**
+
+![CRUD Interaction Flow Diagram](https://drive.google.com/uc?id=1zfQbo5DWX70pqsNCl2u644dPRBygyetq)
+
+**User Operations:**
+    * Frontend sends requests to the API for creating, retrieving, updating, and deleting users.
+    * API interacts with the database to perform these operations.
+    * API sends back the corresponding data or success/error messages to the frontend.
+* **Post Operations:**
+    * Similar to user operations, but for creating, retrieving, updating, and deleting posts.
+    * Includes actions for liking and unliking posts.
+* **Comment Operations:**
+    * Handles CRUD operations for comments on posts.
+* **Like Operations:**
+    * Handles Like and Unlike operations.
+* **Follow Operations:**
+    * Handles CRUD operations for follow relationships.
+* **Feed Operations:**
+    * Frontend requests the news feed from the API.
+    * API retrieves filtered and sorted posts from the database.
+    * API returns the post data to the frontend.
+
+**2. System Architecture Diagram**
+
+![System Architecture Diagram](https://drive.google.com/uc?id=1h4CjbVk1vRNex6B1PVkKWa5JuH5EbqSh)
+
+* **Frontend (React):**
+    * User interface for interacting with the API.
+* **API Gateway:**
+    * Entry point for all API requests.
+    * Routes requests to the appropriate services.
+* **Authentication/Authorization:**
+    * Verifies user credentials and authorizes access to protected resources.
+    * JWT token validation occurs here.
+* **Posts API (Django/DRF):**
+    * Handles all post-related operations.
+    * Includes logic for creating, retrieving, updating, and deleting posts, comments, likes, and follow relationships.
+* **Database (PostgreSQL):**
+    * Stores all application data (users, posts, comments, likes, follow relationships).
+* **Feed Logic:**
+    * Handles the retrieval and filtering of posts for the news feed.
+* **Follow Logic:**
+    * Handles the retrieval and creation of follow relationships.
+* **Error Response:**
+    * Handles invalid authentications.
+
+---
+
+### Homework 6: Integrating Third-Party Services
 
 **1. Authentication and Authorization Flow Diagram**
 
@@ -75,7 +125,7 @@
 
 ---
 
-## Homework 5: Adding User Interactions (Likes and Comments)
+### Homework 5: Adding User Interactions (Likes and Comments)
 
 **1. Data Relationship Diagram**
 

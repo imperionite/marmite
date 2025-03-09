@@ -60,9 +60,9 @@ GET /posts/follows/
 ![all follows relationships](https://drive.google.com/uc?id=1hl483pGPvrSGLAqc7vMqhbnSZy3mFAUG)
 
 
-### Delete a Follow
+### Delete Follow Relationship by Owner
 
 DELETE /posts/follows/{follow_id}/
 
-![delete follow](https://drive.google.com/uc?id=1hl483pGPvrSGLAqc7vMqhbnSZy3mFAUG)
+![delete follow](https://drive.google.com/uc?id=1ECLekShOkkqcbyGrc7Oi1rczY3yyxI0q)
 

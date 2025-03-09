@@ -1,5 +1,5 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTI0Nzg5LCJpYXQiOjE3NDE1MTM5ODksImp0aSI6Ijc2ZGQ4NjdlNWQwZjQ1YzRiMTczMTRmZjczNDBiZDdlIiwidXNlcl9pZCI6NH0._cOrE412VLzBl7t1GHFu_HfV9I4EvtFuoENrcWMfOrE
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTM3ODQzLCJpYXQiOjE3NDE1MjcwNDMsImp0aSI6ImEzY2YyMDY3NTgwODQ2ZmI4NjY5ZGEwMzgzN2EwOWY1IiwidXNlcl9pZCI6NH0.Z1LaQnzsZuF5RQaDvC7Mffj0oQ57Q2_zWvq31F2BpRw
 ###
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTIyODg3LCJpYXQiOjE3NDE1MTIwODcsImp0aSI6ImYzNGI5NGMzMTkzMjQ1ZmI5YTVkZTY5OWE4MjVjNjZhIiwidXNlcl9pZCI6MX0.QUBQQISi0s8HDlKvHiYWpIhTV9lwEi-O9ZTFV4aoP4Y
 
@@ -58,5 +58,11 @@ Content-Type: application/json
 
 ### all follow relationship
 GET http://127.0.0.1:8000/posts/follows/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json
+
+
+### delete follow relation by owner
+DELETE http://127.0.0.1:8000/posts/follows/1/ HTTP/1.1
 Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
