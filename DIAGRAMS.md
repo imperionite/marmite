@@ -1,6 +1,6 @@
 ## Diagrams
 
-## Homework 6 Diagrams
+## Homework 6: Integrating Third-Party Services
 
 **1. Authentication and Authorization Flow Diagram**
 
@@ -75,7 +75,7 @@
 
 ---
 
-## Homework 5 Diagrams
+## Homework 5: Adding User Interactions (Likes and Comments)
 
 **1. Data Relationship Diagram**
 
