@@ -2,6 +2,7 @@ argon2-cffi==23.1.0
 argon2-cffi-bindings==21.2.0
 asgiref==3.8.1
 attrs==25.1.0
+cachetools==5.5.2
 certifi==2024.12.14
 cffi==1.17.1
 charset-normalizer==3.4.0
@@ -9,7 +10,9 @@ confluent-kafka==2.6.2
 cryptography==44.0.0
 defusedxml==0.8.0rc2
 dj-database-url==2.3.0
+dj-rest-auth==7.0.1
 Django==5.1.4
+django-allauth==65.4.1
 django-cors-headers==4.6.0
 django-db-connection-pool==1.2.5
 django-extensions==3.2.3
@@ -19,6 +22,7 @@ djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
 djoser==2.3.1
 drf-spectacular==0.28.0
+google-auth==2.38.0
 greenlet==3.1.1
 hiredis==3.1.0
 idna==3.10
@@ -27,6 +31,8 @@ jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 oauthlib==3.2.2
 psycopg2-binary==2.9.10
+pyasn1==0.6.1
+pyasn1_modules==0.4.1
 pycparser==2.22
 PyJWT==2.10.1
 python-decouple==3.8
@@ -37,6 +43,7 @@ referencing==0.36.2
 requests==2.32.3
 requests-oauthlib==2.0.0
 rpds-py==0.22.3
+rsa==4.9
 social-auth-app-django==5.4.2
 social-auth-core==4.5.4
 SQLAlchemy==2.0.36

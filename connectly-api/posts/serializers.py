@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 # from djoser.serializers import UserSerializer
 from validate_email import validate_email # type: ignore
 
@@ -70,30 +71,46 @@ class PostSerializer(serializers.ModelSerializer):
         return value
 
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        # Add custom fields to the token payload
+        data['username'] = self.user.username
+        data['email'] = self.user.email
+
+        return data
+    
+
 class LoginSerializer(serializers.Serializer):
     """
     Instead of manually handling tokens, it is recommended to use DRF SimpleJWT's built-in token handling for better security and maintainability.
     This revised serializer authenticates users using the provided identifier and password, then generates JWT tokens using RefreshToken from SimpleJWT.
     """
-    identifier = serializers.CharField()  # Can be email or username
+    identifier = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
         identifier = attrs.get('identifier')
         password = attrs.get('password')
 
-        # Authenticate user using custom backend
         user = authenticate(request=self.context.get('request'), username=identifier, password=password)
         if not user:
             raise serializers.ValidationError('Unable to log in with provided credentials.')
 
-       # Generate JWT token for authenticated user
+        # Generate JWT token using the custom serializer
         refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
 
+        # Use the custom serializer to add username and email to the payload
+        serializer = CustomTokenObtainPairSerializer()
+        token = serializer.get_token(user)
+        token['access'] = access_token
         return {
             'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            'access': access_token,
         }
+    
 
 
 class LikeSerializer(serializers.ModelSerializer):

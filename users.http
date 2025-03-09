@@ -1,13 +1,15 @@
 ###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMTU1MTcwLCJpYXQiOjE3NDAxNDQzNzAsImp0aSI6ImMzYTE5ZTIxMmUxZDRjOTc5MTVlYzA1ZWZmYzFhZGVmIiwidXNlcl9pZCI6Mn0.72FGRJMO8W67WBp5fr1o1GTLhauluez17VvSnG14MrQ
-
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwODE5OTk5LCJpYXQiOjE3NDA4MDkxOTksImp0aSI6IjJiNmEyODA4MTY1MTQzYmY5NTdjMWZmMWMwMDdlYmU0IiwidXNlcl9pZCI6MX0.NVJVptQcLFA94kc451FK1E_WWhVJIHEewnXdU2zB_H0
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTAyMzkzLCJpYXQiOjE3NDE0OTE1OTMsImp0aSI6IjViY2Y4ODkxZDdiOTQ5YmM5MjkxYjFhMTA1MzNhZjk0IiwidXNlcl9pZCI6NH0.k0jI_rixfNVmI5W7Op0DXe113VL4Ic23nku2tJqo7RM
+###
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNDI1OTc3LCJpYXQiOjE3NDE0MTUxNzcsImp0aSI6IjRmMWZiMzMwNzVmMTQxNzk5YjdhMTA2MzFjMDdjNDNjIiwidXNlcl9pZCI6MX0.snWiwEmDlnshJix1NOxgyWfy27jl4j3yjzHb3MFCeAE
+###
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MjA5NzA2NiwiaWF0IjoxNzQxNDkyMjY2LCJqdGkiOiI3ODk5YjA4YjQwNmE0N2FkYTQ1NzM0OThiZjZkYjY5MiIsInVzZXJfaWQiOjR9.fCJJi1Pl9sGdituSksv6gyHN23xyvpJLykbjMaasT24
 ########################################################################################
 
 ### login1
 ### A custom auth backend are implemented EmailOrUsernameModelBackend
 ### to be able for user to login using username or email
-POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -18,7 +20,7 @@ Content-Type: application/json
 ### login2
 ### A custom auth backend are implemented EmailOrUsernameModelBackend
 ### to be able for user to login using username or email
-POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -39,6 +41,11 @@ Content-Type: application/json
 
 ### list all users - Protected
 GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
+Authorization: Bearer {{adminUserAccess}}
+Content-Type: application/json
+
+### find by id - Admin
+GET http://127.0.0.1:8000/posts/users/8/ HTTP/1.1
 Authorization: Bearer {{adminUserAccess}}
 Content-Type: application/json
 
@@ -98,9 +105,19 @@ Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
 
 ### Validate JWT
-POST https://127.0.0.1:8080/api/validate-token/ HTTP/1.1
+POST http://127.0.0.1:8000/api/validate-token/ HTTP/1.1
 Content-Type: application/json
 
 {
     "token": "{{nonAdminUserAccess}}"
 }
+
+
+### obtaining refresh token 
+POST http://127.0.0.1:8000/auth/jwt/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "refresh": "{{refreshToken}}"
+}
+

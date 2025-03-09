@@ -3,6 +3,7 @@ from decouple import config, Csv
 import dj_database_url # type: ignore
 from pathlib import Path
 from datetime import timedelta
+from django.conf import settings
 from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,19 +23,26 @@ DJANGO_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    "django.contrib.sites",
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
 ]
 
 THIRD_PARTY_APPS = [
-    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'corsheaders',
     'django_filters',
+    'social_django',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'djoser',
     'drf_spectacular',
 ]
@@ -49,11 +57,14 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 
@@ -66,7 +77,9 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +87,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -139,6 +154,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # allow to use username or email on user's login 
 AUTHENTICATION_BACKENDS = [
     'posts.backends.EmailOrUsernameModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -152,30 +168,45 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Type', 'authorization', 'X-CSRFToken', 'Access-Control-Allow-Origin: *',]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
+    'https://localhost:8080',
     'https://127.0.0.1:8080',
-    'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
 
 ]
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
+    'https://localhost:8080',
     'https://127.0.0.1:8080',
-    'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
 )
 
 CORS_ALLOW_HEADERS = default_headers + (
-    'Access-Control-Allow-Origin',
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'Access-Control-Allow-Origin',
-    'cache-control',
-    'if-modified-since',
-    'keep-alive',
-    'X-Mx-ReqToken',
-    'XMLHttpRequest',
 )
+
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
 
 CORS_PREFLIGHT_MAX_AGE = 86400
 
@@ -215,21 +246,41 @@ REST_FRAMEWORK = {
 
 }
 
-# Djoser
+# Django-Allauth
 # ------------------------------------------------------------------------------
 
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'SERIALIZERS': {
-        'user_create': 'posts.serializers.UserSerializer',
-        'user': 'posts.serializers.UserSerializer',  # Use custom serializer for user retrieval as well
-    },
-    'LOGIN_FIELD': 'login',
-    'AUTH_BACKENDS': (
-        'posts.backends.EmailOrUsernameModelBackend',
-    ),
+REST_USE_JWT = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = ['email']
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['email', 'profile', 'openid'],
+        'AUTH_PARAMS': {'access_type': 'offline'},
+        'OAUTH_PKCE_ENABLED': True,
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
+        }
+    }
 }
 
+LOGIN_REDIRECT_URL = config(
+    'LOGIN_REDIRECT_URL', default='http://127.0.0.1:5173/dashboard')
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+# Google Credentials
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_CLIENT_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'openid'
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
 
 # Simple JWT
 # ------------------------------------------------------------------------------
@@ -237,11 +288,37 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=180),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'SIGNING_KEY': config('SIGNING_KEY', default='insecure-default-key'),  # Replace with a secure key from env!
     'ALGORITHM': 'HS256',
+    'TOKEN_OBTAIN_SERIALIZER': 'posts.serializers.CustomTokenObtainPairSerializer',
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
+
+GOOGLE_SECRET = config('GOOGLE_CLIENT_SECRET')
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
+}
+
+# Djoser
+# ------------------------------------------------------------------------------
+
+DJOSER = {
+    'LOGIN_FIELD': 'identifier',
+    'SERIALIZERS': {
+        'user_create': 'posts.serializers.UserSerializer',
+        'user': 'posts.serializers.UserSerializer',  # Use custom serializer for user retrieval as well
+    },
+    'AUTH_BACKENDS': (
+        'posts.backends.EmailOrUsernameModelBackend',
+    ),
+}
+
 
 
 # Security
@@ -252,32 +329,42 @@ X_FRAME_OPTIONS = 'DENY'
 
 CSRF_COOKIE_HTTPONLY = False
 
-CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+CSRF_TRUSTED_ORIGINS = [
+        'http://127.0.0.1:8000',
+        'https://127.0.0.1:8080',
+        'https://localhost:8080',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+    ]
 
-CSRF_COOKIE_NAME = 'csrftoken'
+if not settings.DEBUG:
 
-CSRF_COOKIE_SAMESITE = 'Lax'
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=True, cast=bool)
+    SECURE_SSL_REDIRECT = config(
+        'SECURE_SSL_REDIRECT', default=True, cast=bool)
 
-SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=True, cast=bool)
+    SESSION_COOKIE_SECURE = config(
+        'SESSION_COOKIE_SECURE', default=True, cast=bool)
 
-SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=31536000, cast=int) # 1 year
+    CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE',
+                                default=True, cast=bool)
 
-SECURE_HSTS_INCLUDE_SUBDOMAINS = config('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True, cast=bool)
+    SECURE_HSTS_SECONDS = config(
+        'SECURE_HSTS_SECONDS', default=18408206, cast=int)  # 60
 
-SECURE_HSTS_PRELOAD = config('SECURE_HSTS_PRELOAD', default=True, cast=bool)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = config(
+        'SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True, cast=bool)
 
-CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=True, cast=bool)
+    SECURE_HSTS_PRELOAD = config(
+        'SECURE_HSTS_PRELOAD', default=True, cast=bool)
 
-SECURE_BROWSER_XSS_FILTER = config('SECURE_BROWSER_XSS_FILTER', default=True, cast=bool)
+    SECURE_CONTENT_TYPE_NOSNIFF = config(
+        'SECURE_CONTENT_TYPE_NOSNIFF', default=True, cast=bool)
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://localhost:8080', cast=Csv())
+    SECURE_REFERRER_POLICY = config(
+        'REFERRER_POLICY', default='no-referrer-when-downgrade')
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    CORS_REPLACE_HTTPS_REFERER = True
 
-SECURE_CONTENT_TYPE_NOSNIFF = config('SECURE_CONTENT_TYPE_NOSNIFF', default=True, cast=bool)
-
-
-
-
+    

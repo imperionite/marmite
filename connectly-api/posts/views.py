@@ -5,10 +5,14 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-# from rest_framework.authtoken.models import Token
 from rest_framework.pagination import PageNumberPagination
+from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 import logging
 
 from .models import Post, Comment, Like
@@ -192,7 +196,6 @@ class PostViewSet(viewsets.ModelViewSet):
     
 
 class CommentViewSet(viewsets.ModelViewSet):
-
     """
     ViewSet for managing comments on posts.
 
@@ -247,7 +250,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 
-    
 # LoginView using SimpleJWT
 class LoginView(APIView):
     def post(self, request):
@@ -278,7 +280,7 @@ class ProtectedView(APIView):
         content = {'message': 'This is a protected route, accessible only to authenticated users.'}
 
         return Response(content)
-
+    
 # View for Validating JWT
 class ValidateTokenView(APIView):
     def post(self, request, *args, **kwargs):
@@ -301,3 +303,56 @@ class ValidateTokenView(APIView):
                 'status': False,
                 'message': str(e),
             }, status=401)
+    
+class CustomTokenRefreshView(TokenRefreshView):
+
+    def post(self, request, *args, **kwargs):
+        # Get the refresh token from the request data
+        refresh_token = request.data.get('refresh')
+
+        if not refresh_token:
+            return Response({"detail": "Refresh token is required."}, status=400)
+
+        try:
+            # Validate and decode the provided refresh token
+            refresh = RefreshToken(refresh_token)
+
+            # If the refresh token is valid, generate new access and refresh tokens for the user
+            new_access_token = refresh.access_token
+            new_refresh_token = RefreshToken.for_user(refresh.user)  # New refresh token for the user
+
+            # Return both the new access token and refresh token
+            return Response({
+                'access': str(new_access_token),
+                'refresh': str(new_refresh_token)  # Optional: Include new refresh token
+            })
+
+        except Exception as e:
+            # If the refresh token is invalid, return an error
+            return Response({"detail": "Invalid refresh token."}, status=400)
+        
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+    callback_url = "http://127.0.0.1:5173/" # frontend url
+
+    def post(self, request, *args, **kwargs):
+        # Call the parent class's post method to handle the OAuth process
+        response = super().post(request, *args, **kwargs)
+        
+        # If the response is successful, generate and return JWT tokens
+        if response.status_code == 200:
+            user = self.user  # The user object associated with this login
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)  # Access token
+            refresh_token = str(refresh)  # Refresh token
+
+            # Return the tokens in the response
+            return Response({
+                'access': access_token,
+                'refresh': refresh_token
+            }, status=status.HTTP_200_OK)
+        else:
+            # If there was an error, return the response from the parent class
+            return response
