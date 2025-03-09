@@ -22,9 +22,9 @@ This implementation provides a solid foundation for Google social login, integra
      ```
    - This URL matches Django Allauth’s default endpoint for handling Google login responses.
 
-#### Essential URI's for Setup
+#### URI's for Setup
 
-<img src="https://drive.google.com/uc?id=1g8AfzwJTL9Fp7ERxRyn5TOSH6AbpVQtw" width="150" height="150" />
+<img src="https://drive.google.com/uc?id=1g8AfzwJTL9Fp7ERxRyn5TOSH6AbpVQtw" width="300" height="300" />
 
 
 4. **API Endpoint:**
