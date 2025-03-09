@@ -68,6 +68,12 @@ POST /api/validate-token/
 
 ![invalid JWT](https://drive.google.com/uc?id=1sKjwU70fXE90DhXl5wEekg0JUQHdxdRf)
 
+### Obtaiing New JWT Access Token From Refresh Token
+
+POST /auth/jwt/refresh/
+
+![new JWT](https://drive.google.com/uc?id=1RTQ6LZCT6OTC-ceq9NH07lyIlBlsPbsQ)
+
 ---
 
 ## Summary

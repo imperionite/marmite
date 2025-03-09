@@ -2,6 +2,8 @@
 @nonAdminUserAccess=eyJhbGciOiJSUzI1NiIsImtpZCI6IjI1ZjgyMTE3MTM3ODhiNjE0NTQ3NGI1MDI5YjAxNDFiZDViM2RlOWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI1Mjk2MzU3NzUxOTgtcGEydTYyc2wyZmpnMDkyazVoa3UwaDFmOGM4azBkMmQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI1Mjk2MzU3NzUxOTgtcGEydTYyc2wyZmpnMDkyazVoa3UwaDFmOGM4azBkMmQuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTY5NjMxMDcwMDg3MjM0NTMyNDIiLCJlbWFpbCI6ImFpZGF0YWluZHVzdHJpZXNAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiI4akhsMU9VSzhFSktxekJhMmh2MmtnIiwibmFtZSI6IkFJIERhdGEgSW5kdXN0cmllcyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLc1hWXzZiU0FwLXVMNFpYTDRET1Z4RmZ5Z1FSOHFEWjZqa3VzTE9yaG5XTEVqOWc9czk2LWMiLCJnaXZlbl9uYW1lIjoiQUkgRGF0YSIsImZhbWlseV9uYW1lIjoiSW5kdXN0cmllcyIsImlhdCI6MTc0MDg5NjE3MiwiZXhwIjoxNzQwODk5NzcyfQ.sb7JsdnWojqQ_JR7JuT4IfHkVHuQCD7f5SSetow79OPVzk8VVV2fQgz6lECtcTxYD4KaA-T9DZPr2p6YTX26kbURjYzJvznzkespxvr9guZUh-VKgHdTon-6lFZLj_fbJgjVVbQsz-pIOHgGROmhJXvC33Ee-OOKWKTcXecmtQXl6QqcdAKI0yfWuAPcjpwgDJ5R4_mC38p0h4MIXRKryV6Uk72a2Zst8kssGx8MxwgRezcTNSkzjuKORGD_SlFifcPrV3W-EbmRLEC_fJOvThP2D8PGZBnHR49Z-wcp3jwBdYkazAm6cSFUtYicMmpB0IIjot2gAtrvm5U57SzLUw
 ###
 @adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
+###
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MjA5NzA2NiwiaWF0IjoxNzQxNDkyMjY2LCJqdGkiOiI3ODk5YjA4YjQwNmE0N2FkYTQ1NzM0OThiZjZkYjY5MiIsInVzZXJfaWQiOjR9.fCJJi1Pl9sGdituSksv6gyHN23xyvpJLykbjMaasT24
 ########################################################################################
 
 ####################### LOGIN ###############################
@@ -15,4 +17,12 @@ Content-Type: application/json
 {
     "identifier": "user2",
     "password": "passworD1#"
+}
+
+### obtaining refresh token via Djoser - Public
+POST http://127.0.0.1:8000/auth/jwt/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "refresh": "{{refreshToken}}"
 }

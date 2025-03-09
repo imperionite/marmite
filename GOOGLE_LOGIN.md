@@ -31,7 +31,7 @@ This implementation provides a solid foundation for Google social login, integra
 
 #### Frontend Homepage
 
-![frontend homepage](https://drive.google.com/uc?id=1g8AfzwJTL9Fp7ERxRyn5TOSH6AbpVQtw)
+![frontend homepage](https://drive.google.com/uc?id=1qq7p9l_wWNEe6A02I0exZLj7BVD1gg18)
 
 ## Frontend Setup (React)
 

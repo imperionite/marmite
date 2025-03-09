@@ -113,7 +113,7 @@ Content-Type: application/json
 }
 
 
-### obtaining refresh token 
+### obtaining refresh token via Djoser - Public
 POST http://127.0.0.1:8000/auth/jwt/refresh/ HTTP/1.1
 Content-Type: application/json
 
