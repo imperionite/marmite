@@ -54,3 +54,9 @@ Content-Type: application/json
 {
     "following": 6
 }
+
+
+### all follow relationship
+GET http://127.0.0.1:8000/posts/follows/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json

@@ -52,3 +52,17 @@ GET /posts/feed/?filter=liked
 POST /posts/follows/
 
 ![create follow](https://drive.google.com/uc?id=1BZXwSFYKRLU7pY40fml9r1YzAs3J1ZlQ)
+
+### Retrieves All Follows
+
+GET /posts/follows/
+
+![all follows relationships](https://drive.google.com/uc?id=1hl483pGPvrSGLAqc7vMqhbnSZy3mFAUG)
+
+
+### Delete a Follow
+
+DELETE /posts/follows/{follow_id}/
+
+![delete follow](https://drive.google.com/uc?id=1hl483pGPvrSGLAqc7vMqhbnSZy3mFAUG)
+
