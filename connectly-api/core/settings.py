@@ -376,8 +376,6 @@ if not settings.DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = config(
         'SECURE_CONTENT_TYPE_NOSNIFF', default=True, cast=bool)
 
-    SECURE_REFERRER_POLICY = config(
-        'REFERRER_POLICY', default='no-referrer-when-downgrade')
     
 
     
