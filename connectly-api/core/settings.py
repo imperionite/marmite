@@ -378,8 +378,6 @@ if not settings.DEBUG:
 
     SECURE_REFERRER_POLICY = config(
         'REFERRER_POLICY', default='no-referrer-when-downgrade')
-
-    CORS_REPLACE_HTTPS_REFERER = True
     
 
     
