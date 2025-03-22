@@ -1,4 +1,5 @@
 import os
+import sys
 from decouple import config, Csv
 import dj_database_url # type: ignore
 from pathlib import Path
@@ -137,6 +138,13 @@ DATABASES = {
 
 # Disable server-side cursors when using PgBouncer in transaction pooling mode
 DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
+
+# Override database settings for unit testing
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',  # Use in-memory SQLite for faster tests
+    }
 
 # Password & Auth Backends
 # ------------------------------------------------------------------------------

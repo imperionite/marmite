@@ -47,10 +47,12 @@ python connectly-api/manage.py assign_roles
 python connectly-api/manage.py flush
 
 # Render start command
-gunicorn --workers 3 --bind 0.0.0.0:$PORT core.wsgi:application
+gunicorn --pythonpath connectly-api --workers 3 --bind 0.0.0.0:$PORT core.wsgi:application
 
 # Render build command
 ./build.sh
+
+# https://marmite.onrender.com
 
 
 # postgres

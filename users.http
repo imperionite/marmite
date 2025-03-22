@@ -1,9 +1,11 @@
 ###### VARIABLES (tokens, etc) ######
 @nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTAyMzkzLCJpYXQiOjE3NDE0OTE1OTMsImp0aSI6IjViY2Y4ODkxZDdiOTQ5YmM5MjkxYjFhMTA1MzNhZjk0IiwidXNlcl9pZCI6NH0.k0jI_rixfNVmI5W7Op0DXe113VL4Ic23nku2tJqo7RM
 ###
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNDI1OTc3LCJpYXQiOjE3NDE0MTUxNzcsImp0aSI6IjRmMWZiMzMwNzVmMTQxNzk5YjdhMTA2MzFjMDdjNDNjIiwidXNlcl9pZCI6MX0.snWiwEmDlnshJix1NOxgyWfy27jl4j3yjzHb3MFCeAE
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNjQ0NTQ1LCJpYXQiOjE3NDI2MzM3NDUsImp0aSI6IjI1ZWQyYTdjZTE4ZjQxOGNhMzEwYzY4MGQ2M2Y3OWEyIiwidXNlcl9pZCI6MX0.h5S4vU-hbWnGMt6i8VCCDUrsC_tPU3JBLR2t5_Q7P0c
 ###
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MjA5NzA2NiwiaWF0IjoxNzQxNDkyMjY2LCJqdGkiOiI3ODk5YjA4YjQwNmE0N2FkYTQ1NzM0OThiZjZkYjY5MiIsInVzZXJfaWQiOjR9.fCJJi1Pl9sGdituSksv6gyHN23xyvpJLykbjMaasT24
+### prod site
+@prodSite=https://marmite.onrender.com
 ########################################################################################
 
 ### login1
@@ -15,6 +17,17 @@ Content-Type: application/json
 {
     "identifier": "admin",
     "password": "A#123qqq"
+}
+
+### prod login1
+### A custom auth backend are implemented EmailOrUsernameModelBackend
+### to be able for user to login using username or email
+POST {{prodSite}}/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "aiotrope@sharklasers.com",
+    "password": "A!123zzz"
 }
 
 ### login2
@@ -40,7 +53,7 @@ Content-Type: application/json
 }
 
 ### list all users - Protected
-GET https://127.0.0.1:8080/posts/users/ HTTP/1.1
+GET {{prodSite}}/posts/users/ HTTP/1.1
 Authorization: Bearer {{adminUserAccess}}
 Content-Type: application/json
 
