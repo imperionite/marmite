@@ -3,3 +3,4 @@
 secrets.txt
 /app-secrets/
 /ssl/
+/.venv/

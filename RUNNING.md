@@ -18,10 +18,12 @@ python manage.py startapp app_name
 # create and apply migration
 $ python manage.py makemigrations --dry-run --verbosity 3 # dry-run
 $ python manage.py makemigrations
-$ python manage.py migrate --noinput
+$ python manage.py migrate --no-input
 
 # creating super user
 python manage.py createsuperuser
+# create superuser in command base
+python manage.py create_superuser
 
 # serve backend at localhost:8000
 python manage.py runserver
@@ -32,8 +34,14 @@ pip freeze > requirements.txt
 # create secret keys
 $ python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
 
-# running fixture
-python manage.py generate_fixture_data
+# running fixture, for initial run only, when flush DB or on intial deployment setup, 
+# just delete first the initial_data.json in fixtures directory to generate new one
+python connectly-api/manage.py generate_fixture_data 
+# python connectly-api/manage.py loaddata connectly-api/posts/fixtures/initial_data.json
+
+# remove all records from the entire database (including resetting auto-incrementing primary keys)
+python connectly-api/manage.py flush
+
 
 # postgres
 docker ps

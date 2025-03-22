@@ -138,7 +138,7 @@ The `initial_data.json` file contains the following data:
 
 - **Password Hashing:** The `generate_fixture_data` command handles password hashing securely using Django's built-in methods. **Do not** attempt to store plain text passwords in your fixtures.
 - **Dependencies:** The order of objects in the JSON file is important due to foreign key constraints. Users must be created before posts, posts before comments and likes, and so on. The provided command handles this automatically.
-- **Running Order:** Ensure that you run the `generate_fixture_data` command _after_ running your initial migrations (`python manage.py migrate`) and _after_ creating the superuser account. The superuser should be created either through `createsuperuser` or within the initial migration itself. Then, run `loaddata`.
+- **Running Order:** Ensure that you run the `generate_fixture_data` command _after_ running your initial migrations (`python manage.py migrate`) and _after_ creating the superuser account. The superuser should be created either through `createsuperuser` or within the initial migration itself. Then, run `python connectly-api/manage.py generate_fixture_data` and `python connectly-api/manage.py assign_roles` to assigned user role.
 
 <a name="ep"></a>
 

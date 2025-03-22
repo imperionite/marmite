@@ -85,7 +85,7 @@ class Command(BaseCommand):
         fixture_data = users + posts + comments + likes
 
          # Write to JSON file
-        with open('posts/fixtures/initial_data.json', 'w') as f:
+        with open('connectly-api/posts/fixtures/initial_data.json', 'w') as f:
             json.dump(fixture_data, f, indent=2)
 
         self.stdout.write(self.style.SUCCESS('Fixture data generated successfully!'))

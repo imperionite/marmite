@@ -13,8 +13,7 @@ SECRET_KEY = config('SECRET_KEY', default='secretkey')
 
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost, 127.0.0.1, connectly-api, host.docker.internal', cast=Csv())
-
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost, 127.0.0.1, host.docker.internal, marmite.onrender.com', cast=Csv())
 
 
 # Application definition & Middlewares
@@ -45,6 +44,7 @@ THIRD_PARTY_APPS = [
     'dj_rest_auth.registration',
     'djoser',
     'drf_spectacular',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 LOCAL_APPS = [
@@ -109,7 +109,12 @@ SITE_ID = 1
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_URL = 'static/'
+# Static files (For Django Admin)
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Database & Cache
@@ -174,8 +179,9 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-
+    'https://marmite.onrender.com',
 ]
+
 CORS_ORIGIN_WHITELIST = (
     'https://localhost:8080',
     'https://127.0.0.1:8080',
@@ -183,6 +189,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://marmite.onrender.com',
 )
 
 CORS_ALLOW_HEADERS = default_headers + (
@@ -335,7 +342,8 @@ CSRF_TRUSTED_ORIGINS = [
         'https://localhost:8080',
         'http://localhost:8000',
         'http://127.0.0.1:8000',
-    ]
+        'https://marmite.onrender.com',
+]
 
 if not settings.DEBUG:
 
@@ -366,5 +374,6 @@ if not settings.DEBUG:
         'REFERRER_POLICY', default='no-referrer-when-downgrade')
 
     CORS_REPLACE_HTTPS_REFERER = True
+    
 
     
