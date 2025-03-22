@@ -1,6 +1,7 @@
 #### 🤖 CLI Commands (DRF)
 
 ```bash
+## delete and re-create new virtual env if environment is not detected by VS Code; reinstall the packages again
 # virtual env.
 $ python -m venv .venv # create
 $ source .venv/bin/activate # activate
