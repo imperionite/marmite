@@ -40,8 +40,17 @@ $ python -c 'from django.core.management.utils import get_random_secret_key; pri
 python connectly-api/manage.py generate_fixture_data 
 # python connectly-api/manage.py loaddata connectly-api/posts/fixtures/initial_data.json
 
+# assign roles to seeded user data
+python connectly-api/manage.py assign_roles
+
 # remove all records from the entire database (including resetting auto-incrementing primary keys)
 python connectly-api/manage.py flush
+
+# Render start command
+gunicorn --workers 3 --bind 0.0.0.0:$PORT core.wsgi:application
+
+# Render build command
+./build.sh
 
 
 # postgres

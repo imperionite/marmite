@@ -1,0 +1,177 @@
+[
+  {
+    "model": "posts.user",
+    "pk": 2,
+    "fields": {
+      "username": "user0",
+      "email": "user0@example.com",
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "posts.user",
+    "pk": 3,
+    "fields": {
+      "username": "user1",
+      "email": "user1@example.com"
+    }
+  },
+  {
+    "model": "posts.user",
+    "pk": 4,
+    "fields": {
+      "username": "user2",
+      "email": "user2@example.com"
+    }
+  },
+  {
+    "model": "posts.user",
+    "pk": 5,
+    "fields": {
+      "username": "user3",
+      "email": "user3@example.com"
+    }
+  },
+  {
+    "model": "posts.user",
+    "pk": 6,
+    "fields": {
+      "username": "user4",
+      "email": "user4@example.com"
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 1,
+    "fields": {
+      "content": "Post 1 content by user0",
+      "author": 2
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 2,
+    "fields": {
+      "content": "Post 2 content by user1",
+      "author": 3
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 3,
+    "fields": {
+      "content": "Post 3 content by user2",
+      "author": 4
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 4,
+    "fields": {
+      "content": "Post 4 content by user3",
+      "author": 5
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 5,
+    "fields": {
+      "content": "Post 5 content by user4",
+      "author": 6
+    }
+  },
+  {
+    "model": "posts.post",
+    "pk": 6,
+    "fields": {
+      "content": "Post 6 content by user0",
+      "author": 2
+    }
+  },
+  {
+    "model": "posts.comment",
+    "pk": 1,
+    "fields": {
+      "content": "Comment 1 on post 1 by user1",
+      "user": 3,
+      "post": 1
+    }
+  },
+  {
+    "model": "posts.comment",
+    "pk": 2,
+    "fields": {
+      "content": "Comment 2 on post 1 by user2",
+      "user": 4,
+      "post": 1
+    }
+  },
+  {
+    "model": "posts.comment",
+    "pk": 3,
+    "fields": {
+      "content": "Comment on post 2 by user0",
+      "user": 2,
+      "post": 2
+    }
+  },
+  {
+    "model": "posts.comment",
+    "pk": 4,
+    "fields": {
+      "content": "Another comment on post 2 by user3",
+      "user": 5,
+      "post": 2
+    }
+  },
+  {
+    "model": "posts.comment",
+    "pk": 5,
+    "fields": {
+      "content": "Comment on post 3 by user4",
+      "user": 6,
+      "post": 3
+    }
+  },
+  {
+    "model": "posts.like",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "post": 1
+    }
+  },
+  {
+    "model": "posts.like",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "post": 1
+    }
+  },
+  {
+    "model": "posts.like",
+    "pk": 3,
+    "fields": {
+      "user": 2,
+      "post": 3
+    }
+  },
+  {
+    "model": "posts.like",
+    "pk": 4,
+    "fields": {
+      "user": 2,
+      "post": 2
+    }
+  },
+  {
+    "model": "posts.like",
+    "pk": 5,
+    "fields": {
+      "user": 5,
+      "post": 4
+    }
+  }
+]

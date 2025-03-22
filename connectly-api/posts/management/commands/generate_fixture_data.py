@@ -1,9 +1,11 @@
+import os
 import json
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from ...models import Post, Comment, Like 
+from django.contrib.auth.hashers import make_password
+from ...models import Post, Comment, Like, Follow
 
-User = get_user_model() 
+User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Generates fixture data with hashed passwords'
@@ -13,79 +15,144 @@ class Command(BaseCommand):
         posts = []
         comments = []
         likes = []
+        follows = []
 
         # Create users with hashed passwords (Admin user first)
-        user0 = User.objects.create_superuser(username='user0', email='user0@example.com', password='passworD1#')
-        users.append({"model": "posts.user", "pk": user0.pk, "fields": {"username": user0.username, "email": user0.email, "is_superuser": user0.is_superuser, "is_staff": user0.is_staff}})
+        user0, created = User.objects.get_or_create(
+            email='user0@example.com',
+            defaults={
+                'username': 'user0',
+                'password': make_password('passworD1#'),
+                'is_superuser': True,
+                'is_staff': True
+            }
+        )
+        users.append({
+            "model": "posts.user",
+            "pk": user0.pk,
+            "fields": {
+                "username": user0.username,
+                "email": user0.email,
+                "is_superuser": user0.is_superuser,
+                "is_staff": user0.is_staff,
+                "created_at": user0.created_at.isoformat()
+            }
+        })
 
         for i in range(1, 5):  # Create 4 regular users (user1 to user4)
-            user = User.objects.create_user(username=f'user{i}', email=f'user{i}@example.com', password='passworD1#')
-            users.append({"model": "posts.user", "pk": user.pk, "fields": {"username": user.username, "email": user.email}})
+            user, created = User.objects.get_or_create(
+                email=f'user{i}@example.com',
+                defaults={
+                    'username': f'user{i}',
+                    'password': make_password('passworD1#')
+                }
+            )
+            users.append({
+                "model": "posts.user",
+                "pk": user.pk,
+                "fields": {
+                    "username": user.username,
+                    "email": user.email,
+                    "created_at": user.created_at.isoformat()
+                }
+            })
+
+        user_list = User.objects.all()  # Get all users dynamically
 
         # Create posts (6 posts)
-        post1 = Post.objects.create(content="Post 1 content by user0", author=user0)
-        posts.append({"model": "posts.post", "pk": post1.pk, "fields": {"content": post1.content, "author": user0.pk}})
-
-        user_list = [user0] # user0 is already in the list
-        for i in range(1, 5):
-            user_list.append(User.objects.get(username=f'user{i}'))
-
-        post2 = Post.objects.create(content="Post 2 content by user1", author=user_list[1])
-        posts.append({"model": "posts.post", "pk": post2.pk, "fields": {"content": post2.content, "author": user_list[1].pk}})
-
-        post3 = Post.objects.create(content="Post 3 content by user2", author=user_list[2])
-        posts.append({"model": "posts.post", "pk": post3.pk, "fields": {"content": post3.content, "author": user_list[2].pk}})
-
-        post4 = Post.objects.create(content="Post 4 content by user3", author=user_list[3])
-        posts.append({"model": "posts.post", "pk": post4.pk, "fields": {"content": post4.content, "author": user_list[3].pk}})
-
-        post5 = Post.objects.create(content="Post 5 content by user4", author=user_list[4])
-        posts.append({"model": "posts.post", "pk": post5.pk, "fields": {"content": post5.content, "author": user_list[4].pk}})
-
-        post6 = Post.objects.create(content="Post 6 content by user0", author=user0)
-        posts.append({"model": "posts.post", "pk": post6.pk, "fields": {"content": post6.content, "author": user0.pk}})
-
+        post_data = [
+            {"content": "Post 1 content by user0", "author": user0},
+            {"content": "Post 2 content by user1", "author": user_list[1]},
+            {"content": "Post 3 content by user2", "author": user_list[2]},
+            {"content": "Post 4 content by user3", "author": user_list[3]},
+            {"content": "Post 5 content by user4", "author": user_list[4]},
+            {"content": "Post 6 content by user0", "author": user0},
+        ]
+        for data in post_data:
+            post, created = Post.objects.get_or_create(**data)
+            if created:
+                posts.append({
+                    "model": "posts.post",
+                    "pk": post.pk,
+                    "fields": {
+                        "content": post.content,
+                        "author": post.author.pk,
+                        "created_at": post.created_at.isoformat()
+                    }
+                })
 
         # Create comments (5 comments)
-        comment1 = Comment.objects.create(content="Comment 1 on post 1 by user1", user=user_list[1], post=post1)
-        comments.append({"model": "posts.comment", "pk": comment1.pk, "fields": {"content": comment1.content, "user": user_list[1].pk, "post": post1.pk}})
-
-        comment2 = Comment.objects.create(content="Comment 2 on post 1 by user2", user=user_list[2], post=post1)
-        comments.append({"model": "posts.comment", "pk": comment2.pk, "fields": {"content": comment2.content, "user": user_list[2].pk, "post": post1.pk}})
-
-        comment3 = Comment.objects.create(content="Comment on post 2 by user0", user=user0, post=post2)
-        comments.append({"model": "posts.comment", "pk": comment3.pk, "fields": {"content": comment3.content, "user": user0.pk, "post": post2.pk}})
-
-        comment4 = Comment.objects.create(content="Another comment on post 2 by user3", user=user_list[3], post=post2)
-        comments.append({"model": "posts.comment", "pk": comment4.pk, "fields": {"content": comment4.content, "user": user_list[3].pk, "post": post2.pk}})
-
-        comment5 = Comment.objects.create(content="Comment on post 3 by user4", user=user_list[4], post=post3)
-        comments.append({"model": "posts.comment", "pk": comment5.pk, "fields": {"content": comment5.content, "user": user_list[4].pk, "post": post3.pk}})
-
+        comment_data = [
+            {"content": "Comment 1 on post 1 by user1", "user": user_list[1], "post": Post.objects.get(id=1)},
+            {"content": "Comment 2 on post 1 by user2", "user": user_list[2], "post": Post.objects.get(id=1)},
+            {"content": "Comment on post 2 by user0", "user": user0, "post": Post.objects.get(id=2)},
+            {"content": "Another comment on post 2 by user3", "user": user_list[3], "post": Post.objects.get(id=2)},
+            {"content": "Comment on post 3 by user4", "user": user_list[4], "post": Post.objects.get(id=3)},
+        ]
+        for data in comment_data:
+            comment, created = Comment.objects.get_or_create(**data)
+            if created:
+                comments.append({
+                    "model": "posts.comment",
+                    "pk": comment.pk,
+                    "fields": {
+                        "content": comment.content,
+                        "user": comment.user.pk,
+                        "post": comment.post.pk,
+                        "created_at": comment.created_at.isoformat()
+                    }
+                })
 
         # Create likes (3 likes)
-        like1 = Like.objects.create(user=user_list[1], post=post1)
-        likes.append({"model": "posts.like", "pk": like1.pk, "fields": {"user": user_list[1].pk, "post": post1.pk}})
+        like_data = [
+            {"user": user_list[1], "post": Post.objects.get(id=1)},
+            {"user": user_list[2], "post": Post.objects.get(id=1)},
+            {"user": user0, "post": Post.objects.get(id=3)},
+        ]
+        for data in like_data:
+            like, created = Like.objects.get_or_create(**data)
+            if created:
+                likes.append({
+                    "model": "posts.like",
+                    "pk": like.pk,
+                    "fields": {
+                        "user": like.user.pk,
+                        "post": like.post.pk,
+                        "created_at": like.created_at.isoformat()
+                    }
+                })
 
-        like2 = Like.objects.create(user=user_list[2], post=post1)
-        likes.append({"model": "posts.like", "pk": like2.pk, "fields": {"user": user_list[2].pk, "post": post1.pk}})
-
-        like3 = Like.objects.create(user=user0, post=post3)
-        likes.append({"model": "posts.like", "pk": like3.pk, "fields": {"user": user0.pk, "post": post3.pk}})
-
-        # Create unlikes (2 unlikes - these are actually likes that will be deleted)
-        unlike1 = Like.objects.create(user=user0, post=post2) # This like will be deleted to simulate unlike
-        likes.append({"model": "posts.like", "pk": unlike1.pk, "fields": {"user": user0.pk, "post": post2.pk}})
-
-        unlike2 = Like.objects.create(user=user_list[3], post=post4) # This like will be deleted to simulate unlike
-        likes.append({"model": "posts.like", "pk": unlike2.pk, "fields": {"user": user_list[3].pk, "post": post4.pk}})
-
+        # Create follows (2 follows)
+        follow_data = [
+            {"follower": user0, "following": user_list[1]},
+            {"follower": user_list[1], "following": user_list[2]},
+        ]
+        for data in follow_data:
+            follow, created = Follow.objects.get_or_create(**data)
+            if created:
+                follows.append({
+                    "model": "posts.follow",
+                    "pk": follow.pk,
+                    "fields": {
+                        "follower": follow.follower.pk,
+                        "following": follow.following.pk,
+                        "created_at": follow.created_at.isoformat()
+                    }
+                })
 
         # Combine all data
-        fixture_data = users + posts + comments + likes
+        fixture_data = users + posts + comments + likes + follows
 
-         # Write to JSON file
-        with open('connectly-api/posts/fixtures/initial_data.json', 'w') as f:
+        # Dynamically generate the absolute path
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        FIXTURES_DIR = os.path.join(BASE_DIR, 'connectly-api', 'posts', 'fixtures')
+        FILE_PATH = os.path.join(FIXTURES_DIR, 'initial_data.json')
+
+        # Ensure the fixtures directory exists
+        os.makedirs(FIXTURES_DIR, exist_ok=True)
+
+        # Write to JSON file
+        with open(FILE_PATH, 'w') as f:
             json.dump(fixture_data, f, indent=2)
 
         self.stdout.write(self.style.SUCCESS('Fixture data generated successfully!'))
