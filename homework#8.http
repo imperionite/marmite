@@ -79,3 +79,7 @@ Authorization: Bearer {{nonAdminUserAccess}}
 DELETE http://127.0.0.1:8000/posts/comments/2/ HTTP/1.1
 Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
+
+### Guest user accesses protected route
+GET http://127.0.0.1:8000/posts/feed/ HTTP/1.1
+Content-Type: application/json

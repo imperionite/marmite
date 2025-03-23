@@ -8,10 +8,6 @@
 * **Prerequisites:** Login as user0 (admin). Use the login endpoint and store the access token.
 * **Endpoint:** `DELETE /posts/posts/3/`
 
-### All Public Posts
-
-![all public posts](https://drive.google.com/uc?id=169himHJWZ7N5ETsAO3EYPlBGLp3PKv0I)
-
 ### Initial posts
 ![initial posts in db](https://drive.google.com/uc?id=1c-Qo7okus2MW_Ye2M0ZTr03mn3vaMNqm)
 
@@ -83,20 +79,25 @@
 ![regular user deletes another user's comment](https://drive.google.com/uc?id=15oj4KazYDOzVBWuuNdaOQNuM2nqt0vbE)
 
 ---
-* **Test Case 7: Guest User Accesses Protected Routes:**
-    * **Scenario:** Guest user attempts to access the feed.
-    * **Endpoint:** `GET /posts/feed/`
-    * **Headers:** (None)
-    * **Expected Result:** Status code 401 (Unauthorized).
+## **Test Case 7: Guest User Accesses Protected Routes:**
+* **Scenario:** Guest user attempts to access the feed.
+* **Endpoint:** `GET /posts/feed/`
 
+![guest user accesses protected endpoint](https://drive.google.com/uc?id=11d2CSGmIAltczvYAEBTSTRrv4Xi9GYXt)
+
+---
 **2. Privacy Settings Tests:**
 
-* **Test Case 8: Public Post Visibility:**
+## **Test Case 8: Public Post Visibility:**
     * **Scenario:** User2 (ID: 4) views public post 1.
     * **Prerequisites:** Login as user2.
     * **Endpoint:** `GET /posts/1/`
-    * **Headers:** `Authorization: Bearer <access_token>`
-    * **Expected Result:** Status code 200 (OK), and the post content is visible.
+
+### All Public Posts
+
+![all public posts](https://drive.google.com/uc?id=169himHJWZ7N5ETsAO3EYPlBGLp3PKv0I)
+
+---
 * **Test Case 9: Public Post in Feed:**
     * **Scenario:** User2 views public post 1 in the feed.
     * **Prerequisites:** Login as user2.
