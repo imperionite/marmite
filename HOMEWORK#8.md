@@ -11,7 +11,7 @@
 ### Initial posts
 ![initial posts in db](https://drive.google.com/uc?id=1c-Qo7okus2MW_Ye2M0ZTr03mn3vaMNqm)
 
-#### Admin deletes a post
+### Admin deletes a post
 ![admin user deletes a post](https://drive.google.com/uc?id=1XaMV7fv0-xRsh8J2nszNd31KGUkauUbY)
 
 ### Posts after deletion
@@ -27,7 +27,7 @@
 
 ![initial comments in db](https://drive.google.com/uc?id=1EqU6NbqdAEKHotjJOilP5rg6bSFknJl3)
 
-#### Admin deletes a comment
+### Admin deletes a comment
 
 ![admin user deletes a comment](https://drive.google.com/uc?id=1rkkBk080IGlzgBxD2fU7rI_BckF14ees)
 
@@ -54,6 +54,7 @@
 ![after admin user deletes a comment](https://drive.google.com/uc?id=1d78txIvUNDERYxLjJcpEQMWEfWaucFHS)
 
 ---
+
 ## * **Test Case 4: Regular User Deletes Own Post:**
 * **Scenario:** Regular user (user1, ID: 3) deletes their own post (ID: 3).
 * **Prerequisites:** Login as user1.
@@ -86,41 +87,48 @@
 ![guest user accesses protected endpoint](https://drive.google.com/uc?id=11d2CSGmIAltczvYAEBTSTRrv4Xi9GYXt)
 
 ---
-**2. Privacy Settings Tests:**
+## **2. Privacy Settings Tests:**
 
 ## **Test Case 8: Public Post Visibility:**
     * **Scenario:** User2 (ID: 4) views public post 1.
-    * **Prerequisites:** Login as user2.
-    * **Endpoint:** `GET /posts/1/`
+    * **Prerequisites:** Anonymous users access non-protected routes & non-private posts
+    * **Endpoint:** `GET /posts/posts/`
 
 ### All Public Posts
 
 ![all public posts](https://drive.google.com/uc?id=169himHJWZ7N5ETsAO3EYPlBGLp3PKv0I)
 
 ---
-* **Test Case 9: Public Post in Feed:**
-    * **Scenario:** User2 views public post 1 in the feed.
-    * **Prerequisites:** Login as user2.
-    * **Endpoint:** `GET /posts/feed/`
-    * **Headers:** `Authorization: Bearer <access_token>`
-    * **Expected Result:** Status code 200 (OK), and post 1 is included in the feed.
-* **Test Case 10: Private Post Visibility (Owner):**
-    * **Scenario:** User0 (ID: 2) views their own private post 6.
-    * **Prerequisites:** Login as user0.
-    * **Endpoint:** `GET /posts/6/`
-    * **Headers:** `Authorization: Bearer <access_token>`
-    * **Expected Result:** Status code 200 (OK), and the post content is visible.
-* **Test Case 11: Private Post Visibility (Other User):**
-    * **Scenario:** User1 (ID: 3) attempts to view user0's private post 6.
-    * **Prerequisites:** Login as user1.
-    * **Endpoint:** `GET /posts/6/`
-    * **Headers:** `Authorization: Bearer <access_token>`
-    * **Expected Result:** Status code 403 (Forbidden).
-* **Test Case 12: Private Post in Feed (Other User):**
-    * **Scenario:** User1 views the feed and private post 6 from user0 is not visible.
-    * **Prerequisites:** Login as user1.
-    * **Endpoint:** `GET /posts/feed/`
-    * **Headers:** `Authorization: Bearer <access_token>`
-    * **Expected Result:** Status code 200 (OK), and post 6 is not included in the feed.
+## **Test Case 9: Public Post in Feed:**
+* **Scenario:** User2 views public post 1 in the feed.
+* **Prerequisites:** Login as user2.
+* **Endpoint:** `GET /posts/feed/`
 
-Please let me know how these tests go, and if you have any questions or encounter any issues!
+![public post in feed](https://drive.google.com/uc?id=14zP7La5cV_OdbFdV5TNTRrqv-o1FjHIR)
+
+---
+ 
+## **Test Case 10: Private Post Visibility (Owner):**
+* **Scenario:** User0 (ID: 2) views their own private post 6.
+* **Prerequisites:** Login as user0.
+* **Endpoint:** `GET /posts/6/`
+
+![private post visibility - owner](https://drive.google.com/uc?id=1MYpbWxDv5lhCcaf6P60MBqb1GoHtUfAi)
+
+---
+
+## **Test Case 11: Private Post Visibility (Other User):**
+* **Scenario:** User1 (ID: 3) attempts to view user0's private post 6.
+* **Prerequisites:** Login as user1.
+* **Endpoint:** `GET /posts/6/`
+
+![private post visibility - other user](https://drive.google.com/uc?id=1dEovW-co4ghl5Gc3rSgxbEF1t7vmHf0E)
+
+---
+
+## **Test Case 12: Private Post in Feed (Other User):**
+* **Scenario:** User1 views the feed and private post 6 from user0 is not visible.
+* **Prerequisites:** Login as user1.
+* **Endpoint:** `GET /posts/feed/`
+
+![private post in feed - other user](https://drive.google.com/uc?id=1kPQkJlI6muylOVx2gs3qO5Ra2MYdJCXk)

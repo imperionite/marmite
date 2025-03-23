@@ -1,7 +1,7 @@
 ###### VARIABLES ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzMzMjQwLCJpYXQiOjE3NDI3MjI0NDAsImp0aSI6IjVjM2FhYjY1NjMwZDRmNzM5NDgzYjE3OWIyOWQ4Y2I4IiwidXNlcl9pZCI6NH0.n7vU_S8BpvUFlXcZ4OuehimFnxgMr00e0ock5vtq43k
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzQ4NTk5LCJpYXQiOjE3NDI3Mzc3OTksImp0aSI6IjNjNjAwZGI0Yzc2ZDQwYWU5ZmNjMWY3N2I0ODMyOGVmIiwidXNlcl9pZCI6NH0.4qwbRWJF0HwqBz9YjYiPoJ_SAYn60EKIJsiB5Rs51y8
 ###
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzMwNTcwLCJpYXQiOjE3NDI3MTk3NzAsImp0aSI6IjI1OTgxNzg3MGUwMDQ0NGZhYjM0ZGUxNWU2ZjNlMzA0IiwidXNlcl9pZCI6MX0.eqm24lU5clE3PC4jSn0ltMHiqd3SpuuyV8mj78pL2I0
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzQ4NTYxLCJpYXQiOjE3NDI3Mzc3NjEsImp0aSI6IjZlZjlkYzc4Y2Q1ZDRlY2Y5ZGM1MzI1ZGM3ZDM5MTFmIiwidXNlcl9pZCI6Mn0.7WyzMnd7MYYHUtJPPQuQYGk5cPDDt4D_gynLtwdVNBs
 ########################################################################################
 
 ### login1
@@ -25,7 +25,7 @@ Content-Type: application/json
     "password": "passworD1#"
 }
 
-### Public Post Visibility
-GET http://127.0.0.1:8000/posts/posts/ HTTP/1.1
+### Private Post in Feed (Other User)
+GET http://127.0.0.1:8000/posts/feed/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
 Content-Type: application/json
-

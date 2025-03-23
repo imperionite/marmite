@@ -2,6 +2,7 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
@@ -86,8 +87,17 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
         if user.is_authenticated:
-            return Post.objects.filter(Q(privacy='public') | Q(author=user) | Q(author__followers__follower=user)).distinct()
-        return Post.objects.filter(privacy='public')
+            # Admin can see all private posts
+            if user.is_staff or user.role == "admin" or user.groups.filter(name="Admin").exists():
+                return Post.objects.all()  # Admin can see everything
+                # Owner can see all their private posts, plus public posts and those from followers
+            return Post.objects.filter(
+                Q(privacy='public') |
+                Q(author=user) |
+                Q(author__followers__follower=user)
+            ).distinct()
+        return Post.objects.filter(privacy='public')  # Public posts visible to everyone
+
 
     def get_permissions(self):
         """
@@ -125,13 +135,22 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         Retrieves a single post, enforcing privacy settings.
         """
-        post = self.get_object()
-        if post.privacy == 'private' and post.author != request.user:
+        try:
+            post = self.get_object()
+        except NotFound:
+            return Response({'detail': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Admin can view all posts, including private ones
+        if post.privacy == 'private' and post.author != request.user and not request.user.is_staff:
             return Response({'detail': 'You do not have permission to view this post.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Serialize post data
         data = self.get_serializer(post).data
         data['like_count'] = post.likes.count()
         data['comment_count'] = post.comments.count()
+
         return Response(data)
+
 
     @action(detail=True, methods=['get'])
     def comments(self, request, pk=None):
