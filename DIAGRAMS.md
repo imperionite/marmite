@@ -1,5 +1,112 @@
 ## Diagrams
 
+### Homework 8: Privacy Settings and Role-Based Access Control (RBAC)
+
+**1. Access Control Flow Diagram**
+
+```mermaid
+flowchart TD
+    %% Styling definitions
+    classDef process fill:#a8d5ba,stroke:#004d25,color:#000
+    classDef decision fill:#ffb366,stroke:#cc5200,color:#000
+    classDef error fill:#ff9999,stroke:#cc0000,color:#000
+    classDef success fill:#99cc99,stroke:#006600,color:#000
+    
+    %% Main flow
+    A[API Receives Request]:::process --> B{Validate Token}:::decision
+    B -->|Invalid| C[401 Unauthorized]:::error
+    B -->|Valid| D{Check User Role}:::decision
+    D -->|Insufficient| F[403 Forbidden]:::error
+    D -->|Sufficient| E{Check Object Ownership}:::decision
+    E -->|Not Owner| F
+    E -->|Is Owner| G{Check Privacy Settings}:::decision
+    G -->|Private & Not Owner| F
+    G -->|Public or Owner| H[Perform Action]:::success
+    H --> I[Send Response to Client]:::process
+    C --> I
+    F --> I
+
+```
+
+###  Core Components
+
+1. **Request Reception**  - The API receives an incoming request
+  - This marks the entry point of the validation chain
+  - All subsequent steps are dependent on this initial request
+
+
+2. **Token Validation**  - First line of defense in the security chain
+  - Checks for presence and validity of authentication token
+  - Two possible outcomes:
+                    - Valid token → Proceeds to role checking
+    - Invalid token → Returns 401 Unauthorized response
+
+
+
+
+3. **Role-Based Access Control (RBAC)**  - Evaluates user's permission level
+  - Two possible paths:
+                    - Sufficient role → Proceeds to ownership check
+    - Insufficient role → Returns 403 Forbidden response
+
+
+
+
+4. **Object Ownership Verification**  - Checks if user has ownership rights
+  - Two possible outcomes:
+                    - Is owner → Proceeds to privacy settings check
+    - Not owner → Returns 403 Forbidden response
+
+
+
+
+5. **Privacy Settings Evaluation**  - Final security checkpoint
+  - Two possible paths:
+                    - Public or owner access → Proceeds to action execution
+    - Private and not owner → Returns 403 Forbidden response
+
+
+
+
+6. **Action Execution and Response**  - Performs the requested action
+  - Sends response back to client
+  - Handles both successful and error responses
+
+
+
+###  Security Logic Flow
+
+The diagram implements a layered security approach where each validation step must be passed successfully before proceeding to the next:
+
+1. **Authentication Layer**  - Token validation ensures only authenticated users can proceed
+  - Immediate rejection of unauthorized requests
+  - Prevents unauthorized access attempts early in the process
+
+
+2. **Authorization Layer**  - Role checking ensures users have appropriate permissions
+  - Ownership verification adds an additional security layer
+  - Privacy settings provide fine-grained access control
+
+
+3. **Error Handling**  - Consistent error response pattern (401/403)
+  - Clear separation between authentication and authorization failures
+  - All error paths converge to the response handler
+
+
+
+###  Flow Logic
+
+The diagram's top-down structure represents a sequential validation process where:
+
+1. Each diamond shape represents a decision point
+2. Rectangular boxes represent actions or processes
+3. Arrows show the flow direction and possible paths
+4. Color coding helps distinguish between different types of operations:
+          - Green: Processing steps
+  - Orange: Decision points
+  - Red: Error responses
+  - Light green: Successful actions
+
 ### Homework 7: Building a News Feed
 
 **1. CRUD Interaction Flow Diagram**
