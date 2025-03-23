@@ -47,7 +47,7 @@
 
 ### Initial users
 
-![initial users in db](https://drive.google.com/uc?id=/1jZzO4sxpj7DWEdRYXfdasTZ69OuOkFYe)
+![initial users in db](https://drive.google.com/uc?id=1jZzO4sxpj7DWEdRYXfdasTZ69OuOkFYe)
 
 #### Admin update a user
 
@@ -80,7 +80,7 @@
 * **Prerequisites:** Login as user1.
 * **Endpoint:** `DELETE /comments/3/`
 
-![regular user deletes another user's comment](https://drive.google.com/uc?id=15oj4KazYDOzVBWuuNdaOQNuM2nqt0vbE/)
+![regular user deletes another user's comment](https://drive.google.com/uc?id=15oj4KazYDOzVBWuuNdaOQNuM2nqt0vbE)
 
 ---
 * **Test Case 7: Guest User Accesses Protected Routes:**
