@@ -6,8 +6,10 @@ class IsOwnerOrAdmin(BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # Admins can do anything
-        if request.user.is_staff:
+        user = request.user
+
+        # Admins have full access
+        if user.is_staff or user.role == "admin" or user.groups.filter(name="Admin").exists():
             return True
 
         # Check if the object has 'user' or 'author' and compare it with the request user

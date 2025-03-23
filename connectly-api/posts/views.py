@@ -9,22 +9,18 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 import logging
-
 from .models import Post, Comment, Like, Follow
 from .serializers import UserSerializer, PostSerializer, CommentSerializer, LoginSerializer, FeedPostSerializer, FollowSerializer
 from .permissions import IsOwnerOrAdmin
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
-
-from rest_framework import status
-from rest_framework.response import Response
-    
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -43,11 +39,9 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-
         if 'password' in request.data:
             user.set_password(request.data['password'])
             user.save()
-
         self.perform_update(serializer)
         return Response(serializer.data)
 
@@ -60,35 +54,40 @@ class UserViewSet(viewsets.ModelViewSet):
 
         response_data = {
             'id': user.id,
+            'username': user.username,
             'message': 'User created successfully'
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
-        logger.debug(f"Request user: {request.user}, is_staff: {request.user.is_staff}, Target user: {user}")
-        if request.user.is_staff or user == request.user:
+        if user == request.user or request.user.is_staff or request.user.role == "admin" or request.user.groups.filter(name="Admin").exists():
             self.perform_destroy(user)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         return Response({'message': 'You do not have permission to delete this account.'}, status=status.HTTP_403_FORBIDDEN)
 
-
-
-# Pagination for Comments
 class CommentPagination(PageNumberPagination):
-    page_size = 5  # Default number of comments per page
+    page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 20
-
 
 class PostViewSet(viewsets.ModelViewSet):
     """
     ViewSet for handling CRUD operations on Post objects.
     Includes additional actions for liking, unliking, and commenting on posts.
     Only post owners or admin users can update or delete a post.
+    Privacy settings and RBAC enforced.
     """
-    queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get_queryset(self):
+        """
+        Enforces privacy settings and filters posts accordingly.
+        """
+        user = self.request.user
+        if user.is_authenticated:
+            return Post.objects.filter(Q(privacy='public') | Q(author=user) | Q(author__followers__follower=user)).distinct()
+        return Post.objects.filter(privacy='public')
 
     def get_permissions(self):
         """
@@ -96,7 +95,7 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         if self.action in ['list', 'retrieve', 'comments', 'likes']:
             permission_classes = [IsAuthenticatedOrReadOnly]
-        elif self.action in ['create', 'like', 'unlike', 'add_comment']:
+        elif self.action in ['create', 'like', 'unlike', 'comment']:
             permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrAdmin]
@@ -104,9 +103,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """
-        Creates a new post.
-
-        Automatically sets the current user as the author.
+        Creates a new post with the current user as the author.
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -126,11 +123,11 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         """
-        Retrieves a single post.
-
-        Includes like and comment counts in the response.
+        Retrieves a single post, enforcing privacy settings.
         """
         post = self.get_object()
+        if post.privacy == 'private' and post.author != request.user:
+            return Response({'detail': 'You do not have permission to view this post.'}, status=status.HTTP_403_FORBIDDEN)
         data = self.get_serializer(post).data
         data['like_count'] = post.likes.count()
         data['comment_count'] = post.comments.count()
@@ -151,8 +148,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def like(self, request, pk=None):
         """
         Allows an authenticated user to like a post.
-
-        Prevents duplicate likes from the same user.
         """
         post = self.get_object()
         user = request.user
@@ -185,72 +180,42 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         post = self.get_object()
         serializer = CommentSerializer(data=request.data)
-
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, post=post)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
-    
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
-    ViewSet for managing comments on posts.
-
-    Allows creating, retrieving, updating, and deleting comments.
-    Only the comment's author or an admin user can update or delete a comment.
+    Handles CRUD operations for comments with RBAC enforcement.
     """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
     def get_permissions(self):
-        """
-        Returns permissions based on the action.
-        """
         if self.action in ['list', 'retrieve']:
             return [IsAuthenticatedOrReadOnly()]
         return [IsAuthenticated(), IsOwnerOrAdmin()]
 
     def create(self, request, *args, **kwargs):
-        """
-        Creates a comment. Supports:
-        - POST /comments/ with { "post": post_id, "content": "..." }
-        - POST /posts/{post_id}/comments/ without needing post_id in the body
-        """
         post_id = kwargs.get('post_id') or request.data.get('post')
         if not post_id:
             return Response({'error': 'Post ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-
         post = get_object_or_404(Post, pk=post_id)
-
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=self.request.user, post=post)
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def update(self, request, *args, **kwargs):
-        """
-        Updates a comment. Only the author or admin can update.
-        """
-        return super().update(request, *args, **kwargs)
-
-    def partial_update(self, request, *args, **kwargs):
-        """
-        Partially updates a comment.
-        """
-        return super().partial_update(request, *args, **kwargs)
-
+    
     def destroy(self, request, *args, **kwargs):
-        """
-        Deletes a comment.
-        """
-        return super().destroy(request, *args, **kwargs)
+        instance = self.get_object()
+        if IsOwnerOrAdmin().has_object_permission(request, self, instance):
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'message': 'You do not have permission to delete this comment.'}, status=status.HTTP_403_FORBIDDEN)
 
 
-# LoginView using SimpleJWT
 class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data, context={'request': request})
@@ -262,6 +227,8 @@ class PostDetailView(APIView):
 
     def get(self, request, pk):
         post = Post.objects.get(pk=pk)
+        if post.privacy == 'private' and post.author != request.user:
+            return Response({'message': 'This post is private.'}, status=status.HTTP_403_FORBIDDEN)
         self.check_object_permissions(request, post)
         return Response({"content": post.content})
 
@@ -272,23 +239,16 @@ class AdminView(APIView):
         return Response({"message": "Hello, Admin!"})
     
 class ProtectedView(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
-
         content = {'message': 'This is a protected route, accessible only to authenticated users.'}
-
         return Response(content)
     
-# View for Validating JWT
 class ValidateTokenView(APIView):
     def post(self, request, *args, **kwargs):
         jwt_auth = JWTAuthentication()
-        
-        # Extract token from request headers or body as needed
-        token = request.data.get('token')  # Assuming token is sent in the body
-        
+        token = request.data.get('token')
         try:
             validated_token = jwt_auth.get_validated_token(token)
             user = jwt_auth.get_user(validated_token)
@@ -305,100 +265,71 @@ class ValidateTokenView(APIView):
             }, status=401)
     
 class CustomTokenRefreshView(TokenRefreshView):
-
     def post(self, request, *args, **kwargs):
-        # Get the refresh token from the request data
         refresh_token = request.data.get('refresh')
-
         if not refresh_token:
             return Response({"detail": "Refresh token is required."}, status=400)
-
         try:
-            # Validate and decode the provided refresh token
             refresh = RefreshToken(refresh_token)
-
-            # If the refresh token is valid, generate new access and refresh tokens for the user
             new_access_token = refresh.access_token
-            new_refresh_token = RefreshToken.for_user(refresh.user)  # New refresh token for the user
-
-            # Return both the new access token and refresh token
+            new_refresh_token = RefreshToken.for_user(refresh.user)
             return Response({
                 'access': str(new_access_token),
-                'refresh': str(new_refresh_token)  # Optional: Include new refresh token
+                'refresh': str(new_refresh_token)
             })
-
         except Exception as e:
-            # If the refresh token is invalid, return an error
             return Response({"detail": "Invalid refresh token."}, status=400)
-        
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
-    callback_url = "http://127.0.0.1:5173/" # frontend url
+    callback_url = "http://127.0.0.1:5173/"
 
     def post(self, request, *args, **kwargs):
-        # Call the parent class's post method to handle the OAuth process
         response = super().post(request, *args, **kwargs)
-        
-        # If the response is successful, generate and return JWT tokens
         if response.status_code == 200:
-            user = self.user  # The user object associated with this login
+            user = self.user
             refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)  # Access token
-            refresh_token = str(refresh)  # Refresh token
-
-            # Return the tokens in the response
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
             return Response({
                 'access': access_token,
                 'refresh': refresh_token
             }, status=status.HTTP_200_OK)
         else:
-            # If there was an error, return the response from the parent class
             return response
-        
 
 class FeedPagination(PageNumberPagination):
-    """
-    Pagination class for the feed view.
-    Sets the default page size and allows customization via query parameters.
-    """
-    page_size = 10  # Default number of posts per page
-    page_size_query_param = 'page_size'  # Query parameter to change page size
-    max_page_size = 100  # Maximum allowed page size
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def feed_view(request):
-    """
-    Retrieves a paginated list of posts, with optional filtering by followed users or liked posts.
-
-    Query Parameters:
-    - filter (optional): 'followed' or 'liked' to filter posts.
-
-    Returns:
-    - Paginated list of posts, serialized using FeedPostSerializer.
-    """
-    user = request.user  # Get the authenticated user
-    filter_type = request.query_params.get('filter', None)  # Get the filter type from query parameters
+    user = request.user
+    filter_type = request.query_params.get('filter', None)
 
     if filter_type == 'followed':
-        # Filter posts from users followed by the current user
         followed_users = Follow.objects.filter(follower=user).values_list('following', flat=True)
-        posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+        posts = Post.objects.filter(author__in=followed_users)
     elif filter_type == 'liked':
-        # Filter posts liked by the current user
         liked_posts = Like.objects.filter(user=user).values_list('post', flat=True)
-        posts = Post.objects.filter(id__in=liked_posts).order_by('-created_at')
+        posts = Post.objects.filter(id__in=liked_posts)
     else:
-        # Return all posts if no filter is specified
-        posts = Post.objects.all().order_by('-created_at')
+        posts = Post.objects.all()
 
-    paginator = FeedPagination()  # Initialize pagination
-    result_page = paginator.paginate_queryset(posts, request)  # Paginate the queryset
-    serializer = FeedPostSerializer(result_page, many=True)  # Serialize the paginated results
-    return paginator.get_paginated_response(serializer.data)  # Return the paginated response
+    # Enforce privacy settings
+    posts = posts.filter(
+        Q(privacy='public') | 
+        Q(author=user) | 
+        Q(author__followers__follower=user)
+    ).distinct().order_by('-created_at')
 
+    paginator = FeedPagination()
+    paginated_posts = paginator.paginate_queryset(posts, request)
+    serializer = FeedPostSerializer(paginated_posts, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
@@ -409,7 +340,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         serializer.save(follower=self.request.user)
 
     def get_queryset(self):
-        # Allow users to only see their own follow relationships
         return Follow.objects.filter(follower=self.request.user)
 
     def destroy(self, request, *args, **kwargs):

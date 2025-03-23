@@ -3,17 +3,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-# from djoser.serializers import UserSerializer
-from validate_email import validate_email # type: ignore
-
+from validate_email import validate_email
 from .models import Post, Comment, Like, Follow
 
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(read_only=True) # Added role field
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'created_at'] # Exclude sensitive fields like password
+        fields = ['id', 'username', 'email', 'created_at', 'role'] # Added role field
     
     def validate_username(self, value):
         if len(value) < 3:
@@ -47,18 +47,12 @@ class CommentSerializer(serializers.ModelSerializer):
         return value
 
 class PostSerializer(serializers.ModelSerializer):
-    
-    """
-    The comments field in the serializer is used to represent the reverse relationship from the Post model to the Comment model. 
-    This relationship is established through the related_name='comments' argument in the post field of the Comment model.
-    For consistency, readability and flexibility, nested serializer was used.
-    """
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'content', 'author', 'created_at', 'comments',]
-        read_only_fields = ['id', 'author', 'created_at',] 
+        fields = ['id', 'content', 'author', 'created_at', 'comments', 'privacy']
+        read_only_fields = ['id', 'author', 'created_at']
     
     def validate_content(self, value):
         if len(value) < 7:
@@ -85,7 +79,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class LoginSerializer(serializers.Serializer):
     """
     Instead of manually handling tokens, it is recommended to use DRF SimpleJWT's built-in token handling for better security and maintainability.
-    This revised serializer authenticates users using the provided identifier and password, then generates JWT tokens using RefreshToken from SimpleJWT.
+    This rserializer authenticates users using the provided identifier and password, then generates JWT tokens using RefreshToken from SimpleJWT.
     """
     identifier = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -111,25 +105,21 @@ class LoginSerializer(serializers.Serializer):
             'access': access_token,
         }
     
-
-
 class LikeSerializer(serializers.ModelSerializer):
-    """Serializer for the Like model"""
-
     class Meta:
         model = Like
         fields = ["id", "user", "post", "created_at"]
-        read_only_fields = ["user"]  # Ensure user is set automatically
-
+        read_only_fields = ["user"]
 
 class FeedPostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
+    privacy = serializers.CharField(read_only=True) #added privacy
 
     class Meta:
         model = Post
-        fields = ['id', 'content', 'author_username', 'created_at', 'like_count', 'comment_count']
+        fields = ['id', 'content', 'author_username', 'created_at', 'like_count', 'comment_count', 'privacy'] #added privacy
 
     def get_like_count(self, obj):
         return obj.likes.count()
@@ -137,9 +127,8 @@ class FeedPostSerializer(serializers.ModelSerializer):
     def get_comment_count(self, obj):
         return obj.comments.count()
 
-
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = ['id', 'follower', 'following', 'created_at']
-        read_only_fields = ['follower', 'created_at']  # follower is set automatically
+        read_only_fields = ['follower', 'created_at']

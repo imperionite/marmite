@@ -52,6 +52,14 @@ gunicorn --pythonpath connectly-api --workers 3 --bind 0.0.0.0:$PORT core.wsgi:a
 # Render build command
 ./build.sh
 
+# ensure excution permission on all .sh files
+chmod +x build_debug.sh
+chmod +x build.sh
+
+# run the script on debug mode
+./build_debug.sh
+
+
 # https://marmite.onrender.com
 
 

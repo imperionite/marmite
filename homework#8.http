@@ -1,0 +1,81 @@
+###### VARIABLES ######
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTAyMzkzLCJpYXQiOjE3NDE0OTE1OTMsImp0aSI6IjViY2Y4ODkxZDdiOTQ5YmM5MjkxYjFhMTA1MzNhZjk0IiwidXNlcl9pZCI6NH0.k0jI_rixfNVmI5W7Op0DXe113VL4Ic23nku2tJqo7RM
+###
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNjQ0NTQ1LCJpYXQiOjE3NDI2MzM3NDUsImp0aSI6IjI1ZWQyYTdjZTE4ZjQxOGNhMzEwYzY4MGQ2M2Y3OWEyIiwidXNlcl9pZCI6MX0.h5S4vU-hbWnGMt6i8VCCDUrsC_tPU3JBLR2t5_Q7P0c
+###
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MjA5NzA2NiwiaWF0IjoxNzQxNDkyMjY2LCJqdGkiOiI3ODk5YjA4YjQwNmE0N2FkYTQ1NzM0OThiZjZkYjY5MiIsInVzZXJfaWQiOjR9.fCJJi1Pl9sGdituSksv6gyHN23xyvpJLykbjMaasT24
+########################################################################################
+
+### login1
+### A custom auth backend are implemented EmailOrUsernameModelBackend
+### to be able for user to login using username or email
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "admin",
+    "password": "A#123qqq"
+}
+### login2
+### A custom auth backend are implemented EmailOrUsernameModelBackend
+### to be able for user to login using username or email
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "user2",
+    "password": "passworD1#"
+}
+
+
+### list all public posts 
+GET https://127.0.0.1:8080/posts/posts/ HTTP/1.1
+Content-Type: application/json
+
+
+### Admin User Deletes a Post
+DELETE http://127.0.0.1:8000/posts/posts/3/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{adminUserAccess}}
+
+
+### All Comments
+GET http://127.0.0.1:8000/posts/comments/ HTTP/1.1
+Content-Type: application/json
+
+
+
+### Admin User Deletes a Comment
+DELETE http://127.0.0.1:8000/posts/comments/1/ HTTP/1.1
+Authorization: Bearer {{adminUserAccess}}
+Content-Type: application/json
+
+
+### list all users 
+GET http://127.0.0.1:8000/posts/users/ HTTP/1.1
+Authorization: Bearer {{adminUserAccess}}
+Content-Type: application/json
+
+### Admin User Updates a User
+PATCH http://127.0.0.1:8000/posts/users/3/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json
+
+{
+    "username": "updated_user1"
+}
+
+### Regular User Deletes Own Post
+DELETE http://127.0.0.1:8000/posts/posts/4/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{nonAdminUserAccess}}
+
+### Regular User Deletes Another User's Post
+DELETE http://127.0.0.1:8000/posts/posts/5/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{nonAdminUserAccess}}
+
+### Regular User Deletes Another User's Comment
+DELETE http://127.0.0.1:8000/posts/comments/2/ HTTP/1.1
+Authorization: Bearer {{nonAdminUserAccess}}
+Content-Type: application/json

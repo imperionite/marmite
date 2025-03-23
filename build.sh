@@ -20,3 +20,4 @@ python connectly-api/manage.py generate_fixture_data
 # Run the custom management command to assign roles
 python connectly-api/manage.py assign_roles
 
+

@@ -1,17 +1,23 @@
-###### VARIABLES (tokens, etc) ######
-@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxNTI0Nzg5LCJpYXQiOjE3NDE1MTM5ODksImp0aSI6Ijc2ZGQ4NjdlNWQwZjQ1YzRiMTczMTRmZjczNDBiZDdlIiwidXNlcl9pZCI6NH0._cOrE412VLzBl7t1GHFu_HfV9I4EvtFuoENrcWMfOrE
+###### VARIABLES ######
+@nonAdminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzMzMjQwLCJpYXQiOjE3NDI3MjI0NDAsImp0aSI6IjVjM2FhYjY1NjMwZDRmNzM5NDgzYjE3OWIyOWQ4Y2I4IiwidXNlcl9pZCI6NH0.n7vU_S8BpvUFlXcZ4OuehimFnxgMr00e0ock5vtq43k
 ###
-@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQwMjIwMTMwLCJpYXQiOjE3NDAyMDkzMzAsImp0aSI6IjllNzMxZTE1NzcyMDQzZjY5YWFlYjcwNmU0NjlhNjlmIiwidXNlcl9pZCI6MX0.wpwGvmp0Q90o378cnQJ68ynYqOJT3wl14ETGlANyAgQ
-###
-@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0MjA5NzA2NiwiaWF0IjoxNzQxNDkyMjY2LCJqdGkiOiI3ODk5YjA4YjQwNmE0N2FkYTQ1NzM0OThiZjZkYjY5MiIsInVzZXJfaWQiOjR9.fCJJi1Pl9sGdituSksv6gyHN23xyvpJLykbjMaasT24
+@adminUserAccess=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQyNzMwNTcwLCJpYXQiOjE3NDI3MTk3NzAsImp0aSI6IjI1OTgxNzg3MGUwMDQ0NGZhYjM0ZGUxNWU2ZjNlMzA0IiwidXNlcl9pZCI6MX0.eqm24lU5clE3PC4jSn0ltMHiqd3SpuuyV8mj78pL2I0
 ########################################################################################
 
-####################### LOGIN ###############################
-
-### login
+### login1
 ### A custom auth backend are implemented EmailOrUsernameModelBackend
 ### to be able for user to login using username or email
-POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "identifier": "admin",
+    "password": "A!123zzz"
+}
+### login2
+### A custom auth backend are implemented EmailOrUsernameModelBackend
+### to be able for user to login using username or email
+POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -19,7 +25,3 @@ Content-Type: application/json
     "password": "passworD1#"
 }
 
-### delete follow relation by owner
-DELETE http://127.0.0.1:8000/posts/follows/1/ HTTP/1.1
-Authorization: Bearer {{nonAdminUserAccess}}
-Content-Type: application/json

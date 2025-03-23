@@ -8,7 +8,7 @@ from ...models import Post, Comment, Like, Follow
 User = get_user_model()
 
 class Command(BaseCommand):
-    help = 'Generates fixture data with hashed passwords'
+    help = 'Generates fixture data with hashed passwords, roles, and post privacy'
 
     def handle(self, *args, **options):
         users = []
@@ -17,14 +17,15 @@ class Command(BaseCommand):
         likes = []
         follows = []
 
-        # Create users with hashed passwords (Admin user first)
+        # Create users with hashed passwords and roles (Admin user first)
         user0, created = User.objects.get_or_create(
             email='user0@example.com',
             defaults={
                 'username': 'user0',
                 'password': make_password('passworD1#'),
                 'is_superuser': True,
-                'is_staff': True
+                'is_staff': True,
+                'role': 'admin'  # Set admin role
             }
         )
         users.append({
@@ -35,16 +36,36 @@ class Command(BaseCommand):
                 "email": user0.email,
                 "is_superuser": user0.is_superuser,
                 "is_staff": user0.is_staff,
+                "role": user0.role,
                 "created_at": user0.created_at.isoformat()
             }
         })
+
+        # Check for existing "admin" user and set role
+        try:
+            admin_user = User.objects.get(username='admin')
+            admin_user.role = 'admin'
+            admin_user.save()
+            users.append({
+                "model": "posts.user",
+                "pk": admin_user.pk,
+                "fields": {
+                    "username": admin_user.username,
+                    "email": admin_user.email,
+                    "role": admin_user.role,
+                    "created_at": admin_user.created_at.isoformat()
+                }
+            })
+        except User.DoesNotExist:
+            pass  # User "admin" doesn't exist, continue
 
         for i in range(1, 5):  # Create 4 regular users (user1 to user4)
             user, created = User.objects.get_or_create(
                 email=f'user{i}@example.com',
                 defaults={
                     'username': f'user{i}',
-                    'password': make_password('passworD1#')
+                    'password': make_password('passworD1#'),
+                    'role': 'user'  # Set user role
                 }
             )
             users.append({
@@ -53,20 +74,21 @@ class Command(BaseCommand):
                 "fields": {
                     "username": user.username,
                     "email": user.email,
+                    "role": user.role,
                     "created_at": user.created_at.isoformat()
                 }
             })
 
         user_list = User.objects.all()  # Get all users dynamically
 
-        # Create posts (6 posts)
+        # Create posts (6 posts) with privacy settings
         post_data = [
-            {"content": "Post 1 content by user0", "author": user0},
-            {"content": "Post 2 content by user1", "author": user_list[1]},
-            {"content": "Post 3 content by user2", "author": user_list[2]},
-            {"content": "Post 4 content by user3", "author": user_list[3]},
-            {"content": "Post 5 content by user4", "author": user_list[4]},
-            {"content": "Post 6 content by user0", "author": user0},
+            {"content": "Post 1 content by user0", "author": user0, "privacy": "public"},
+            {"content": "Post 2 content by user1", "author": user_list[1], "privacy": "private"},
+            {"content": "Post 3 content by user2", "author": user_list[2], "privacy": "public"},
+            {"content": "Post 4 content by user3", "author": user_list[3], "privacy": "private"},
+            {"content": "Post 5 content by user4", "author": user_list[4], "privacy": "public"},
+            {"content": "Post 6 content by user0", "author": user0, "privacy": "private"},
         ]
         for data in post_data:
             post, created = Post.objects.get_or_create(**data)
@@ -77,6 +99,7 @@ class Command(BaseCommand):
                     "fields": {
                         "content": post.content,
                         "author": post.author.pk,
+                        "privacy": post.privacy, # add privacy
                         "created_at": post.created_at.isoformat()
                     }
                 })

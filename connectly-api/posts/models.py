@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-# from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
@@ -19,7 +18,8 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     username = models.CharField(_('username'), max_length=150, unique=True)
-    created_at = models.DateTimeField(verbose_name='date joined', auto_now_add=True) # renaming default date_joined field
+    created_at = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    role = models.CharField(max_length=20, choices=(('guest', 'Guest'), ('user', 'User'), ('admin', 'Admin')), default='user') 
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -27,38 +27,38 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+        
 class Post(models.Model):
     """Model representing a post created by a user."""
     content = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    privacy = models.CharField(max_length=20, choices=(('public', 'Public'), ('private', 'Private')), default='public') # Added privacy field
 
     def __str__(self):
         return f"Post {self.id} by {self.author.username}"
     
     class Meta:
         ordering = ['-created_at']
-    
 
 class Comment(models.Model):
     """Model representing a comment on a post."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments") 
-    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name="comments")  # The post this comment belongs to)
-    content = models.TextField() # change the field name from text
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name="comments")
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"Comment by {self.author.username} on Post {self.post.id}"
-
+        return f"Comment by {self.user.username} on Post {self.post.id}"
 
 class Like(models.Model):
     """Model representing a like on a post."""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")  # The user who liked a post
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")  # The liked post
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     created_at = models.DateTimeField(auto_now_add=True) 
 
     class Meta:
-        unique_together = ("user", "post")  # Ensures a user can like a post only once
+        unique_together = ("user", "post")
 
     def __str__(self):
         return f"{self.user.username} liked Post {self.post.id}"
