@@ -11,12 +11,12 @@
 ### login1
 ### A custom auth backend are implemented EmailOrUsernameModelBackend
 ### to be able for user to login using username or email
-POST http://127.0.0.1:8000/posts/users/login/ HTTP/1.1
+POST https://127.0.0.1:8080/posts/users/login/ HTTP/1.1
 Content-Type: application/json
 
 {
     "identifier": "admin",
-    "password": "A#123qqq"
+    "password": "A!123zzz"
 }
 
 ### prod login1

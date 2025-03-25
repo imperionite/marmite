@@ -24,14 +24,12 @@ djoser==2.3.1
 drf-spectacular==0.28.0
 google-auth==2.38.0
 greenlet==3.1.1
-gunicorn==23.0.0
 hiredis==3.1.0
 idna==3.10
 inflection==0.5.1
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 oauthlib==3.2.2
-packaging==24.2
 psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1

@@ -22,19 +22,49 @@ services:
       - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
     depends_on:
       - postgres
-  
+    
   nginx:
     image: nginx:alpine
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      # - ./ssl/cert.pem:/etc/nginx/cert.pem:ro # uncomment on https
-      # - ./ssl/key.pem:/etc/nginx/key.pem:ro # uncomment on https
+      - ./ssl/cert.pem:/etc/nginx/cert.pem:ro # uncomment on https; comment when testing with Social Auth
+      - ./ssl/key.pem:/etc/nginx/key.pem:ro # uncomment on https; comment when testing with Social Auth
     depends_on:
       - postgres
     ports:
       - 8080:8080
     networks:
       - app-network
+  k6_caching:
+    image: grafana/k6
+    volumes:
+      - ./K6:/tests
+    command: run /tests/caching_test.js
+    depends_on:
+      - nginx
+    networks:
+      - app-network
+
+  # k6_rate_limit:
+  #   image: grafana/k6
+  #   volumes:
+  #     - ./K6:/tests
+  #   command: run /tests/rate_limit_test.js
+  #   depends_on:
+  #     - nginx
+  #   networks:
+  #     - app-network
+
+  # k6_cache_invalidation:
+  #   image: grafana/k6
+  #   volumes:
+  #     - ./K6:/tests
+  #   command: run /tests/cache_invalidation_test.js
+  #   depends_on:
+  #     - nginx
+  #   networks:
+  #     - app-network
+ 
 
 volumes:
   postgres_data:

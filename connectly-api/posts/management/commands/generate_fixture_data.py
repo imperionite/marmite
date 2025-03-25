@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from ...models import Post, Comment, Like, Follow
+import random
 
 User = get_user_model()
 
@@ -17,15 +18,32 @@ class Command(BaseCommand):
         likes = []
         follows = []
 
-        # Create users with hashed passwords and roles (Admin user first)
+        # ======================
+        #  Check Seeding Conditions
+        # ======================
+        if not (
+            User.objects.filter(username='admin').count() == 1 and
+            not Post.objects.exists() and
+            not Comment.objects.exists() and
+            not Like.objects.exists()
+        ):
+            self.stdout.write(self.style.WARNING(
+                'Seeding conditions not satisfied. Skipping fixture generation.'
+            ))
+            return
+
+        # ======================
+        #  Create Users
+        # ======================
+        # Create user0 as admin
         user0, created = User.objects.get_or_create(
-            email='user0@example.com',
+            username='user0',
             defaults={
-                'username': 'user0',
+                'email': 'user0@example.com',
                 'password': make_password('passworD1#'),
-                'is_superuser': True,
+                'is_superuser': False, # not superuser
                 'is_staff': True,
-                'role': 'admin'  # Set admin role
+                'role': 'admin'  # admin role
             }
         )
         users.append({
@@ -41,31 +59,14 @@ class Command(BaseCommand):
             }
         })
 
-        # Check for existing "admin" user and set role
-        try:
-            admin_user = User.objects.get(username='admin')
-            admin_user.role = 'admin'
-            admin_user.save()
-            users.append({
-                "model": "posts.user",
-                "pk": admin_user.pk,
-                "fields": {
-                    "username": admin_user.username,
-                    "email": admin_user.email,
-                    "role": admin_user.role,
-                    "created_at": admin_user.created_at.isoformat()
-                }
-            })
-        except User.DoesNotExist:
-            pass  # User "admin" doesn't exist, continue
-
-        for i in range(1, 5):  # Create 4 regular users (user1 to user4)
+        # Create regular users (user1 to user19)
+        for i in range(1, 20):
             user, created = User.objects.get_or_create(
                 email=f'user{i}@example.com',
                 defaults={
                     'username': f'user{i}',
                     'password': make_password('passworD1#'),
-                    'role': 'user'  # Set user role
+                    'role': 'user'
                 }
             )
             users.append({
@@ -79,42 +80,51 @@ class Command(BaseCommand):
                 }
             })
 
-        user_list = User.objects.all()  # Get all users dynamically
-
-        # Create posts (6 posts) with privacy settings
-        post_data = [
-            {"content": "Post 1 content by user0", "author": user0, "privacy": "public"},
-            {"content": "Post 2 content by user1", "author": user_list[1], "privacy": "private"},
-            {"content": "Post 3 content by user2", "author": user_list[2], "privacy": "public"},
-            {"content": "Post 4 content by user3", "author": user_list[3], "privacy": "private"},
-            {"content": "Post 5 content by user4", "author": user_list[4], "privacy": "public"},
-            {"content": "Post 6 content by user0", "author": user0, "privacy": "private"},
-        ]
-        for data in post_data:
-            post, created = Post.objects.get_or_create(**data)
-            if created:
+        # ======================
+        #  Create Posts (50 posts)
+        # ======================
+        existing_post_authors = set()
+        for i in range(1, 51):
+            author = random.choice(users[1:])  # Exclude admin
+            privacy = random.choice(["public", "private"])
+            
+            # Create post only if content is unique (optional)
+            post_content = f"Post {i} content by {author['fields']['username']}"
+            if not Post.objects.filter(content=post_content).exists():
+                post = Post(
+                    content=post_content,
+                    author=User.objects.get(pk=author["pk"]),
+                    privacy=privacy
+                )
+                post.save()
                 posts.append({
                     "model": "posts.post",
                     "pk": post.pk,
                     "fields": {
                         "content": post.content,
                         "author": post.author.pk,
-                        "privacy": post.privacy, # add privacy
+                        "privacy": post.privacy,
                         "created_at": post.created_at.isoformat()
                     }
                 })
 
-        # Create comments (5 comments)
-        comment_data = [
-            {"content": "Comment 1 on post 1 by user1", "user": user_list[1], "post": Post.objects.get(id=1)},
-            {"content": "Comment 2 on post 1 by user2", "user": user_list[2], "post": Post.objects.get(id=1)},
-            {"content": "Comment on post 2 by user0", "user": user0, "post": Post.objects.get(id=2)},
-            {"content": "Another comment on post 2 by user3", "user": user_list[3], "post": Post.objects.get(id=2)},
-            {"content": "Comment on post 3 by user4", "user": user_list[4], "post": Post.objects.get(id=3)},
-        ]
-        for data in comment_data:
-            comment, created = Comment.objects.get_or_create(**data)
-            if created:
+        # ======================
+        #  Create Comments (100 comments)
+        # ======================
+        comment_set = set()  # Track user-post pairs
+        for i in range(1, 101):
+            user = random.choice(users)
+            post = random.choice(posts)
+            
+            # Ensure unique comment per user-post combo
+            comment_key = (user["pk"], post["pk"])
+            if comment_key not in comment_set:
+                comment = Comment(
+                    content=f"Comment {i} by {user['fields']['username']}",
+                    user=User.objects.get(pk=user["pk"]),
+                    post=Post.objects.get(pk=post["pk"])
+                )
+                comment.save()
                 comments.append({
                     "model": "posts.comment",
                     "pk": comment.pk,
@@ -125,16 +135,29 @@ class Command(BaseCommand):
                         "created_at": comment.created_at.isoformat()
                     }
                 })
+                comment_set.add(comment_key)
 
-        # Create likes (3 likes)
-        like_data = [
-            {"user": user_list[1], "post": Post.objects.get(id=1)},
-            {"user": user_list[2], "post": Post.objects.get(id=1)},
-            {"user": user0, "post": Post.objects.get(id=3)},
-        ]
-        for data in like_data:
-            like, created = Like.objects.get_or_create(**data)
-            if created:
+        # ======================
+        #  Create Likes (200 likes)
+        # ======================
+        like_pairs = set()  # Track user-post pairs
+        like_count = 0
+        while like_count < 200:
+            user = random.choice(users)
+            post = random.choice(posts)
+            
+            # Check both database and current batch
+            user_post_pair = (user["pk"], post["pk"])
+            
+            if (
+                not Like.objects.filter(user=user["pk"], post=post["pk"]).exists()
+                and user_post_pair not in like_pairs
+            ):
+                like = Like(
+                    user=User.objects.get(pk=user["pk"]),
+                    post=Post.objects.get(pk=post["pk"])
+                )
+                like.save()
                 likes.append({
                     "model": "posts.like",
                     "pk": like.pk,
@@ -144,15 +167,31 @@ class Command(BaseCommand):
                         "created_at": like.created_at.isoformat()
                     }
                 })
+                like_pairs.add(user_post_pair)
+                like_count += 1
 
-        # Create follows (2 follows)
-        follow_data = [
-            {"follower": user0, "following": user_list[1]},
-            {"follower": user_list[1], "following": user_list[2]},
-        ]
-        for data in follow_data:
-            follow, created = Follow.objects.get_or_create(**data)
-            if created:
+        # ======================
+        #  Create Follows (100 follows)
+        # ======================
+        follow_pairs = set()  # Track follower-following pairs
+        follow_count = 0
+        while follow_count < 100:
+            follower = random.choice(users)
+            following = random.choice(users)
+            
+            # Skip self-follows and duplicates
+            follower_pk = follower["pk"]
+            following_pk = following["pk"]
+            if (
+                follower_pk != following_pk
+                and not Follow.objects.filter(follower=follower_pk, following=following_pk).exists()
+                and (follower_pk, following_pk) not in follow_pairs
+            ):
+                follow = Follow(
+                    follower=User.objects.get(pk=follower_pk),
+                    following=User.objects.get(pk=following_pk)
+                )
+                follow.save()
                 follows.append({
                     "model": "posts.follow",
                     "pk": follow.pk,
@@ -162,19 +201,20 @@ class Command(BaseCommand):
                         "created_at": follow.created_at.isoformat()
                     }
                 })
+                follow_pairs.add((follower_pk, following_pk))
+                follow_count += 1
 
-        # Combine all data
+        # ======================
+        #  Save to Fixture File
+        # ======================
         fixture_data = users + posts + comments + likes + follows
 
-        # Dynamically generate the absolute path
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        FIXTURES_DIR = os.path.join(BASE_DIR, 'connectly-api', 'posts', 'fixtures')
+        FIXTURES_DIR = os.path.join(BASE_DIR, 'fixtures')
         FILE_PATH = os.path.join(FIXTURES_DIR, 'initial_data.json')
 
-        # Ensure the fixtures directory exists
         os.makedirs(FIXTURES_DIR, exist_ok=True)
 
-        # Write to JSON file
         with open(FILE_PATH, 'w') as f:
             json.dump(fixture_data, f, indent=2)
 

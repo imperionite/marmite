@@ -8,10 +8,14 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.throttling import UserRateThrottle
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from rest_framework.pagination import PageNumberPagination
+from django.conf import settings
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -44,6 +48,8 @@ class UserViewSet(viewsets.ModelViewSet):
             user.set_password(request.data['password'])
             user.save()
         self.perform_update(serializer)
+        cache.delete(f'user_{self.get_object().id}')
+        cache.delete('feed_view') 
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
@@ -59,11 +65,25 @@ class UserViewSet(viewsets.ModelViewSet):
             'message': 'User created successfully'
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        cache_key = f'user_{instance.id}'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response(cached_data)
+        else:
+            data = serializer.data
+            cache.set(cache_key, data, settings.CACHE_TTL)
+            return Response(data)
 
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         if user == request.user or request.user.is_staff or request.user.role == "admin" or request.user.groups.filter(name="Admin").exists():
             self.perform_destroy(user)
+            cache.delete(f'user_{self.get_object().id}')
+            cache.delete('feed_view') 
             return Response({'message': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         return Response({'message': 'You do not have permission to delete this account.'}, status=status.HTTP_403_FORBIDDEN)
 
@@ -80,6 +100,7 @@ class PostViewSet(viewsets.ModelViewSet):
     Privacy settings and RBAC enforced.
     """
     serializer_class = PostSerializer
+    # throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         """
@@ -119,6 +140,7 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
+        cache.delete('feed_view')  # Clear the cache
         return Response(
             {"message": "Post created successfully", "post": serializer.data},
             status=status.HTTP_201_CREATED,
@@ -131,9 +153,17 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         serializer.save(author=self.request.user)
 
+    def perform_update(self, serializer):
+        serializer.save()
+        cache.delete('feed_view')  # Clear the cache
+
+    def perform_destroy(self, instance):
+        instance.delete()
+        cache.delete('feed_view') # Clear the cache
+
     def retrieve(self, request, *args, **kwargs):
         """
-        Retrieves a single post, enforcing privacy settings.
+        Retrieves a single post, enforcing privacy settings and using caching.
         """
         try:
             post = self.get_object()
@@ -144,13 +174,32 @@ class PostViewSet(viewsets.ModelViewSet):
         if post.privacy == 'private' and post.author != request.user and not request.user.is_staff:
             return Response({'detail': 'You do not have permission to view this post.'}, status=status.HTTP_403_FORBIDDEN)
 
+        # Cache logic
+        cache_key = f'post_{post.id}'
+        cached_data = cache.get(cache_key)
+
+        if cached_data:
+            return Response(cached_data)
+
         # Serialize post data
         data = self.get_serializer(post).data
         data['like_count'] = post.likes.count()
         data['comment_count'] = post.comments.count()
 
+        # Store in cache and return response
+        cache.set(cache_key, data, settings.CACHE_TTL)
         return Response(data)
 
+    def perform_update(self, serializer):
+        instance = self.get_object() # get the instance
+        serializer.save()
+        cache.delete(f'post_{instance.id}') # clear the cache
+        cache.delete('feed_view')  # Clear the feed cache
+    
+    def perform_destroy(self, instance):
+        cache.delete(f'post_{instance.id}') # clear the cache
+        cache.delete('feed_view') # clear the feed cache
+        instance.delete()
 
     @action(detail=True, methods=['get'])
     def comments(self, request, pk=None):
@@ -175,6 +224,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
         Like.objects.create(user=user, post=post)
+        cache.delete('feed_view') # clear cache
         return Response({'message': 'Post liked successfully.'}, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
@@ -190,6 +240,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message': 'You have not liked this post yet.'}, status=status.HTTP_400_BAD_REQUEST)
 
         like.delete()
+        cache.delete('feed_view') # clear cache
         return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
@@ -199,8 +250,14 @@ class PostViewSet(viewsets.ModelViewSet):
         """
         post = self.get_object()
         serializer = CommentSerializer(data=request.data)
+        cache_key = f'post_{pk}_comments'
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response(cached_data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, post=post)
+            cache.delete('feed_view') # clear cache
+            cache.set(cache_key, data, settings.CACHE_TTL)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -210,6 +267,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    # throttle_classes = [UserRateThrottle]
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -319,12 +377,13 @@ class GoogleLogin(SocialLoginView):
             return response
 
 class FeedPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 10  # Adjust as needed
     page_size_query_param = 'page_size'
     max_page_size = 100
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@cache_page(settings.CACHE_TTL)
 def feed_view(request):
     user = request.user
     filter_type = request.query_params.get('filter', None)
@@ -354,17 +413,26 @@ class FollowViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(follower=self.request.user)
+    # throttle_classes = [UserRateThrottle]
 
     def get_queryset(self):
         return Follow.objects.filter(follower=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(follower=self.request.user)
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        cache.delete(f'user_{request.user.id}_follows')
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.follower == request.user:
             self.perform_destroy(instance)
+            cache.delete(f'user_{request.user.id}_follows')
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({"detail": "You do not have permission to delete this follow relationship."}, status=status.HTTP_403_FORBIDDEN)

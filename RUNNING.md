@@ -53,11 +53,13 @@ gunicorn --pythonpath connectly-api --workers 3 --bind 0.0.0.0:$PORT core.wsgi:a
 ./build.sh
 
 # ensure excution permission on all .sh files
-chmod +x build_debug.sh
-chmod +x build.sh
+chmod +x SH/build_debug.sh # for DRF debug
+chmod +x SH/build.sh # for render.com
+chmod +x K6/run_k6_tests.sh # for K6 load testing
 
-# run the script on debug mode
-./build_debug.sh
+./SH/build.sh # run the script on render
+./SH/build_debug.sh # run to build DRF on debug mode
+./K6/run_k6_tests.sh # run to automate the K6 load testing
 
 
 # https://marmite.onrender.com
