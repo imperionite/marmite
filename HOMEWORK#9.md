@@ -228,3 +228,17 @@ The Redis cache is performing very efficiently during the `comment-test`, with a
 * **Monitor Redis During Comment Tests:** If needed, use `redis-cli monitor` (potentially filtered for comment-related keys) while running the `comment-test` to observe the specific commands being executed and confirm cache hits and misses.
 
 In summary, based on the `INFO stats`, the caching for comments appears to be working effectively. The slight decrease in the global hit rate is likely due to the test exercising the comment caching mechanisms. Further analysis of the k6 test results for comments will provide more insights into the performance impact of the caching.
+
+## **Test Basic Pagination:**
+
+**Page 1**
+
+![page 1](https://drive.google.com/uc?id=14LbY-7FVxADM8z9hdPEMqCBvDpbGgFs0)
+
+**Page 2**
+
+![page 2](https://drive.google.com/uc?id=1ifo8cPnUoM5pzNysPDr5FFjX4EHYy2mV)
+
+**Page 3**
+
+![page 3](https://drive.google.com/uc?id=1A4m5KTDIrSasJ1UDwhlvsv-q64mgRC85)
