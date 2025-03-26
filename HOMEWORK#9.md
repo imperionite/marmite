@@ -1,4 +1,4 @@
-## Assessment and Interpretation of k6 Performance Test Results for the Connectly Posts Feed Endpoint
+## **Assessment and Interpretation of k6 Performance Test Results for the Connectly Posts Feed Endpoint**
 
 This report provides an assessment and interpretation of the performance test results obtained using k6 for the Connectly application's feed endpoint. The primary objective of the test was to evaluate the endpoint's reliability and performance, particularly focusing on the effectiveness of caching mechanisms under a simulated load.
 
@@ -50,7 +50,7 @@ The k6 test results indicate that the Connectly feed endpoint is performing reli
 
 ---
 
-## Assessment and Interpretation of k6 Performance Test Results for the Connectly Comments Endpoint
+## **Assessment and Interpretation of k6 Performance Test Results for the Connectly Comments Endpoint**
 
 This report provides an assessment and interpretation of the performance test results obtained using k6 for the Connectly application's comments endpoint. The primary objective was to evaluate the endpoint's reliability and performance, with a focus on data integrity and caching effectiveness under a simulated load.
 
@@ -100,7 +100,13 @@ The k6 test reveals a significant data integrity issue in the comments endpoint,
 
 ---
 
-**Cache Hit Rate Analysis and Interpretation For Feed Test**
+## **Cache Hit Rate Analysis and Interpretation For Feed Test**
+
+The purpose of this report is to analyze the Redis cache performance before and after running the feed-test script. This is done by computing the cache hit rate, which indicates how effectively the cache serves requests without requiring a database query. The cache hit rate is calculated using the formula:
+
+$$
+\text{Cache Hit Rate} = \frac{\text{Keyspace Hits}}{\text{Keyspace Hits} + \text{Keyspace Misses}} \times 100
+$$
 
 **Data Source:** `INFO stats` command from Redis before and after running the `feed-test` script.
 
@@ -108,11 +114,6 @@ The k6 test reveals a significant data integrity issue in the comments endpoint,
 
 - `keyspace_hits`: Number of successful lookups in the key space.
 - `keyspace_misses`: Number of unsuccessful lookups in the key space.
-
-**1. Introduction**
-The purpose of this report is to analyze the Redis cache performance before and after running the feed-test script. This is done by computing the cache hit rate, which indicates how effectively the cache serves requests without requiring a database query. The cache hit rate is calculated using the formula:
-
-\[ \text{Cache Hit Rate} = \frac{\text{Keyspace Hits}}{\text{Keyspace Hits} + \text{Keyspace Misses}} \times 100 \]
 
 **Info Stats before running the feed test script**
 
@@ -122,7 +123,7 @@ The purpose of this report is to analyze the Redis cache performance before and 
 
 ![Info Stats After Running the Feed Test Script](https://drive.google.com/uc?id=1jM21Wr9nSWkhpBk6QASB04d7JRW2vgGW)
 
-**2. Cache Statistics Overview**
+**Cache Statistics Overview**
 
 | Metric                     | Before Test | After Test | Difference |
 | -------------------------- | ----------- | ---------- | ---------- |
@@ -132,7 +133,7 @@ The purpose of this report is to analyze the Redis cache performance before and 
 | Keyspace Misses            | 1           | 1          | 0          |
 | Cache Hit Rate (%)         | 99.97       | 99.98      | +0.01      |
 
-**3. Interpretation**
+**Interpretation**
 
 - **High Cache Efficiency**: The cache hit rate before the test was 99.97% and increased slightly to 99.98% after the test. This demonstrates that almost all requests were successfully served from the cache, minimizing database queries and reducing system load.
 - **Minimal Cache Misses**: The number of keyspace misses remained constant at 1 before and after the test, meaning there was no significant increase in cache misses even with additional requests.
@@ -145,15 +146,17 @@ While the global cache hit rate is impressively high, we must consider the follo
 
 * **Global vs. Specific Endpoint:** The `INFO stats` provide a global view of the entire Redis instance. The high hit rate might be attributed to other cached data being accessed frequently, masking potential issues with the feed endpoint's caching.
 
-**4. Assessment and Recommendations**
+**Assessment and Recommendations**
 
 - **Current Caching Strategy is Effective**: Given the consistently high cache hit rate, the current Redis caching configuration is performing optimally.
 - **Monitor for Future Growth**: If the user base or data volume increases, it is advisable to periodically review cache hit/miss statistics to ensure continued efficiency.
 - **Implement Monitoring Alerts**: Setting up automated alerts for drastic changes in cache hit rate or an increase in misses could help prevent performance degradation.
 - **Consider Optimizing Expiry Policies**: While there were no expired keys, it may be useful to implement cache expiration policies for less frequently accessed data to ensure efficient memory usage.
 
-**5. Conclusion**
+**Conclusion**
 The Redis caching mechanism is performing exceptionally well, with a near-perfect cache hit rate. This indicates that the system is effectively reducing database load and ensuring quick response times for users. Regular monitoring should be maintained to sustain this high level of performance.
 
 
 ---
+
+## **Cache Hit Rate Analysis and Interpretation For Comment Test**
