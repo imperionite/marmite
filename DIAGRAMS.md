@@ -1,8 +1,33 @@
 ## Diagrams
 
-### Homework 9: Performance Optimization
+### Homework 9 & TA: Performance Optimization
 
-**1. CRUD Interaction Flow Diagram**
+**1. Access Control Flow Diagram**
+
+```mermaid
+flowchart TD
+    %% Styling definitions
+    classDef process fill:#a8d5ba,stroke:#004d25,color:#000
+    classDef decision fill:#ffb366,stroke:#cc5200,color:#000
+    classDef error fill:#ff9999,stroke:#cc0000,color:#000
+    classDef success fill:#99cc99,stroke:#006600,color:#000
+
+    %% Main flow
+    A[API Receives Request]:::process --> B{Validate Token}:::decision
+    B -- Invalid --> C[401 Unauthorized]:::error
+    B -- Valid --> D{Check User Role}:::decision
+    D -- Insufficient --> F[403 Forbidden]:::error
+    D -- Sufficient --> E{Check Object Ownership}:::decision
+    E -- Not Owner --> F
+    E -- Is Owner --> G{Check Privacy Settings}:::decision
+    G -- Private & Not Owner --> F
+    G -- Public or Owner --> H[Perform Action]:::success
+    H --> I[Send Response to Client]:::process
+    C --> I
+    F --> I
+```
+
+**2. CRUD Interaction Flow Diagram**
 
 ```mermaid
 sequenceDiagram
@@ -72,7 +97,7 @@ This diagram illustrates the sequence of interactions involved in retrieving the
 - To ensure data consistency, the `Backend Service` invalidates the relevant feed cache in `Cache (Redis)`. It does this by deleting any cache entries associated with the user's feed, regardless of the page or page size. This forces the next request for the feed to fetch fresh data from the database and repopulate the cache.
 - The `Backend Service` sends a success response back through the `API Gateway` to the `Client`.
 
-**2. System Architecture Diagram**
+**3. System Architecture Diagram**
 
 ```mermaid
 graph TD
