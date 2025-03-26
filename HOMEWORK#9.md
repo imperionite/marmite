@@ -6,7 +6,7 @@ This report provides an assessment and interpretation of the performance test re
 
 **Methodology:**
 
-The performance test was conducted using a k6 script (`K6/feed-test.js`) executed locally. The script simulated a user logging in and then repeatedly fetching the feed. The test configuration involved a ramping virtual user (VU) scenario over a duration of 50 seconds, reaching a peak of 10 concurrent VUs. The test consisted of three stages:
+The performance test was conducted using a k6 script ([K6/feed-test.js](https://github.com/imperionite/marmite/blob/main/K6/feed-test.js)) executed locally. The script simulated a user logging in and then repeatedly fetching the feed. The test configuration involved a ramping virtual user (VU) scenario over a duration of 50 seconds, reaching a peak of 10 concurrent VUs. The test consisted of three stages:
 
 1.  **Ramp-up (10s):** The number of VUs gradually increased from 0 to 5.
 2.  **Steady State (20s):** The test maintained a constant load of 10 VUs.
@@ -58,7 +58,7 @@ This report provides an assessment and interpretation of the performance test re
 
 **Methodology:**
 
-The performance test was conducted using a k6 script (`K6/comment-test.js`) executed locally. The script simulated a user logging in and then repeatedly fetching comments for a randomly selected post. Similar to the feed test, the test employed a ramping virtual user (VU) scenario over a duration of 50 seconds, reaching a peak of 10 concurrent VUs. The test consisted of three stages:
+The performance test was conducted using a k6 script ([K6/comment-test.js](https://github.com/imperionite/marmite/blob/main/K6/comment-test.js)) executed locally. The script simulated a user logging in and then repeatedly fetching comments for a randomly selected post. Similar to the feed test, the test employed a ramping virtual user (VU) scenario over a duration of 50 seconds, reaching a peak of 10 concurrent VUs. The test consisted of three stages:
 
 1.  **Ramp-up (10s):** The number of VUs gradually increased from 0 to 10.
 2.  **Steady State (30s):** The test maintained a constant load of 10 VUs.
