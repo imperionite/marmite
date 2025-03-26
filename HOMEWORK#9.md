@@ -171,9 +171,8 @@ The Redis caching mechanism is performing exceptionally well, with a near-perfec
 The cache hit rate is calculated using the formula:
 
 $$
-\text{Cache Hit Rate} = \frac{\text{keyspace\_hits}}{\text{keyspace\_hits} + \text{keyspace\_misses}} \times 100
+\text{Cache Hit Rate} = \frac{\text{keyspace_hits}}{\text{keyspace_hits} + \text{keyspace_misses}} \times 100
 $$
-
 
 **Results:**
 
@@ -198,10 +197,10 @@ $$
 $$
 
 **Change in Cache Hit Rate:**
+
 $$
 99.9020\% - 99.9751\% = -0.0731\%
 $$
-
 
 **Assessment:**
 
