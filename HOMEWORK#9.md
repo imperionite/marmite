@@ -1,4 +1,6 @@
-## **Assessment and Interpretation of k6 Performance Test Results for the Connectly Posts Feed Endpoint**
+## **Caching Documentation and Validation**
+
+### **Assessment and Interpretation of k6 Performance Test Results for the Connectly Posts Feed Endpoint**
 
 This report provides an assessment and interpretation of the performance test results obtained using k6 for the Connectly application's feed endpoint. The primary objective of the test was to evaluate the endpoint's reliability and performance, particularly focusing on the effectiveness of caching mechanisms under a simulated load.
 
@@ -50,7 +52,7 @@ The k6 test results indicate that the Connectly feed endpoint is performing reli
 
 ---
 
-## **Assessment and Interpretation of k6 Performance Test Results for the Connectly Comments Endpoint**
+### **Assessment and Interpretation of k6 Performance Test Results for the Connectly Comments Endpoint**
 
 This report provides an assessment and interpretation of the performance test results obtained using k6 for the Connectly application's comments endpoint. The primary objective was to evaluate the endpoint's reliability and performance, with a focus on data integrity and caching effectiveness under a simulated load.
 
@@ -88,11 +90,11 @@ The k6 test results indicate a generally stable performance for the Connectly co
 
 **Recommendations:**
 
-1.  **Investigate Data Integrity Issue:** The primary focus should be on diagnosing and resolving the reason why the content of the first comment is missing in a significant number of initial requests. This requires examining the Django view logic, serializer, and database queries involved in fetching comments. Logging the specific data being retrieved and serialized during these failing requests could be invaluable.
-2.  **Analyze Caching Performance:** Conduct a deeper analysis of the response times for both initial and cached requests. Examine percentiles and consider implementing logging on the Django side to explicitly track cache hits and misses for the comments endpoint.
-3.  **Review Caching Configuration for Comments:** Evaluate the cache timeout and invalidation strategy for the comments endpoint. Ensure it aligns with the expected data update frequency and performance goals.
-4.  **Profile Backend Operations:** Profiling the Django backend specifically for the comments endpoint can help identify performance bottlenecks in both cached and uncached scenarios.
-5.  **Examine Database Queries:** Analyze the database queries executed when fetching comments. Ensure they are optimized and that appropriate indexes are in place.
+* **Investigate Data Integrity Issue:** The primary focus should be on diagnosing and resolving the reason why the content of the first comment is missing in a significant number of initial requests. This requires examining the Django view logic, serializer, and database queries involved in fetching comments. Logging the specific data being retrieved and serialized during these failing requests could be invaluable.
+* **Analyze Caching Performance:** Conduct a deeper analysis of the response times for both initial and cached requests. Examine percentiles and consider implementing logging on the Django side to explicitly track cache hits and misses for the comments endpoint.
+* **Review Caching Configuration for Comments:** Evaluate the cache timeout and invalidation strategy for the comments endpoint. Ensure it aligns with the expected data update frequency and performance goals.
+* **Profile Backend Operations:** Profiling the Django backend specifically for the comments endpoint can help identify performance bottlenecks in both cached and uncached scenarios.
+* **Examine Database Queries:** Analyze the database queries executed when fetching comments. Ensure they are optimized and that appropriate indexes are in place.
 
 **Conclusion:**
 
@@ -100,7 +102,7 @@ The k6 test reveals a significant data integrity issue in the comments endpoint,
 
 ---
 
-## **Report on Cache Hit Rate Analysis for Post Feed Test**
+### **Report on Cache Hit Rate Analysis for Post Feed Test**
 
 The purpose of this report is to analyze the Redis cache performance before and after running the feed-test script. This is done by computing the cache hit rate, which indicates how effectively the cache serves requests without requiring a database query. The cache hit rate is calculated using the formula:
 
@@ -158,7 +160,7 @@ The Redis caching mechanism is performing exceptionally well, with a near-perfec
 
 ---
 
-## **Report on Cache Hit Rate Analysis for Post Comment Test**
+### **Report on Cache Hit Rate Analysis for Post Comment Test**
 
 **Data Source:** `INFO stats` command from Redis before and after running the `comment-test` script.
 
@@ -229,7 +231,11 @@ The Redis cache is performing very efficiently during the `comment-test`, with a
 
 In summary, based on the `INFO stats`, the caching for comments appears to be working effectively. The slight decrease in the global hit rate is likely due to the test exercising the comment caching mechanisms. Further analysis of the k6 test results for comments will provide more insights into the performance impact of the caching.
 
-## **Test Basic Pagination:**
+---
+
+## **Validate Pagination**
+
+### **Test Basic Pagination:**
 
 **Page 1**
 

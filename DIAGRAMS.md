@@ -1,5 +1,161 @@
 ## Diagrams
 
+### Homework 9:
+
+**1. CRUD Interaction Flow Diagram**
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API Gateway
+    participant Backend Service
+    participant Cache (Redis)
+    participant Database
+
+    Client->>API Gateway: GET /feed?page={page}&page_size={size}
+    API Gateway->>Backend Service: GET /feed?page={page}&page_size={size}
+
+    Backend Service->>Cache: GET feed:{user_id}:{page}:{size}:{sorting}
+    Cache-->>Backend Service: Cached Data (Hit or Miss)
+
+    alt Cache Miss
+        Backend Service->>Database: Query posts for user (with pagination)
+        Database-->>Backend Service: Paginated Post Data
+        Backend Service->>Cache: SETEX feed:{user_id}:{page}:{size}:{sorting}, Data, TTL
+    end
+
+    Backend Service-->>API Gateway: Paginated Feed Data
+    API Gateway-->>Client: Paginated Feed Data
+
+    Client->>API Gateway: POST /posts
+    API Gateway->>Backend Service: POST /posts
+    Backend Service->>Database: Create New Post
+    Database-->>Backend Service: Success
+
+    Backend Service->>Cache: DELETE feed:{user_id}:*:*:* (Invalidate Feed Cache)
+
+    Backend Service-->>API Gateway: Success
+    API Gateway-->>Client: Success
+
+```
+
+**Interpretation:**
+
+This diagram illustrates the sequence of interactions involved in retrieving the news feed (`GET /feed`) and creating a new post (`POST /posts`), specifically highlighting the integration of pagination and caching using Redis.
+
+* **Client:** The initiator of the API requests, such as a web browser or mobile application.
+* **API Gateway:** An optional intermediary that handles routing and potentially other cross-cutting concerns before requests reach the backend service.
+* **Backend Service:** Represents the core application logic, which in our case is likely implemented using Django.
+* **Cache (Redis):** An in-memory data store used to cache frequently accessed feed data to improve performance and reduce database load.
+* **Database:** The persistent storage for the application's data, which we've assumed to be SQLite based on the original architecture.
+
+**Logical Scenarios:**
+
+**Scenario 1: Retrieving the News Feed (`GET /feed`) with Pagination and Caching**
+
+- The `Client` sends a `GET /feed` request to the `API Gateway` (if present), including parameters to specify the desired page (`page`) and the number of items per page (`page_size`).
+- The `API Gateway` routes this request to the `Backend Service`.
+- The `Backend Service` first attempts to retrieve the feed data from the `Cache (Redis)`. It constructs a cache key that incorporates the user's identity (implicitly assumed in `feed:{user_id}`), the requested `page`, the `page_size`, and the sorting criteria.
+- **Cache Hit:** If the data is found in the `Cache (Redis)` using the generated key, the `Cache` returns the cached data directly to the `Backend Service`.
+- **Cache Miss:** If the data is not found in the `Cache (Redis)`:
+    * The `Backend Service` queries the `Database` to retrieve the posts relevant to the user, applying the specified pagination to fetch only the required subset of data.
+    * The `Database` returns the paginated post data to the `Backend Service`.
+    * The `Backend Service` then stores this retrieved data in the `Cache (Redis)` using the same cache key, along with a `TTL` (Time-To-Live) to ensure the data doesn't become too stale.
+- The `Backend Service` sends the paginated feed data back through the `API Gateway` to the `Client`.
+
+**Scenario 2: Creating a New Post (`POST /posts`) and Cache Invalidation**
+
+- The `Client` sends a `POST /posts` request to the `API Gateway`.
+- The `API Gateway` routes the request to the `Backend Service`.
+- The `Backend Service` creates the new post in the `Database`.
+- The `Database` confirms the successful creation to the `Backend Service`.
+- To ensure data consistency, the `Backend Service` invalidates the relevant feed cache in `Cache (Redis)`. It does this by deleting any cache entries associated with the user's feed, regardless of the page or page size. This forces the next request for the feed to fetch fresh data from the database and repopulate the cache.
+- The `Backend Service` sends a success response back through the `API Gateway` to the `Client`.
+
+---
+
+**2. System Architecture Diagram**
+
+```mermaid
+graph TD
+    classDef client fill:#FFB6C1,stroke:#333,color:#000
+    classDef server fill:#ADD8E6,stroke:#333,color:#000
+    classDef auth fill:#87CEEB,stroke:#333,color:#000
+    classDef config fill:#FFB366,stroke:#333,color:#000
+    classDef logging fill:#98FB98,stroke:#333,color:#000
+    classDef database fill:#DDA0DD,stroke:#333,color:#000
+    classDef singleton fill:#F5F5F5,stroke:#666,stroke-width:1px,color:#000
+
+    Client[Client Applications]:::client --> |HTTPS| Server[Django Server]:::server
+    
+    subgraph Authentication["Authentication System"]
+        Server --> AuthLogic[Authentication Logic]:::auth
+        AuthLogic --> |Hash & Store| Database[(SQLite Database)]:::database
+    end
+    
+    subgraph Configuration["Configuration Management"]
+        Server --> ConfigManager[Configuration Manager]:::config
+        ConfigManager -.-> |Singleton Pattern| Singleton_Config[Configuration Instance]:::singleton
+    end
+    
+    subgraph Logging["Logging System"]
+        Server --> Logger[Logger]:::logging
+        Logger -.-> |Singleton Pattern| Singleton_Logger[Logger Instance]:::singleton
+        Logger --> |Log Events| LogEvents[API Event Logs]:::logging
+    end
+    
+    subgraph Content["Content Management"]
+        Server --> PostFactory[Post Factory]:::config
+        PostFactory --> |Create/Update| Database
+        Database -.-> |Metadata| Metadata[Post Metadata]:::database
+    end
+    
+    %% Legend
+    subgraph Legend["Component Types"]
+        direction LR
+        C[Client Apps]:::client
+        S[Server Components]:::server
+        A[Auth Components]:::auth
+        CF[Config/Factory]:::config
+        L[Logging]:::logging
+        DB[(Database)]:::database
+        SI[Singleton Instances]:::singleton
+    end
+
+```
+
+**Interpretation:**
+
+This diagram provides a high-level overview of the system's components and their relationships, with a focus on highlighting the role of the Redis cache.
+
+* **Client (Postman / Client):** Represents the external entity interacting with the application.
+* **Server (Django Server):** The core application server built using the Django framework.
+* **Configuration Manager:** A component responsible for managing application configurations. It's implemented as a Singleton for centralized access.
+* **Logger:** A component for logging application events, also implemented as a Singleton.
+* **AuthLogic:** Represents the part of the application handling authentication and managing relationships between users, posts, and comments.
+* **Post Factory:** A component using the Factory pattern to create post objects.
+* **Database (SQLite Database):** The persistent data store.
+* **Cache (Redis):** The in-memory data store used for caching.
+
+**Logical Flow:**
+
+1.  The `Client` communicates with the `Server` (Django Server) via HTTPS.
+2.  The `Server` relies on the `Configuration Manager` for settings and the `Logger` for recording events.
+3.  The `Server` interacts with `AuthLogic` for authentication and data relationship management, which in turn interacts with the `Database`.
+4.  When creating posts, the `Server` uses the `Post Factory`, which ultimately interacts with the `Database`.
+5.  **Key Addition:** The `Server` also interacts with the `Cache (Redis)`. This interaction is primarily for reading data (cache hits) to improve performance. In cases of cache misses or data modification, the `Server` might also write to the `Cache`.
+6.  The `Cache (Redis)` can potentially interact with the `Database` indirectly, as the `Server` might fetch data from the database to populate the cache.
+
+**Key Takeaways from the Updated Diagrams:**
+
+* **Pagination is Integrated:** The CRUD Interaction Flow Diagram clearly shows how pagination is handled in the feed retrieval process.
+* **Caching with Redis:** Both diagrams now explicitly include Redis as a `Cache` component, highlighting its role in the architecture.
+* **Cache-Aside Pattern:** The CRUD Interaction Flow Diagram suggests a cache-aside pattern where the application explicitly checks the cache before accessing the database.
+* **Cache Invalidation Importance:** The CRUD Interaction Flow Diagram demonstrates the need for cache invalidation when data is modified.
+* **Focus on Performance:** The inclusion of the `Cache (Redis)` in the architecture emphasizes the effort to improve performance through caching.
+
+---
+
 ### Homework 8: Privacy Settings and Role-Based Access Control (RBAC)
 
 **1. Access Control Flow Diagram**
