@@ -100,7 +100,7 @@ The k6 test reveals a significant data integrity issue in the comments endpoint,
 
 ---
 
-## **Cache Hit Rate Analysis and Interpretation For Feed Test**
+## **Report on Cache Hit Rate Analysis for Post Feed Test**
 
 The purpose of this report is to analyze the Redis cache performance before and after running the feed-test script. This is done by computing the cache hit rate, which indicates how effectively the cache serves requests without requiring a database query. The cache hit rate is calculated using the formula:
 
@@ -142,9 +142,9 @@ $$
 
 While the global cache hit rate is impressively high, we must consider the following points raised in our previous tests:
 
-* **Discrepancy with k6 Test Results:** The k6 test results consistently showed that the "cached" request for the feed was not significantly faster, with the `Get Feed (Cached) - response is faster` check failing in approximately 50% of the iterations. This suggests that the feed data might not be consistently served from the cache, despite the high global hit rate.
+- **Discrepancy with k6 Test Results:** The k6 test results consistently showed that the "cached" request for the feed was not significantly faster, with the `Get Feed (Cached) - response is faster` check failing in approximately 50% of the iterations. This suggests that the feed data might not be consistently served from the cache, despite the high global hit rate.
 
-* **Global vs. Specific Endpoint:** The `INFO stats` provide a global view of the entire Redis instance. The high hit rate might be attributed to other cached data being accessed frequently, masking potential issues with the feed endpoint's caching.
+- **Global vs. Specific Endpoint:** The `INFO stats` provide a global view of the entire Redis instance. The high hit rate might be attributed to other cached data being accessed frequently, masking potential issues with the feed endpoint's caching.
 
 **Assessment and Recommendations**
 
@@ -156,7 +156,76 @@ While the global cache hit rate is impressively high, we must consider the follo
 **Conclusion**
 The Redis caching mechanism is performing exceptionally well, with a near-perfect cache hit rate. This indicates that the system is effectively reducing database load and ensuring quick response times for users. Regular monitoring should be maintained to sustain this high level of performance.
 
-
 ---
 
-## **Cache Hit Rate Analysis and Interpretation For Comment Test**
+## **Report on Cache Hit Rate Analysis for Post Comment Test**
+
+**Data Source:** `INFO stats` command from Redis before and after running the `comment-test` script.
+
+**Metrics Used:**
+
+- `keyspace_hits`: Number of successful lookups in the key space.
+- `keyspace_misses`: Number of unsuccessful lookups in the key space.
+
+**Calculation Method:**
+The cache hit rate is calculated using the formula:
+
+$$
+\text{Cache Hit Rate} = \frac{\text{keyspace_hits}}{\text{keyspace_hits} + \text{keyspace_misses}} \times 100
+$$
+
+**Results:**
+
+| Metric                  | Before Running Script | After Running Script | Difference |
+| ----------------------- | --------------------- | -------------------- | ---------- |
+| `keyspace_hits`         | 4022                  | 5100                 | +1078      |
+| `keyspace_misses`       | 1                     | 5                    | +4         |
+| **Calculated Hit Rate** | **99.98%**            | **99.99%**           | **+0.01%** |
+
+**Detailed Calculation:**
+
+**Before Running the Script:**
+
+$$
+\text{Cache Hit Rate} = \frac{4022}{4022 + 1} \times 100 = \frac{4022}{4023} \times 100 \approx 99.9751\%
+$$
+
+**After Running the Script:**
+
+$$
+\text{Cache Hit Rate} = \frac{5100}{5100 + 5} \times 100 = \frac{5100}{5105} \times 100 \approx 99.9020\%
+$$
+
+**Change in Cache Hit Rate:**
+\[
+99.9020\% - 99.9751\% = -0.0731\%
+\]
+
+**Assessment:**
+
+- **High Initial Hit Rate:** The Redis instance started with a very high global cache hit rate of approximately **99.98%**.
+- **Slight Decrease After Running Script:** After running the `comment-test` script, the global cache hit rate decreased slightly to approximately **99.90%**.
+- **Increase in Hits and Misses:** Both `keyspace_hits` and `keyspace_misses` increased during the test. The increase in hits (1078) was significantly larger than the increase in misses (4).
+
+**Interpretation Considering Previous Discussions:**
+
+* **Global Hit Rate Remains High:** Despite the decrease, the global cache hit rate remains exceptionally high, indicating that the vast majority of requests to Redis are still being served from the cache.
+* **Impact of Comment Test:** The `comment-test` script did introduce some cache misses (4 additional misses). This could be due to:
+    - **Initial Cache Misses:** The first request for certain comments might have resulted in a miss, populating the cache.
+    - **Cache Invalidation:** The comment test might involve actions that invalidate comment-related cache keys.
+    - **Accessing New/Uncached Data:** The test might be accessing comments that haven't been cached before.
+* **Overall Cache Efficiency:** Even with the introduction of some misses, the overall cache efficiency remains very high. The large increase in hits compared to misses suggests that the caching strategy is generally effective for comments as well.
+* **Contrasting with Feed Test:** Unlike the feed test where the k6 results suggested potential issues despite a high global hit rate, the slight decrease in the global hit rate here is accompanied by an increase in both hits and misses, which is more expected when a new part of the application is under load.
+
+**Conclusion:**
+
+The Redis cache is performing very efficiently during the `comment-test`, with a slight and expected decrease in the global hit rate due to the test's activity. The increase in both hits and misses indicates that the test is interacting with the cache, and while some initial misses might occur, the majority of requests are being served from the cache.
+
+**Recommendations:**
+
+* **Examine Comment Caching Logic:** Review the caching implementation for comments in your Django application to understand the cache keys, TTLs, and invalidation strategies.
+* **Analyze k6 Comment Test Results:** Analyze the k6 test results for the comment endpoint, specifically looking at response times for initial and subsequent requests, to see if there's a noticeable performance difference indicating cache hits.
+* **Consider Specific Comment Access Patterns:** Understand how comments are accessed in your application. Are certain comments accessed more frequently, leading to higher hit rates?
+* **Monitor Redis During Comment Tests:** If needed, use `redis-cli monitor` (potentially filtered for comment-related keys) while running the `comment-test` to observe the specific commands being executed and confirm cache hits and misses.
+
+In summary, based on the `INFO stats`, the caching for comments appears to be working effectively. The slight decrease in the global hit rate is likely due to the test exercising the comment caching mechanisms. Further analysis of the k6 test results for comments will provide more insights into the performance impact of the caching.
