@@ -37,9 +37,14 @@ class Post(models.Model):
 
     def __str__(self):
         return f"Post {self.id} by {self.author.username}"
-    
+
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['author']),
+            models.Index(fields=['privacy']),
+            models.Index(fields=['created_at']),
+        ]
 
 class Comment(models.Model):
     """Model representing a comment on a post."""

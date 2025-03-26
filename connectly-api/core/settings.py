@@ -140,19 +140,19 @@ DATABASES = {
 DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 
 # Caching
+REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/1') # default on dev mode using docker
+
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # For development
-        'LOCATION': 'my_feed_cache',
-    },
-    'feed_cache': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',  
+        'LOCATION': REDIS_URL,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            "IGNORE_EXCEPTIONS": True,  # Prevents Redis failures from breaking the app
         }
-    }
+    },
 }
+
 
 # Override database settings for unit testing
 if 'test' in sys.argv:
@@ -279,12 +279,6 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-     'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.UserRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'user': '50/min',  # 50 requests per minute per user
-    }
 
 }
 

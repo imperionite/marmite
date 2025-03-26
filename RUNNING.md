@@ -78,8 +78,11 @@ SELECT * FROM posts_user;
 SELECT id, username, email, password, created_at, date_joined, is_staff FROM posts_user;
 \q # quit psql
 
-
+# redis
+docker ps
+docker exec -it <redis_container_name> redis-cli
 ```
+
 
 #### 🤖 CLI Commands (Docker)
 

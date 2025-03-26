@@ -35,37 +35,20 @@ services:
       - 8080:8080
     networks:
       - app-network
-  k6_caching:
-    image: grafana/k6
+  
+  redis:
+    image: redis:latest
+    command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
-      - ./K6:/tests
-    command: run /tests/caching_test.js
-    depends_on:
-      - nginx
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    restart: 'no'
+    ports:
+      - 6379:6379
+    expose:
+      - 6379
     networks:
       - app-network
-
-  # k6_rate_limit:
-  #   image: grafana/k6
-  #   volumes:
-  #     - ./K6:/tests
-  #   command: run /tests/rate_limit_test.js
-  #   depends_on:
-  #     - nginx
-  #   networks:
-  #     - app-network
-
-  # k6_cache_invalidation:
-  #   image: grafana/k6
-  #   volumes:
-  #     - ./K6:/tests
-  #   command: run /tests/cache_invalidation_test.js
-  #   depends_on:
-  #     - nginx
-  #   networks:
-  #     - app-network
- 
-
+  
 volumes:
   postgres_data:
 
