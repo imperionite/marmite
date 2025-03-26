@@ -43,11 +43,11 @@ sequenceDiagram
 
 This diagram illustrates the sequence of interactions involved in retrieving the news feed (`GET /feed`) and creating a new post (`POST /posts`), specifically highlighting the integration of pagination and caching using Redis.
 
-* **Client:** The initiator of the API requests, such as a web browser or mobile application.
-* **API Gateway:** An optional intermediary that handles routing and potentially other cross-cutting concerns before requests reach the backend service.
-* **Backend Service:** Represents the core application logic, which in our case is likely implemented using Django.
-* **Cache (Redis):** An in-memory data store used to cache frequently accessed feed data to improve performance and reduce database load.
-* **Database:** The persistent storage for the application's data, which we've assumed to be SQLite based on the original architecture.
+- **Client:** The initiator of the API requests, such as a web browser or mobile application.
+- **API Gateway:** An optional intermediary that handles routing and potentially other cross-cutting concerns before requests reach the backend service.
+- **Backend Service:** Represents the core application logic, which in our case is likely implemented using Django.
+- **Cache (Redis):** An in-memory data store used to cache frequently accessed feed data to improve performance and reduce database load.
+- **Database:** The persistent storage for the application's data, which we've assumed to be SQLite based on the original architecture.
 
 **Logical Scenarios:**
 
@@ -58,9 +58,9 @@ This diagram illustrates the sequence of interactions involved in retrieving the
 - The `Backend Service` first attempts to retrieve the feed data from the `Cache (Redis)`. It constructs a cache key that incorporates the user's identity (implicitly assumed in `feed:{user_id}`), the requested `page`, the `page_size`, and the sorting criteria.
 - **Cache Hit:** If the data is found in the `Cache (Redis)` using the generated key, the `Cache` returns the cached data directly to the `Backend Service`.
 - **Cache Miss:** If the data is not found in the `Cache (Redis)`:
-    * The `Backend Service` queries the `Database` to retrieve the posts relevant to the user, applying the specified pagination to fetch only the required subset of data.
-    * The `Database` returns the paginated post data to the `Backend Service`.
-    * The `Backend Service` then stores this retrieved data in the `Cache (Redis)` using the same cache key, along with a `TTL` (Time-To-Live) to ensure the data doesn't become too stale.
+  - The `Backend Service` queries the `Database` to retrieve the posts relevant to the user, applying the specified pagination to fetch only the required subset of data.
+  - The `Database` returns the paginated post data to the `Backend Service`.
+  - The `Backend Service` then stores this retrieved data in the `Cache (Redis)` using the same cache key, along with a `TTL` (Time-To-Live) to ensure the data doesn't become too stale.
 - The `Backend Service` sends the paginated feed data back through the `API Gateway` to the `Client`.
 
 **Scenario 2: Creating a New Post (`POST /posts`) and Cache Invalidation**
@@ -71,8 +71,6 @@ This diagram illustrates the sequence of interactions involved in retrieving the
 - The `Database` confirms the successful creation to the `Backend Service`.
 - To ensure data consistency, the `Backend Service` invalidates the relevant feed cache in `Cache (Redis)`. It does this by deleting any cache entries associated with the user's feed, regardless of the page or page size. This forces the next request for the feed to fetch fresh data from the database and repopulate the cache.
 - The `Backend Service` sends a success response back through the `API Gateway` to the `Client`.
-
----
 
 **2. System Architecture Diagram**
 
@@ -87,29 +85,29 @@ graph TD
     classDef singleton fill:#F5F5F5,stroke:#666,stroke-width:1px,color:#000
 
     Client[Client Applications]:::client --> |HTTPS| Server[Django Server]:::server
-    
+
     subgraph Authentication["Authentication System"]
         Server --> AuthLogic[Authentication Logic]:::auth
         AuthLogic --> |Hash & Store| Database[(SQLite Database)]:::database
     end
-    
+
     subgraph Configuration["Configuration Management"]
         Server --> ConfigManager[Configuration Manager]:::config
         ConfigManager -.-> |Singleton Pattern| Singleton_Config[Configuration Instance]:::singleton
     end
-    
+
     subgraph Logging["Logging System"]
         Server --> Logger[Logger]:::logging
         Logger -.-> |Singleton Pattern| Singleton_Logger[Logger Instance]:::singleton
         Logger --> |Log Events| LogEvents[API Event Logs]:::logging
     end
-    
+
     subgraph Content["Content Management"]
         Server --> PostFactory[Post Factory]:::config
         PostFactory --> |Create/Update| Database
         Database -.-> |Metadata| Metadata[Post Metadata]:::database
     end
-    
+
     %% Legend
     subgraph Legend["Component Types"]
         direction LR
@@ -128,14 +126,14 @@ graph TD
 
 This diagram provides a high-level overview of the system's components and their relationships, with a focus on highlighting the role of the Redis cache.
 
-* **Client (Postman / Client):** Represents the external entity interacting with the application.
-* **Server (Django Server):** The core application server built using the Django framework.
-* **Configuration Manager:** A component responsible for managing application configurations. It's implemented as a Singleton for centralized access.
-* **Logger:** A component for logging application events, also implemented as a Singleton.
-* **AuthLogic:** Represents the part of the application handling authentication and managing relationships between users, posts, and comments.
-* **Post Factory:** A component using the Factory pattern to create post objects.
-* **Database (SQLite Database):** The persistent data store.
-* **Cache (Redis):** The in-memory data store used for caching.
+- **Client (Postman / Client):** Represents the external entity interacting with the application.
+- **Server (Django Server):** The core application server built using the Django framework.
+- **Configuration Manager:** A component responsible for managing application configurations. It's implemented as a Singleton for centralized access.
+- **Logger:** A component for logging application events, also implemented as a Singleton.
+- **AuthLogic:** Represents the part of the application handling authentication and managing relationships between users, posts, and comments.
+- **Post Factory:** A component using the Factory pattern to create post objects.
+- **Database (SQLite Database):** The persistent data store.
+- **Cache (Redis):** The in-memory data store used for caching.
 
 **Logical Flow:**
 
@@ -148,11 +146,11 @@ This diagram provides a high-level overview of the system's components and their
 
 **Key Takeaways from the Updated Diagrams:**
 
-* **Pagination is Integrated:** The CRUD Interaction Flow Diagram clearly shows how pagination is handled in the feed retrieval process.
-* **Caching with Redis:** Both diagrams now explicitly include Redis as a `Cache` component, highlighting its role in the architecture.
-* **Cache-Aside Pattern:** The CRUD Interaction Flow Diagram suggests a cache-aside pattern where the application explicitly checks the cache before accessing the database.
-* **Cache Invalidation Importance:** The CRUD Interaction Flow Diagram demonstrates the need for cache invalidation when data is modified.
-* **Focus on Performance:** The inclusion of the `Cache (Redis)` in the architecture emphasizes the effort to improve performance through caching.
+- **Pagination is Integrated:** The CRUD Interaction Flow Diagram clearly shows how pagination is handled in the feed retrieval process.
+- **Caching with Redis:** Both diagrams now explicitly include Redis as a `Cache` component, highlighting its role in the architecture.
+- **Cache-Aside Pattern:** The CRUD Interaction Flow Diagram suggests a cache-aside pattern where the application explicitly checks the cache before accessing the database.
+- **Cache Invalidation Importance:** The CRUD Interaction Flow Diagram demonstrates the need for cache invalidation when data is modified.
+- **Focus on Performance:** The inclusion of the `Cache (Redis)` in the architecture emphasizes the effort to improve performance through caching.
 
 ---
 
@@ -167,7 +165,7 @@ flowchart TD
     classDef decision fill:#ffb366,stroke:#cc5200,color:#000
     classDef error fill:#ff9999,stroke:#cc0000,color:#000
     classDef success fill:#99cc99,stroke:#006600,color:#000
-    
+
     %% Main flow
     A[API Receives Request]:::process --> B{Validate Token}:::decision
     B -->|Invalid| C[401 Unauthorized]:::error
@@ -184,84 +182,72 @@ flowchart TD
 
 ```
 
-###  Core Components
+### Core Components
 
-1. **Request Reception**  - The API receives an incoming request
-  - This marks the entry point of the validation chain
-  - All subsequent steps are dependent on this initial request
+1. **Request Reception** - The API receives an incoming request
 
+- This marks the entry point of the validation chain
+- All subsequent steps are dependent on this initial request
 
-2. **Token Validation**  - First line of defense in the security chain
-  - Checks for presence and validity of authentication token
-  - Two possible outcomes:
-                    - Valid token → Proceeds to role checking
-    - Invalid token → Returns 401 Unauthorized response
+2. **Token Validation** - First line of defense in the security chain
 
+- Checks for presence and validity of authentication token
+- Two possible outcomes: - Valid token → Proceeds to role checking
+  - Invalid token → Returns 401 Unauthorized response
 
+3. **Role-Based Access Control (RBAC)** - Evaluates user's permission level
 
+- Two possible paths: - Sufficient role → Proceeds to ownership check
+  - Insufficient role → Returns 403 Forbidden response
 
-3. **Role-Based Access Control (RBAC)**  - Evaluates user's permission level
-  - Two possible paths:
-                    - Sufficient role → Proceeds to ownership check
-    - Insufficient role → Returns 403 Forbidden response
+4. **Object Ownership Verification** - Checks if user has ownership rights
 
+- Two possible outcomes: - Is owner → Proceeds to privacy settings check
+  - Not owner → Returns 403 Forbidden response
 
+5. **Privacy Settings Evaluation** - Final security checkpoint
 
+- Two possible paths: - Public or owner access → Proceeds to action execution
+  - Private and not owner → Returns 403 Forbidden response
 
-4. **Object Ownership Verification**  - Checks if user has ownership rights
-  - Two possible outcomes:
-                    - Is owner → Proceeds to privacy settings check
-    - Not owner → Returns 403 Forbidden response
+6. **Action Execution and Response** - Performs the requested action
 
+- Sends response back to client
+- Handles both successful and error responses
 
-
-
-5. **Privacy Settings Evaluation**  - Final security checkpoint
-  - Two possible paths:
-                    - Public or owner access → Proceeds to action execution
-    - Private and not owner → Returns 403 Forbidden response
-
-
-
-
-6. **Action Execution and Response**  - Performs the requested action
-  - Sends response back to client
-  - Handles both successful and error responses
-
-
-
-###  Security Logic Flow
+### Security Logic Flow
 
 The diagram implements a layered security approach where each validation step must be passed successfully before proceeding to the next:
 
-1. **Authentication Layer**  - Token validation ensures only authenticated users can proceed
-  - Immediate rejection of unauthorized requests
-  - Prevents unauthorized access attempts early in the process
+1. **Authentication Layer** - Token validation ensures only authenticated users can proceed
 
+- Immediate rejection of unauthorized requests
+- Prevents unauthorized access attempts early in the process
 
-2. **Authorization Layer**  - Role checking ensures users have appropriate permissions
-  - Ownership verification adds an additional security layer
-  - Privacy settings provide fine-grained access control
+2. **Authorization Layer** - Role checking ensures users have appropriate permissions
 
+- Ownership verification adds an additional security layer
+- Privacy settings provide fine-grained access control
 
-3. **Error Handling**  - Consistent error response pattern (401/403)
-  - Clear separation between authentication and authorization failures
-  - All error paths converge to the response handler
+3. **Error Handling** - Consistent error response pattern (401/403)
 
+- Clear separation between authentication and authorization failures
+- All error paths converge to the response handler
 
-
-###  Flow Logic
+### Flow Logic
 
 The diagram's top-down structure represents a sequential validation process where:
 
 1. Each diamond shape represents a decision point
 2. Rectangular boxes represent actions or processes
 3. Arrows show the flow direction and possible paths
-4. Color coding helps distinguish between different types of operations:
-          - Green: Processing steps
-  - Orange: Decision points
-  - Red: Error responses
-  - Light green: Successful actions
+4. Color coding helps distinguish between different types of operations: - Green: Processing steps
+
+- Orange: Decision points
+- Red: Error responses
+- Light green: Successful actions
+
+---
 
 ### Homework 7: Building a News Feed
 
@@ -270,22 +256,22 @@ The diagram's top-down structure represents a sequential validation process wher
 ![CRUD Interaction Flow Diagram](https://drive.google.com/uc?id=1zfQbo5DWX70pqsNCl2u644dPRBygyetq)
 
 **User Operations:**
-    * Frontend sends requests to the API for creating, retrieving, updating, and deleting users.
-    * API interacts with the database to perform these operations.
-    * API sends back the corresponding data or success/error messages to the frontend.
-* **Post Operations:**
-    * Similar to user operations, but for creating, retrieving, updating, and deleting posts.
-    * Includes actions for liking and unliking posts.
-* **Comment Operations:**
-    * Handles CRUD operations for comments on posts.
-* **Like Operations:**
-    * Handles Like and Unlike operations.
-* **Follow Operations:**
-    * Handles CRUD operations for follow relationships.
-* **Feed Operations:**
-    * Frontend requests the news feed from the API.
-    * API retrieves filtered and sorted posts from the database.
-    * API returns the post data to the frontend.
+_ Frontend sends requests to the API for creating, retrieving, updating, and deleting users.
+_ API interacts with the database to perform these operations. \* API sends back the corresponding data or success/error messages to the frontend.
+
+- **Post Operations:**
+  - Similar to user operations, but for creating, retrieving, updating, and deleting posts.
+  - Includes actions for liking and unliking posts.
+- **Comment Operations:**
+  - Handles CRUD operations for comments on posts.
+- **Like Operations:**
+  - Handles Like and Unlike operations.
+- **Follow Operations:**
+  - Handles CRUD operations for follow relationships.
+- **Feed Operations:**
+  - Frontend requests the news feed from the API.
+  - API retrieves filtered and sorted posts from the database.
+  - API returns the post data to the frontend.
 
 ---
 
@@ -293,25 +279,27 @@ The diagram's top-down structure represents a sequential validation process wher
 
 ![System Architecture Diagram](https://drive.google.com/uc?id=1h4CjbVk1vRNex6B1PVkKWa5JuH5EbqSh)
 
-* **Frontend (React):**
-    * User interface for interacting with the API.
-* **API Gateway:**
-    * Entry point for all API requests.
-    * Routes requests to the appropriate services.
-* **Authentication/Authorization:**
-    * Verifies user credentials and authorizes access to protected resources.
-    * JWT token validation occurs here.
-* **Posts API (Django/DRF):**
-    * Handles all post-related operations.
-    * Includes logic for creating, retrieving, updating, and deleting posts, comments, likes, and follow relationships.
-* **Database (PostgreSQL):**
-    * Stores all application data (users, posts, comments, likes, follow relationships).
-* **Feed Logic:**
-    * Handles the retrieval and filtering of posts for the news feed.
-* **Follow Logic:**
-    * Handles the retrieval and creation of follow relationships.
-* **Error Response:**
-    * Handles invalid authentications.
+- **Frontend (React):**
+  - User interface for interacting with the API.
+- **API Gateway:**
+  - Entry point for all API requests.
+  - Routes requests to the appropriate services.
+- **Authentication/Authorization:**
+  - Verifies user credentials and authorizes access to protected resources.
+  - JWT token validation occurs here.
+- **Posts API (Django/DRF):**
+  - Handles all post-related operations.
+  - Includes logic for creating, retrieving, updating, and deleting posts, comments, likes, and follow relationships.
+- **Database (PostgreSQL):**
+  - Stores all application data (users, posts, comments, likes, follow relationships).
+- **Feed Logic:**
+  - Handles the retrieval and filtering of posts for the news feed.
+- **Follow Logic:**
+  - Handles the retrieval and creation of follow relationships.
+- **Error Response:**
+  - Handles invalid authentications.
+
+---
 
 ### Homework 6: Integrating Third-Party Services
 
@@ -386,6 +374,8 @@ The diagram's top-down structure represents a sequential validation process wher
 - **Token Invalid (Conditional):**
   - If either the Google ID token or the JWT token is invalid, the backend returns an error response to the React frontend.
 
+---
+
 ### Homework 5: Adding User Interactions (Likes and Comments)
 
 **1. Data Relationship Diagram**
@@ -441,4 +431,3 @@ This shows how different API endpoints enable CRUD (Create, Read, Update, Delete
 - **Likes:**
   - `POST /posts/{id}/like/` — Like a post
   - `DELETE /posts/{id}/like/` — Unlike a post
-
